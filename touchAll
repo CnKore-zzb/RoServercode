@@ -1,0 +1,4 @@
+#!/bin/sh
+rm obj/Debug -fr
+rm bin/Debug/libbase.a
+find ./ | xargs touch

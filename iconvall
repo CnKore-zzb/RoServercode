@@ -1,0 +1,15 @@
+#!/bin/sh
+
+dir=$1
+
+for file in `ls $dir/*.{cpp,h}`
+do
+  if [ -f $file ]
+  then
+    ./iconv $file
+    echo "./iconv $file"
+  fi
+done
+
+echo "iconv complete"
+

@@ -1,0 +1,40 @@
+#!/bin/sh
+
+for dir in `ls`
+do
+  if [ ! -d "${dir}" ]; then
+    continue
+  fi
+
+  for file in `ls $dir/*.{cpp,h,proto}`
+  do
+    if [ -f $file ]
+    then
+      echo "$file"
+      ./iconv $file
+      dos2unix $file
+    fi
+  done
+
+ # echo "ls: ${dir}"
+  for subdir in `ls ${dir}/`
+  do
+ #   echo "subdir: ${dir}/${subdir}"
+    if [ ! -d "${dir}/${subdir}" ]; then
+      continue
+    fi
+ #   echo "subdir: ${subdir} is dir"
+    for sfile in `ls ${dir}/$subdir/*.{cpp,h}`
+    do
+      if [ -f $sfile ]
+      then
+        echo "$sfile"
+        ./iconv $sfile
+        dos2unix $sfile
+      fi
+    done
+  done
+done
+
+echo "format complete"
+

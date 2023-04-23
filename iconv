@@ -1,0 +1,9 @@
+#!/bin/sh
+
+if [ $# != 1 ]; then
+  exit 1;
+fi
+
+rm -rf new
+iconv -f gb2312 -t utf-8 $1 -o  new && mv new $1
+

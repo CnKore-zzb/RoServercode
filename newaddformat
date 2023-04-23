@@ -1,0 +1,2 @@
+#!/bin/sh
+svn st|grep ^A|grep -E "(\.cpp$|\.h$)"|awk '{ print $2 }'|xargs ./format

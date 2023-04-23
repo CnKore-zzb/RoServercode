@@ -1,0 +1,68 @@
+#!/bin/sh
+
+protodir=Proto
+outdir=base/protobuf
+clientoutdir=$protodir/client
+
+p=$1
+if [ "x$p" != "x" ]; then
+  protoc -I=$protodir --cpp_out=$outdir $protodir/$p
+  echo "protoc -I=$protodir --cpp_out=$outdir $1"
+
+  cp $protodir/$1 $clientoutdir
+  echo "cp $protodir/$p $clientoutdir"
+  exit
+fi
+
+files=""
+for protofile in `ls $protodir/*.proto`
+do
+  if [ -f $protofile ]
+  then
+    files="$files $protofile"
+  fi
+done
+
+protoc -I=$protodir --cpp_out=$outdir $files
+echo "protoc -I=$protodir --cpp_out=$outdir $files"
+protoc -I=$protodir --go_out=Cmd $files
+echo "protoc -I=$protodir --go_out=Cmd $files"
+
+cd Proto
+var=$(git branch | grep "^*" | sed "s/* //g")
+if [ $var = "master" -o $var = "studio" -o $var = "tf" -o $var = "release" ]; then
+  echo "remove" $var "client proto"
+  rm -rf client
+
+  echo "checkout" $var "client proto"
+  if [ $var = "master" ]; then
+    svn co svn://svn.sg.xindong.com/RO/server/trunk/server/Proto/client
+  elif [ $var = "studio" ]; then
+    svn co svn://svn.sg.xindong.com/RO/server/studio/server/Proto/client
+  elif [ $var = "tf" ]; then
+    svn co svn://svn.sg.xindong.com/RO/server/tf/server/Proto/client
+  elif [ $var = "release" ]; then
+    svn co svn://svn.sg.xindong.com/RO/server/publish/server/Proto/client
+  fi
+fi
+cd ..
+
+clientout="xCmd ProtoCommon SceneUser SceneUser2 LoginUserCmd ErrorUserCmd SceneItem SceneSkill SceneQuest FuBenCmd SceneMap Var SessionTeam BossCmd SessionShop SessionWeather CarrierCmd SceneTip SceneChatRoom InfiniteTower SceneSeal SessionMail SceneInterlocution SceneManual SessionSociality UserEvent ChatCmd ActivityCmd ScenePet AchieveCmd AstrolabeCmd Authorize Dojo GuildCmd MatchCCmd RecordTrade SceneAugury SceneFood Tutor AuctionCCmd ActivityEvent SceneBeing SysMsg PhotoCmd WeddingCCmd PveCard TeamRaidCmd"
+if [ $var = "master" -o $var = "studio" -o $var = "tf" -o $var = "release" ]; then
+  echo "update client proto"
+  for clientfile in $clientout
+  do
+    if [ -f "$protodir/$clientfile.proto" ]
+    then
+      cp $protodir/$clientfile.proto $clientoutdir
+      echo "cp $protodir/$clientfile.proto $clientoutdir"
+    fi
+  done
+
+  echo "commit" $var "client proto"
+  svn commit -m "[opt] : 协议提交" Proto/client
+
+  echo "update" $var "client proto complete"
+fi
+
+echo "protobuf complete"
