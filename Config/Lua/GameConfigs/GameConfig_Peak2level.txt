@@ -1,0 +1,7 @@
+GameConfig.Dead = {
+            max_deadcoin = 9999999,       -- 最大亡者气息
+            quest_perday = 3,         -- 每日任务刷新数量
+			deadcoinID = 169,			-- 道具ID
+	    max_deadlv = 20,          --巅峰2.0的提升的job上限
+	    max_peaklv = 160,         --巅峰1.0的总Job上限
+        }

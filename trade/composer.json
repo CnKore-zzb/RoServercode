@@ -1,0 +1,26 @@
+{
+  "name": "ro-trade-server",
+  "description": "RO聊天服务器",
+  "config": {
+    "bin-dir": "bin",
+    "data-dir": "data",
+    "preferred-install": "dist"
+  },
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "RO\\Cmd\\": "proto/RO/Cmd",
+      "RO\\": "classes",
+      "DrSlump\\": "proto/protobuf-php/library/DrSlump/"
+    }
+  },
+  "require": {
+    "myqee/server": "dev-master"
+  },
+  "repositories": {
+    "packagist": {
+      "type": "composer",
+      "url": "https://packagist.phpcomposer.com"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+--md5:7d7f6d1a107dc86a77492a7bb2e9b3e0
+Table_SystemChat = { 
+	[1] = {id = 1, channel = {2,3}, Type = 1, Text = '获得[63cd4e]%s[-]Job经验', remark = '经验获得提示'},
+	[2] = {id = 2, channel = {2,3}, Type = 1, Text = '获得[63cd4e]%s[-]Base经验', remark = '获得职业经验'},
+	[3] = {id = 3, channel = {2,3}, Type = 1, Text = '获得{itemicon=%s}{item=%s,%s}', remark = '获得道具提示'},
+}
+return Table_SystemChat

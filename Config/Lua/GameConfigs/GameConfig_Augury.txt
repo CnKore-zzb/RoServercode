@@ -1,0 +1,26 @@
+--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+-- 占卜
+GameConfig.Augury = {
+  ItemId = 700009,
+  WaitWord = 82179,
+  ForeWord = 82484,
+  HandTipSysId = 918;                   --1分钟提示消息id
+  RewardTipSysId = 919;                 --奖励提示消息id
+  MaxRewardCountPerDay = 2,             --每天最大奖励次数
+  StartTime = "2017-03-09 00:00:00",    --占卜开始时间
+  EndTime = "2017-03-16 23:59:59",      --占卜活动结束时间
+  HandRewardTime = 10*60,                --牵手多久获得道具 10分钟
+  HandTipTime = 60,                     --牵手提示时间 1分钟  
+  Range = 10,                           --被牵人在npc附近才能邀请
+  Config = {
+   [1] = {npcid = 2196, tbname = "Table_Augury_1", tb = Table_Augury_1, reward=10},  --恋爱的季节
+   [2] = {npcid = 2197, tbname = "Table_Augury_2", tb = Table_Augury_2, reward=10},  --星座的指引
+   [3] = {npcid = 456, tbname = "Table_Augury_3", tb = Table_Augury_3, reward=10},  --冒险的极意
+   [4] = {npcid = 789, tbname = "Table_Valentine", tb = Table_Valentine, reward=10},  --老的占卜
+   [5] = {npcid = 5453, tbname = "Table_Augury_Activity", tb = Table_Augury_Activity, reward=10},  --活动占卜
+  },
+  MaxRewardCount = 1,                   --每天奖励最大次数
+  ExtraItemId = 710027,					--额外占卜次数
+}

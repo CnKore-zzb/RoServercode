@@ -1,0 +1,10 @@
+--md5:deeb6496946e308bf4cedb96893fd3d1
+Table_Avatar = { 
+	[1] = {id = 1, NameZh = '眨眼', NameEn = 'Head_closeeye', Probability = 10000, Duration = 0.1, }, 
+	[2] = {id = 2, NameZh = '眯眯眼', Priority = 2, NameEn = 'Head_hit', Probability = 10000, Duration = 2, Adventureskills = 50014001},
+	[3] = {id = 3, NameZh = '微笑', Priority = 2, NameEn = 'Head_smile', Probability = 10000, Duration = 2, Adventureskills = 50013001},
+	[4] = {id = 4, NameZh = '死亡', Priority = 1, NameEn = 'Head_hit', Probability = 10000, Duration = 0, Adventureskills = 50014001},
+	[5] = {id = 5, NameZh = '闭眼', NameEn = 'Head_closeeye', Probability = 10000, Duration = 0, }, 
+	[6] = {id = 6, NameZh = '异常状态', Priority = 2, NameEn = 'Head_closeeye', Probability = 10000, Duration = 0, Adventureskills = 50014001},
+}
+return Table_Avatar

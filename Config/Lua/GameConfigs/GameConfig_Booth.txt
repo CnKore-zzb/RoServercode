@@ -1,0 +1,42 @@
+﻿--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+--摆摊相关配置
+ GameConfig.Booth = {
+	name_length_max = 11,              --摊位名字最大字数
+	booth_buff = 96321,                --摆摊状态下不可移动不可战斗buff
+	update_cd = 5,	                   --修改店铺的cd
+	skill_id = 278,		           --限制技能
+	map_ids = {1, 2},		   --摆摊限制地图id
+	score_exchange_rate = 10000,       --交易税和积分的比例
+	booth_range = 3,		   --摆摊的检测范围
+	uprate_max = 0,                    --非公示期最大上调
+	downrate_max = -50,                --非公示期最大下调
+	uprate_publicity_max = 50,        --公示期最大上调
+	downrate_publicity_max = -50,      --公示期最大下调
+	uprate_list = {100, 200, 300, 400, 500},    --上调档位百分比（千分位）
+	downrate_list = {100, 200, 300, 400, 500},   --下调档位百分比（千分位）
+	quota_cost_max = 4000000000,          --单件商品额度消耗上限
+	quota_exchange_rate = 1,           --买家zeny和打赏积分的比值（非公示期）
+	quota_exchange_rate_pub = 1,       --买家zeny和打赏积分的比值（公示期）
+	quota_zeny_discount = 4,           --买家购买时使用打赏积分抵扣zeny的比值
+	score = { 
+		[0] = {num = 0, name = "白色", icon = "stall_icon_white"},
+		[1] = {num = 50, name = "绿色", icon = "stall_icon_green"},
+		[2] = {num = 500, name = "蓝色", icon = "stall_icon_blue"},
+		[3] = {num = 2000, name = "紫色", icon = "stall_icon_purple"},
+		[4] = {num = 10000, name = "橘色", icon = "stall_icon_orange"},
+		[5] = {num = 50000, name = "粉色", icon = "stall_icon_pink"},
+	},                                 --招牌等级
+	base_pending_count = 8,          --基础上架数
+	max_pending_count = 13,             --最大上架数
+	exchange_hour = 86400,             --过期时间（秒）  
+	max_size_one_scene = 50,	 --单场景最大同步人数
+	max_size_nine = 50,		 --九屏其他线最大同步人数
+	booth_maintenance = 0,           --摆摊维护，1表示维护
+	shoppingMode_reset = 604800,     --逛街模式状态重置时长，以秒做单位
+	screenFilterID = 32,             --逛街模式屏蔽
+	booth_screenFilterID = 33,       --摆摊状态的光效和人名屏蔽
+	quota_itemid = 149,              --信用额度的图标丢失情况解决
+} 
+

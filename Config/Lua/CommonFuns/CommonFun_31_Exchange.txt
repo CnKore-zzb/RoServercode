@@ -1,0 +1,40 @@
+-- 计算交易所税率  x%, price 单价
+function CommonFun.calcTradeTax(price)
+  local tax = 9
+  if (price <= 100*10000) then
+    return 9
+  elseif( price <= 500*10000) then
+    return 10
+  elseif (price <=1000*10000) then
+    return 11
+  elseif (price <=2500*10000) then
+    return 12
+  elseif (price <=5000*10000) then
+    return 13
+  elseif (price <=10000*10000) then
+    return 14
+  else
+    return 15
+  end
+end
+
+-- 计算交易所赠送费  totalPrice总价，bg背景id
+function CommonFun.calcTradeGiveFee(totalPrice, bg)
+  local fee = totalPrice
+  if (totalPrice <= 100 * 10000) then
+    fee = 1 * 10000
+  elseif (totalPrice <= 500 * 10000) then
+    fee = 5 * 10000
+  else
+    fee = 10 * 10000
+  end
+
+  --process bg
+  local extra = 0
+  if (GameConfig.Exchange.SendMoney[bg] == nil ) then
+    extra = 0
+  else
+    extra = GameConfig.Exchange.SendMoney[bg].price
+  end
+  return fee + extra
+end

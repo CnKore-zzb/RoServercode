@@ -1,0 +1,24 @@
+ 驱动器 C 中的卷是 OS
+ 卷的序列号是 4245-113D
+
+ C:\RO\studio\client-refactory\Develop\Assets\Resources\Script\MConfig\Dialog 的目录
+
+2018/09/12  19:50    <DIR>          .
+2018/09/12  19:50    <DIR>          ..
+2018/09/12  14:08         1,491,359 Dialog_Index.txt
+2018/09/12  17:50         1,146,359 Table_Dialog_Left.txt
+2018/09/12  17:50           367,776 Table_Dialog_NpcDefault.txt
+2018/09/06  12:20            26,953 Table_Dialog_NpcTalk.txt
+2018/09/12  17:50         1,099,687 Table_Dialog_Quest1.txt
+2018/09/06  12:20            66,717 Table_Dialog_Quest10.txt
+2018/09/06  12:20           334,731 Table_Dialog_Quest11.txt
+2018/09/11  16:14         1,115,804 Table_Dialog_Quest2.txt
+2018/09/12  17:50           559,978 Table_Dialog_Quest3.txt
+2018/09/06  12:20             2,264 Table_Dialog_Quest4.txt
+2018/09/06  12:20            32,788 Table_Dialog_Quest5.txt
+2018/09/12  17:50           764,362 Table_Dialog_Quest6.txt
+2018/09/06  12:20               415 Table_Dialog_Quest61.txt
+2018/09/06  12:20            16,090 Table_Dialog_Quest7.txt
+2018/09/06  12:19            26,940 Table_Dialog_Quest8.txt
+              15 个文件      7,052,223 字节
+               2 个目录 71,730,110,464 可用字节

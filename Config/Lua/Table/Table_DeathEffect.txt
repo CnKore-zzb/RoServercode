@@ -1,0 +1,13 @@
+--md5:e7084516d36d74bc2c8942d6baf35eba
+Table_DeathEffect = { 
+	[10107] = {id = 10107, NameZh = '一阶法师猫', Type = 1, Effect = 'Skill/Teleport', EffectSe = 'Common/Teleport', Parameter = {}},
+	[10108] = {id = 10108, NameZh = '一阶格斗猫', Type = 1, Effect = 'Skill/Teleport', EffectSe = 'Common/Teleport', Parameter = {}},
+	[10109] = {id = 10109, NameZh = '一阶厨师猫', Type = 1, Effect = 'Skill/Teleport', EffectSe = 'Common/Teleport', Parameter = {}},
+	[10110] = {id = 10110, NameZh = '一阶忍者猫', Type = 1, Effect = 'Skill/Teleport', EffectSe = 'Common/Teleport', Parameter = {}},
+	[10113] = {id = 10113, NameZh = '二阶法师猫', Type = 1, Effect = 'Skill/Teleport', EffectSe = 'Common/Teleport', Parameter = {}},
+	[10114] = {id = 10114, NameZh = '二阶格斗猫', Type = 1, Effect = 'Skill/Teleport', EffectSe = 'Common/Teleport', Parameter = {}},
+	[10115] = {id = 10115, NameZh = '二阶厨师猫', Type = 1, Effect = 'Skill/Teleport', EffectSe = 'Common/Teleport', Parameter = {}},
+	[10116] = {id = 10116, NameZh = '二阶忍者猫', Type = 1, Effect = 'Skill/Teleport', EffectSe = 'Common/Teleport', Parameter = {}},
+	[30025] = {id = 30025, NameZh = '猫飞碟', Type = 1, Effect = '', EffectSe = '', Parameter = {effect_on="Skill/UFOBoom",ep=1,se_on="Common/Teleport"}},
+}
+return Table_DeathEffect

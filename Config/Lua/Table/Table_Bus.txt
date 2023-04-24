@@ -1,0 +1,26 @@
+--md5:f2b44edd3f7faed209233e0cc68a6fb2
+Table_Bus = { 
+	[1] = {id = 1, NameZh = '波利气球', NameEn = 'bus_1', Type = 3, Camera = 3, DropPos = {[1]={-31.28,-0.03,52.03}}},
+	[2] = {id = 2, NameZh = '马车', NameEn = 'bus_2', Type = 4, Camera = 3, DropPos = {[1]={24.4,2.35,5.22}}},
+	[3] = {id = 3, NameZh = '飞毯', NameEn = 'bus_3', Type = 3, Camera = 3, DropPos = {}},
+	[4] = {id = 4, NameZh = '飞艇', NameEn = 'bus_4', Camera = 3, DropPos = {}},
+	[5] = {id = 5, NameZh = '硬石猛犸', NameEn = 'bus_5', Camera = 3, DropPos = {}},
+	[6] = {id = 6, NameZh = '飞龙', NameEn = 'bus_6', Camera = 3, DropPos = {}},
+	[7] = {id = 7, NameZh = '摩天轮', NameEn = 'bus_7', Type = 2, Camera = 4, DropPos = {[1]={-2.16,3.29,23.56}}},
+	[8] = {id = 8, NameZh = '雷霆', NameEn = 'bus_8', Type = 1, Camera = 3, DropPos = {[1]={104.33,-10.25,34.50},[2]={5.52,4.40,48.61}}},
+	[9] = {id = 9, NameZh = '雷霆', NameEn = 'bus_9', Type = 1, Camera = 3, DropPos = {[1]={5.52,4.40,48.61},[2]={87.05,-9.50,-16.23}}},
+	[10] = {id = 10, NameZh = '雷霆', NameEn = 'bus_10', Type = 1, Camera = 3, DropPos = {[1]={87.05,-9.50,-16.23},[2]={104.33,-10.25,34.50}}},
+	[11] = {id = 11, NameZh = '飞行书', NameEn = 'bus_11', Type = 1, Camera = 3, DropPos = {[1]={67.63, 13.21, 47.71}}},
+	[12] = {id = 12, NameZh = '鲸', NameEn = 'bus_12', Type = 3, Camera = 3, DropPos = {[1]={101.51, 19.65, -75.10},[2]={8.22, 49.16, 72.61},[3]={-70.42, 49.15, 77.30}}},
+	[13] = {id = 13, NameZh = '海龟', NameEn = 'bus_13', Camera = 3, DropPos = {}},
+	[14] = {id = 14, NameZh = '飞毯', NameEn = 'bus_14', Type = 3, Camera = 3, DropPos = {[1]={-221.21,-4.84,-17.79},[2]={-169.46,-9.13,66.88}}},
+	[15] = {id = 15, NameZh = '飞毯', NameEn = 'bus_15', Type = 3, Camera = 3, DropPos = {[1]={-221.21, -4.84, -17.79},[2]={-110.64, -9.13, -79.84}}},
+	[16] = {id = 16, NameZh = '飞毯', NameEn = 'bus_16', Type = 3, Camera = 3, DropPos = {[1]={-169.46, -9.13, 66.88},[2]={-110.64, -9.13, -79.84}}},
+	[17] = {id = 17, NameZh = '风筝', NameEn = 'bus_17', Type = 3, Camera = 3, DropPos = {[1]={-12.4,4.93,69.36}}},
+	[18] = {id = 18, NameZh = '海豚摇摇乐', NameEn = 'bus_18', Type = 1, Camera = 3, DropPos = {}},
+	[19] = {id = 19, NameZh = '海豚摇摇乐', NameEn = 'bus_19', Type = 1, Camera = 3, DropPos = {}},
+	[20] = {id = 20, NameZh = '海豚摇摇乐', NameEn = 'bus_20', Type = 1, Camera = 3, DropPos = {}},
+	[21] = {id = 21, NameZh = '海豚摇摇乐', NameEn = 'bus_21', Type = 1, Camera = 3, DropPos = {}},
+	[22] = {id = 22, NameZh = '蜜月过山车', NameEn = 'bus_22', Type = 4, Camera = 3, DropPos = {[1]={116.9,7.694,56.93}}},
+}
+return Table_Bus

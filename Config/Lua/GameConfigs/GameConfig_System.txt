@@ -1,0 +1,157 @@
+--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+--设备ID版本号
+GameConfig.DidVersion = 1
+--Home键判断断线重连和结束进程的时间判断
+GameConfig.TimeOfHomeKey = {
+TimeWithLogin =43200,
+TimeWithoutLogin=30,
+}
+
+--设置相关配置
+GameConfig.Setting = {
+  ScreenCountLow = 5,
+  ScreenCountMid = 20,
+  ScreenCountHigh = 50,
+  GameTimeTip = 300,
+  MonthGameTimeTip = 400,
+}
+
+--系统
+GameConfig.System = {
+  timespeed = 4,
+  maxbaselevel = 120,
+  maxattrpoint = 100,
+  musicboxnpc = 1259,
+  musicrange = 12,
+  music_status_play = 2001,
+  music_status_stop = 1001,
+  namesize_min = 2,
+  namesize_max = 8,
+  battleinterval=10,
+  barragemap = {2},
+  guildname_max = 8,
+  guildname_min = 2,
+  guildboard_max = 150,
+  guildrecruit_max = 75,
+  guildjob_min = 1,
+  guildjob_max = 5,
+  itemshowtime = 3600,
+  handrange = 20,
+  gomap_buff=102,
+  teamname_max = 12,
+  teamname_min = 2,
+  roomname_max = 12,
+  roomname_min = 1,
+
+  max_base_battle_time = 18000,
+  max_music_battle_time = 3600,
+  music_check_time = 3,
+  music_continue_time = 60,
+  music_return_time = 60,
+  music_buff = 6004,
+
+  newchar_profession = 1,
+  newchar_map_id = 2,
+  maincity_map_id = 1,
+  --------------刚刚切到分线, 不能对boss 和 mini 造成伤害, 不能捡拾boss/nini 掉落
+  zone_boss_limit_buff = 104,
+  ----------天空球过度时间秒----
+  sky_pass_time = 60,
+  --打开仓库的银币消耗
+  warehouseZeny = 99,
+  -- 仓库免费的活动id
+  warehouse_free_activityid = 20,
+
+  -- 邮件超时时间(单位:天)
+  sysmail_overtime = 14,
+  -- 世界聊天等级限制
+  chat_world_reqlv = 10,
+  -- 表示主角色未选择时的确认msgids
+  chooseMainRole_ConfirmMsgids = {25414,25415,25416},
+  -- 屏蔽同同人社区字段，0是不屏蔽，1是屏蔽
+  ShieldMaskDoujinshi = 0,
+}
+
+GameConfig.SystemMenu = {
+    Charactor = 1,
+    Charactor_profession = 2,
+    Charactor_skill = 3,
+    Charactor_title = 4,
+    Bag = 5,
+    Bag_Fashion = 6,
+    WorldMap = 7,
+}
+
+--弹框类型10的点击时间配置
+GameConfig.ItemPopShowTimeLim = 0.5
+
+--公告相关配置
+GameConfig.ShowNotice = {
+  duration = 15
+--公告超过上限的分行停留时间
+}
+
+--优化屏蔽相关
+ GameConfig.Optimized = {
+  Shieldingrange = 7,
+}
+
+--点击屏幕的反馈特效以秒为单位来判断出现的时间
+GameConfig.ClickEffectDelay = 0.5
+
+--激活码错误提示前往链接
+GameConfig.GetActiveCodeUrl = "http://bbs.xd.com/thread-2922680-1-1.html"
+
+--特效毫秒延迟时间
+GameConfig.Delay = {
+--看板特效的时间延迟
+  wantedquestmsg = 1000,
+  card_exchange = 8500,
+  lottery = 4000,
+  guild_treasure=1500,
+}
+
+ -- 省电模式
+GameConfig.HandUP ={
+	Open = 1,
+	--无操作时间多少时间后进入省电模式
+	Time = 120,--测试用15秒
+	--进入省电模式的的屏幕亮度
+	Brightness = 0.1,
+	
+	SceneFilter ={24,25,26,27,28},
+}
+
+GameConfig.MapTrans = {
+	HandRate = 1.2,		--牵手时传送费用基础*1.2
+}
+
+--安全密码 
+GameConfig.Authorize = {
+  ResetTime = 604800,--重置需要消耗的时间：7天
+  RefineLv = 4,--精炼等级达到4与4级以上时
+}
+
+-- 怪物在UI上的缩放比例(依据 monster表中的 shape 字段)
+GameConfig.UIModelScale = {
+  S = 0.5,
+  M = 0.8,
+  L = 1,
+}
+--坐骑预览缩放比例
+GameConfig.UIMountScale = {
+  scale = 0.7,
+}
+--卡片的道具内typeIcon
+GameConfig.CardPosIconConfig = {
+  [81] = "63",
+  [82] = "76",
+  [83] = "64",
+  [84] = "77",
+  [85] = "78",
+  [86] = "79",
+  [87] = "92",
+}
+

@@ -1,0 +1,45 @@
+#!/bin/sh
+
+TMP=$IFS
+IFS='
+'
+
+pfName=$1
+regionName=$2
+zoneName=$3
+progress=$4
+progressName=$5
+
+echo $pfName $regionName $zoneName $progress $progressName
+
+for var in $(ps x |grep $progressName|grep $pfName |grep $regionName |grep $zoneName |grep -v grep|grep -v vim|grep -v restart)
+do
+  #pid=echo $var |cut -c1-5
+  pid=$(echo $var |awk '{ printf "%s ", $1}')
+  pname=$(echo $var |awk '{ printf "%s ", $4}')
+
+  if kill -9 $pid
+  then
+    echo "stop $pname"
+  else
+    echo "can't stop $pname"
+  fi
+done
+
+sleep 3
+
+cont=$(ps x |grep $progressName|grep $pfName |grep $regionName |grep $zoneName |grep -v grep|grep -v vim|grep -v restart |wc -l)
+while [ $cont -gt 0 ]
+do
+  echo "ServerNum:$cont"
+  sleep 1
+  for var in $(ps x |grep $progressName|grep $pfName |grep $regionName |grep $zoneName|grep -v grep|grep -v vim|grep -v restart)
+  do
+    pid=$(echo $var |awk '{ printf "%s ", $1}')
+    kill -2 $pid
+  done
+  cont=$(ps x |grep $progressName|grep $pfName |grep $regionName |grep $zoneName|grep -v grep|grep -v vim|grep -v restart|wc -l)
+done
+
+echo "./$progress -n$progressName -d -p$pfName  -r$regionName  -s$zoneName"
+./$progress -n$progressName -d -p$pfName  -r$regionName  -s$zoneName

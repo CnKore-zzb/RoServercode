@@ -1,0 +1,5 @@
+--md5:347a3dba2ce68cdc46ca11b640b422f3
+Table_StrayCats = { 
+	[10091] = {id = 10091, NameZh = '美眉', type = '短脚小三花', HomePos = {}, Area = 50, AIRest = 30, AIWalk = 30, AISit = 20, AIPlay = 10, AIFollow = 10, AIOut = 0, Info = '', Skill = {}},
+}
+return Table_StrayCats

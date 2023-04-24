@@ -1,0 +1,157 @@
+function CommonFun.calcOdds_1(srcUser)
+
+ return 100
+
+end
+
+function CommonFun.calcOdds_2(srcUser,targetUser)
+ if srcUser==nil or targetUser==nil then
+    return 0
+ end   
+  -----------------------------------------------------------------猎人系老鹰普攻是否可携带宠物进行攻击的判定
+  local skilllv_1 = srcUser:GetLernedSkillLevel(126)
+    if skilllv_1<=0 then
+      return 0
+    end
+  
+  local Hp         =  targetUser:GetProperty("Hp")
+  local MaxHp      =  targetUser:GetProperty("MaxHp")
+  -------------------------------------------星盘闪电冲击概率
+  local Num1=srcUser:GetRunePoint(42001)
+  local Num2=srcUser:GetRunePoint(42002)
+  local Num3=srcUser:GetRunePoint(42003)
+  local Num4=srcUser:GetRunePoint(42004)
+  local Num5=srcUser:GetRunePoint(42005)
+  local RuneDamage=Num1*2+Num2*1+Num3*1+Num4*1+Num5*2
+  -------------------------------------------野性觉醒的计算效果
+  local skilllv_2 = srcUser:GetLernedSkillLevel(250)
+  local Luk = srcUser:GetProperty("Luk")
+    
+  if skilllv_2<=5 and Hp<=MaxHp*0.3 then
+    return 5+Luk/3+skilllv_2*6+RuneDamage
+  elseif skilllv_2>5 and Hp<=MaxHp*0.5 then
+    return 5+Luk/3+30+RuneDamage
+  end
+
+    return 5+Luk/3+RuneDamage
+end
+
+function CommonFun.calcTrapNum(srcUser)
+  -----------------------------------------------------------------猎人系可安放陷阱的总个数上限
+local skilllv_1 = srcUser:GetLernedSkillLevel(142)
+   if skilllv_1<=0 then
+      return 8
+   elseif  skilllv_1>0 and skilllv_1<=2 then
+      return 9  
+   elseif  skilllv_1>2 and skilllv_1<=4 then
+      return 10
+   elseif  skilllv_1>4 and skilllv_1<=6 then
+      return 11 
+   elseif  skilllv_1>6 and skilllv_1<=8 then   
+      return 12 
+   else
+      return 13
+   end           
+end
+
+-------------------------------------------------------------------刺客系技能无影之牙释放有概率不接触隐匿状态
+function CommonFun.calcOdds_4(srcUser)
+local skilllv_1 = srcUser:GetLernedSkillLevel(183)
+ if skilllv_1<=0 then
+    return 0
+ end
+    return skilllv_1*5+25
+end
+
+-------------------------------------------------------------------火柱选择多个目标的技能表配置
+function CommonFun.calcOdds_5(srcUser)
+  local Num1=srcUser:GetRunePoint(22041)
+  local Num2=srcUser:GetRunePoint(22043)
+  return Num1 + Num2
+end
+
+-------------------------------------------------------------------缓速术选择多个目标的技能表配置
+function CommonFun.calcOdds_6(srcUser)
+  local Num1=srcUser:GetRunePoint(52110)
+  return Num1*3
+end
+
+-------------------------------------------------------------------吸气回蓝
+function CommonFun.Inhale(srcUser, targetUser)
+
+  if srcUser == nil or targetUser == nil then
+      return 0
+  end
+  local A=0
+  -------------------------------------------------------------------
+  if targetUser:GetNpcID() == 0 then --------------------吸对方的球
+      local Num1=targetUser:GetBuffLayer(100500)
+      A = 7 * Num1
+  elseif targetUser:GetNpcID()~=0 then 
+      if (targetUser.boss or targetUser.mini) then----------------------对MVP　mini 无效
+          return 0
+      elseif  CommonFun.IsInRate(10, srcUser:GetRandom()) then
+          local BaseLv = targetUser.BaseLv
+          A = BaseLv*2
+      end
+  end
+
+  return A
+end
+-----------------------------------------------------------------流氓偷钱成功率及比例
+function CommonFun.StealMoney(srcUser, targetUser)
+  local skilllv_1 = srcUser:GetLernedSkillLevel(474) ---偷钱
+  local skilllv_2 = srcUser:GetLernedSkillLevel(473) ---强夺
+  local Dex = srcUser:GetProperty("Dex")
+  local Luk = srcUser:GetProperty("Luk")
+  local Rate = math.min(20,(Dex + Luk)/10)  ----D,L影响成功率
+  local RateSum = Rate + 5
+
+  local A = skilllv_1*0.05 +  skilllv_2*0.02
+
+  if  CommonFun.IsInRate(RateSum, srcUser:GetRandom())  then
+        return  A
+  end 
+
+  return 0
+end
+-----------------------------------------------------------------流氓陷阱移除
+function CommonFun.RemoveTrap(srcUser, targetUser)
+  local skilllv_1 = srcUser:GetLernedSkillLevel(489) ---陷阱移除
+
+  return skilllv_1
+end
+-------------------------------------------------------------------流氓隐蔽射击 概率不接触隐匿状态
+function CommonFun.calcOdds_10(srcUser)
+local skilllv_1 = srcUser:GetLernedSkillLevel(1148)
+ if skilllv_1<=5 then
+    return 0
+ end
+    return (skilllv_1*10-20)
+end
+
+
+
+function CommonFun.GetFormulaValue(srcUser, targetUser,type)
+  if CommonFun.FormulaFuns[type] == nil then
+    return 0
+  end
+
+  local  func = CommonFun.FormulaFuns[type]
+  local  value = func(srcUser,targetUser)
+  return value
+end
+
+
+CommonFun.FormulaFuns = {
+  [1] = CommonFun.calcOdds_1,
+  [2] = CommonFun.calcOdds_2,
+  [3] = CommonFun.calcTrapNum,
+  [4] = CommonFun.calcOdds_4,
+  [5] = CommonFun.calcOdds_5,
+  [6] = CommonFun.calcOdds_6,
+  [7] = CommonFun.Inhale,
+  [8] = CommonFun.StealMoney,
+  [9] = CommonFun.RemoveTrap,
+  [10] = CommonFun.calcOdds_10,
+}

@@ -1,0 +1,9 @@
+--md5:70763286e592d7db0f545c615aeda47f
+Table_ActionEffectSetUp = { 
+	[1] = {id = 1, NameZh = '机匠男PLAYSHOW', Path = 'Skill/PlayShow_M', EPID = 2, EPFollow = 1, Loop = 1},
+	[2] = {id = 2, NameZh = '机匠女PLAYSHOW', Path = 'Skill/PlayShow_F', EPID = 2, EPFollow = 1, Loop = 1},
+	[3] = {id = 3, NameZh = '卡浩PLAYSHOW', Path = 'Skill/PlayShow', EPID = 2, EPFollow = 1, Loop = 1},
+	[4] = {id = 4, NameZh = '机匠机甲男银河战士版playshow', Path = 'Skill/MagicGear_PS01_M', EPID = 2, EPFollow = 1, Loop = 1},
+	[5] = {id = 5, NameZh = '机匠机甲女银河战士版playshow', Path = 'Skill/MagicGear_PS01_F', EPID = 2, EPFollow = 1, Loop = 1},
+}
+return Table_ActionEffectSetUp

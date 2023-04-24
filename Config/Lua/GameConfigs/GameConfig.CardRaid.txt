@@ -1,0 +1,53 @@
+GameConfig.CardRaid = {
+     enterlevel = 60,
+     begin_reset_time = 5 * 3600,    --每周开始重置时间(距离本周一0点时间差, 下同)
+     end_reset_time = 6 * 3600,      --每周重置完成时间
+     raid_card_suit = 3,             --每个副本卡牌套数
+     boss_card_num = 3,              --boss卡的数量
+     monster_card_num = 36,          --小怪卡的总数(包括普通小怪和小怪组合中的小怪)
+     max_same_monster = 6,           --小怪卡最多重复的数量
+     item_and_env_num = 21,          --环境卡与道具卡的数量-
+     min_item_num = 12,              --道具卡最少的数量
+     min_env_num = 6,                --环境卡最少的数量
+     max_same_env_item_num = 3,      --环境卡和道具卡最多重复出现的数量
+     boss_group_index = {5,12,18},   --boss组的位置(第几组)
+ 
+     play_card_interval = 30,        --敌方npc打牌间隔-
+     friend_card_delay = 5,          --友方npc在敌方npc打牌结束后, 延迟出牌时间
+     card_finish_close = 300,        --打牌结束后, 倒计时关闭时间
+     friend_npc_id = 5655,           --友方NpcID
+     enemy_npc_id = 5654,            --敌方NpcID-
+     sandglass_npc_id = 5669,        --沙漏NpcID-
+     prepare_card_time = 5,          --点击开始后到第一次打牌准备时间
+     enemy_npc_pos = {-1.69, 3.22, 18.32},     --开始打牌后, 敌方Npc传送到的位置
+ 	 enemy_npc_dir = 142,            --敌方NPC传送后的角度
+     safe_central_pos = {0.40, 4.24, 0.76},     --安全区中心位置
+     safe_range = {13,9,6,3,0},      --毒圈收缩范围
+     posion_effect = {
+       [1] = "Skill/Cardroom_Methane_004", [2] = "Skill/Cardroom_Methane_003",
+       [3] = "Skill/Cardroom_Methane_002", [4] = "Skill/Cardroom_Methane_001"
+     },                              -- 毒圈特效
+	 sandglass_action = {3001, 4001, 6001, 7001},  --毒圈开始收缩后播放的动作
+     posion_buff = {160259},         --毒buff
+     safe_shrink_interval = 60,      --毒圈收缩时间间隔(秒)
+     card_pos = { {-3.41, 3.94, 5.35}, {-5.49, 3.94, 0.81}, {-3.40, 3.94, -3.62} }, --敌方npc打牌点(刷怪)
+
+     invitemsg = 115,   --邀请信息
+     play_card_action = {
+      [5654] = 215,
+      [5655] = 215,
+     },
+     
+	 normal_card_npc = 5665,         --卡牌表现NpcID, 非boss 
+     boss_card_npc = 5666,           --卡牌表现NpcID, boss 
+     card_npc_show_time = 2,         --卡牌出现到招怪时间 
+     card_npc_stay_time = 1,         --卡牌npc, 从招怪到删除时间 
+     friend_card_pos = {6.17, 3.95, 0.59},      --友方npc打牌点 
+     max_reward_count = 1,         --每周每个难度通关后获得奖励次数
+     item_disp_time = 66,            --友方道具消失时间
+     sit_action = 214,               --NPC坐姿播放动作
+     pre_goto_effect = { effect = "Skill/Teleport", effectpos = 0},         --传送前特效
+     end_goto_effect = { effect = "Skill/SpreadMagic", effectpos = 3},      --传送后特效
+     enemy_card_dir = 180,           --卡牌方向
+     max_valid_dis = 15,             --最大活动区域  强制拉回临界点
+ }

@@ -1,0 +1,5 @@
+--商人低价买进、高价出售
+--GameConfig.Business = {
+  --BuyCheapSkillId = 264001,
+  --SellExpensiveSkillId = 265001,
+--}

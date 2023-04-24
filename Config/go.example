@@ -1,0 +1,17 @@
+#!/bin/sh
+
+pfName=$1
+regionName=$2
+zoneName=$3
+
+echo $pfName $regionName $zoneName
+
+#./TradeServer -nTradeServer -d -pxd -rr14
+grep Server ServerConfig.xml | grep reg |awk -F'"' '{print "./" $2 " -d -n" $4 " -p'$pfName' -r'$regionName' "}' | bash
+
+#./SuperServer -nSuperServer -d -p$pfName -s$zoneName
+grep Server ServerConfig.xml | grep type | sed -e "s/^.*type=\"//" -e "s/\" name=\"/ /" -e "s/\".*$//" | awk '{print "./" $1 " -d -n" $2 " -p'$pfName' -r'$regionName' -s'$zoneName'"}' | sed -e "/SessionServer/asleep 1" | bash
+
+if [ "$zoneName" == "s1" ]; then
+./trade/bin/trade-server -d --local -p$pfName -r$regionName
+fi

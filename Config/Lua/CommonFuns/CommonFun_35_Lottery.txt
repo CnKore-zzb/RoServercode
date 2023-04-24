@@ -1,0 +1,82 @@
+
+---------------------扭蛋价格
+--计算扭蛋需要的扭蛋币价格
+--tp:扭蛋类型 2：装备 3:卡片
+--count:今天已经扭蛋的次数
+function CommonFun.calcLotteryCost(tp, count)
+  if tp == 2 then     --装备
+    if count == 0 then 
+      return 10
+    elseif count == 1 then 
+      return 15
+    elseif count == 2 then 
+      return 20
+    elseif count == 3 then 
+      return 35
+    else
+      return 50
+    end
+  end   
+
+  if tp == 3 then     --卡片
+    if count == 0 then 
+      return 30
+    elseif count == 1 then 
+      return 60
+    elseif count == 2 then 
+      return 100
+    elseif count == 3 then 
+      return 150
+    else
+      return 200
+    end
+  end   
+
+  return 0   
+end
+
+
+--计算精炼等级额外回收的扭蛋券个数
+--itemid:物品id（暂未用）
+--refinelv:精炼等级
+--damge:破损（暂未用）
+--type:返回类型，1:头饰 2：装备
+function CommonFun.calcRefineRecovery(itemid, refinelv, damge,type)
+ --装备精炼系数 
+  local refineparam = {
+    [1] = 0,
+    [2] = 0,
+    [3] = 0,
+    [4] = 0,
+    [5] = 1.2,
+    [6] = 1.4,
+    [7] = 1.6,
+    [8] = 2.2,
+    [9] = 3.4,
+    [10] = 5,
+    [11] = 7.4,
+    [12] = 12.4,
+    [13] = 19.8,
+    [14] = 35.2,
+    [15] = 57.4
+  }
+  local ItemCount = 0
+  local CountRatio = 0
+
+--判断类型
+  if type==1 then
+    CountRatio = 3
+  elseif  type==2 then
+    CountRatio = 2
+  else
+    CountRatio = 2
+  end
+
+  if  refineparam[refinelv] == nil then
+    return 0
+  else
+    ItemCount = CountRatio * refineparam[refinelv]
+    return math.floor(ItemCount)
+  end
+
+end

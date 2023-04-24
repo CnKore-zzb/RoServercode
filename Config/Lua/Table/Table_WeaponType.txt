@@ -1,0 +1,18 @@
+--md5:a3f0e0e86621a6be4177ae54f5ad7374
+Table_WeaponType = { 
+	[1] = {id = 1, NameZh = '剑', NameEn = 'Sword', Class = '十字军', SE_hit = 'Weapon/Sword_hit', SE_miss = 'Weapon/Sword_miss'},
+	[2] = {id = 2, NameZh = '长矛', NameEn = 'Spear', Class = '骑士', SE_hit = 'Weapon/Spear_hit', SE_miss = 'Weapon/Spear_miss'},
+	[3] = {id = 3, NameZh = '法杖', NameEn = 'Staff', Class = '法师', SE_hit = 'Weapon/Staff_hit', SE_miss = 'Weapon/Staff_miss'},
+	[4] = {id = 4, NameZh = '锤', NameEn = 'Mace', Class = '牧师', SE_hit = 'Weapon/Mace_hit', SE_miss = 'Weapon/Mace_miss'},
+	[5] = {id = 5, NameZh = '拳刃', NameEn = 'Katar', Class = '刺客', SE_hit = 'Weapon/Katar_hit', SE_miss = 'Weapon/Katar_miss'},
+	[6] = {id = 6, NameZh = '弓', NameEn = 'Bow', Class = '猎人', SE_hit = 'Weapon/Bow_hit', SE_miss = 'Weapon/Bow_miss'},
+	[7] = {id = 7, NameZh = '斧', NameEn = 'Axe', Class = '铁匠', SE_hit = 'Weapon/Axe_hit', SE_miss = 'Weapon/Axe_miss'},
+	[8] = {id = 8, NameZh = '书', NameEn = 'Book', Class = '贤者', SE_hit = 'Weapon/Book_hit', SE_miss = 'Weapon/Book_miss'},
+	[9] = {id = 9, NameZh = '匕首', NameEn = 'Knife', Class = '流氓', SE_hit = 'Weapon/Knife_hit', SE_miss = 'Weapon/Knife_miss'},
+	[10] = {id = 10, NameZh = '乐器', NameEn = 'MusicalInstrument', Class = '诗人', SE_hit = 'Weapon/MusicalInstrument_hit', SE_miss = 'Weapon/MusicalInstrument_miss'},
+	[11] = {id = 11, NameZh = '鞭子', NameEn = 'Whip', Class = '舞娘', SE_hit = 'Weapon/Whip_hit', SE_miss = 'Weapon/Whip_miss'},
+	[12] = {id = 12, NameZh = '试管', NameEn = 'TestTube', Class = '炼金术士', SE_hit = 'Weapon/TestTube_hit', SE_miss = 'Weapon/TestTube_miss'},
+	[13] = {id = 13, NameZh = '拳套', NameEn = 'Knuckle', Class = '武僧', SE_hit = 'Weapon/Knuckle_hit', SE_miss = 'Weapon/Knuckle_miss'},
+	[14] = {id = 14, NameZh = '盾牌', NameEn = 'Shield', Class = '十字军', SE_hit = 'Weapon/Shield_hit', SE_miss = 'Weapon/Shield_miss'},
+}
+return Table_WeaponType

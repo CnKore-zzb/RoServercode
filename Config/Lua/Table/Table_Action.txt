@@ -1,0 +1,17 @@
+--md5:42aa363e76bc40a382b1e84400cd68e0
+Table_Action = { 
+	[1000] = {id = 1000, actions = {type="sysmsg",params={id=3300}}, desc = '提示目标谁对他使用了什么道具'},
+	[1001] = {id = 1001, actions = {type="playeffect",params={id=3,time=2}}, desc = '播放成功的特效'},
+	[1002] = {id = 1002, actions = {type="exp",params={method="add_base",script="calcAdventureGuideBaseExp"}}, desc = '使目标增加base经验'},
+	[1003] = {id = 1003, actions = {type="exp",params={method="add_job",script="calcAdventureGuideJobExp"}}, desc = '使目标增加job经验'},
+	[1004] = {id = 1004, actions = {type="buff",params={method="add",id=1540}}, desc = '使目标获得BUFF：冒险知识消化中，通过击杀魔物获得的job与base经验增加70%。'},
+	[1100] = {id = 1100, actions = {type="sysmsg",params={id=3300}}, desc = '提示目标谁对他使用了什么道具'},
+	[1101] = {id = 1101, actions = {type="playeffect",params={id=4,time=2}}, desc = '播放特效'},
+	[1102] = {id = 1102, actions = {type="playeffect",params={id=5,time=3}}, desc = '播放特效'},
+	[1103] = {id = 1103, actions = {type="playeffect",params={id=6,time=4}}, desc = '播放特效'},
+	[1104] = {id = 1104, actions = {type="playeffect",params={id=7,time=5}}, desc = '播放特效'},
+	[1105] = {id = 1105, actions = {type="playeffect",params={id=8,time=6}}, desc = '播放特效'},
+	[1106] = {id = 1106, actions = {type="playeffect",params={id=9,time=7}}, desc = '播放特效'},
+	[1107] = {id = 1107, actions = {type="buff",params={method="add",id=1550}}, desc = '使目标获得BUFF：六维各自增加20。'},
+}
+return Table_Action

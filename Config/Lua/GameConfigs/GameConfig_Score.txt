@@ -1,0 +1,91 @@
+--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+--胜利结算人物位置
+GameConfig.MultiModelTrans = {
+	--人数为3，5的排列方式
+	  part = {
+		  [1] = {
+			position ={-0.53, 0.1, 2},
+			rotation = {0, -20.46, 0},
+			action = {"victory",2},
+			actions = {[1] = {"play_kiss",3},[2] = {"play_clap",2},[3] = {"play_bow",4},[4] = {"play_wave",5}},
+				failedAction = "die",
+		      },
+
+		  [2] = {
+			position = {-1.68, 0.1, 1.57},
+			rotation = {0, -13.03, 0},
+			action = {"victory",2},
+			actions = {[1] = {"play_kiss",3},[2] = {"play_clap",2},[3] = {"play_bow",4},[4] = {"play_wave",5}},
+				failedAction = "die",
+		      },
+		  [3] = {
+			position = {0.63, 0.1, 1.64},
+			rotation = {0, -36.73, 0},
+			action = {"victory",2},
+			actions = {[1] = {"play_kiss",3},[2] = {"play_clap",2},[3] = {"play_bow",4},[4] = {"play_wave",5}},
+				failedAction = "die",
+		      },
+		  [4] = {
+			position = {-2.81, 0.1, 1.148},
+			rotation = {0, -3.24, 0},
+			action = {"victory",2},
+			actions = {[1] = {"play_kiss",3},[2] = {"play_clap",2},[3] = {"play_bow",4},[4] = {"play_wave",5}},
+				failedAction = "die",
+		      },
+		  [5] = {
+			position = {1.812, 0.1, 2.87},
+			rotation = {1.75, -49.28, 1.348},
+			action = {"victory",2},
+			actions = {[1] = {"play_kiss",3},[2] = {"play_clap",2},[3] = {"play_bow",4},[4] = {"play_wave",5}},
+				failedAction = "die",
+		      },
+	},
+	--人数为2，4，6的排列方式
+	total = {
+		  [1] = {
+			position ={0.9, 0, 0.16},
+			rotation = {0, -34, 0},
+			action = {"victory",2},
+			actions = {[1] = {"play_kiss",3},[2] = {"play_clap",2},[3] = {"play_bow",4},[4] = {"play_wave",5}},
+				failedAction = "die",
+		      },
+
+		  [2] = {
+			position = {-0.42, 0, -0.3},
+			rotation = {0, -14.76001, 0},
+			action = {"victory",2},
+			actions = {[1] = {"play_kiss",3},[2] = {"play_clap",2},[3] = {"play_bow",4},[4] = {"play_wave",5}},
+				failedAction = "die",
+		      },
+		  [3] = {
+			position = {2.12, 0, 0.93},
+			rotation = {0, -42.29999, 0},
+			action = {"victory",2},
+			actions = {[1] = {"play_kiss",3},[2] = {"play_clap",2},[3] = {"play_bow",4},[4] = {"play_wave",5}},
+				failedAction = "die",
+		      },
+		  [4] = {
+			position = {-1.73, 0, -0.36},
+			rotation = {0, 2.23, 0},
+			action = {"victory",2},
+			actions = {[1] = {"play_kiss",3},[2] = {"play_clap",2},[3] = {"play_bow",4},[4] = {"play_wave",5}},
+				failedAction = "die",
+		      },
+		  [5] = {
+			position = {3.01, 0, 1.82},
+			rotation = {0, -52.94, 0},
+			action = {"victory",2},
+			actions = {[1] = {"play_kiss",3},[2] = {"play_clap",2},[3] = {"play_bow",4},[4] = {"play_wave",5}},
+				failedAction = "die",
+		      },
+		  [6] = {
+			position = {-2.89, 0, -0.28},
+			rotation = {0, 17.67, 0},
+			action = {"victory",2},
+			actions = {[1] = {"play_kiss",3},[2] = {"play_clap",2},[3] = {"play_bow",4},[4] = {"play_wave",5}},
+				failedAction = "die",
+		  },
+	},
+}

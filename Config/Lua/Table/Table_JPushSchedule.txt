@@ -1,0 +1,12 @@
+--md5:1ab3ecd12bad35ca8d4f017b47bfa0d9
+Table_JPushSchedule = { 
+	[1] = {id = 1, Message = '★星怪★入侵，请冒险家尽快前往歼灭！', Start = '2020-05-01 05:00:00', End = '', Time = '20:28:00', TimeUnit = 'day', Frequency = 1, Point = {}, Tag = {"Star"}},
+	[100] = {id = 100, Message = '蓄势待发，公会战即将打响！', Start = '2020-05-01 05:00:00', End = '', Time = '20:58:00', TimeUnit = 'week', Frequency = 1, Point = {"THU"}, Tag = {"Guild"}},
+	[101] = {id = 101, Message = '为荣誉而战！公会战决战即将开启！', Start = '2020-05-01 05:00:00', End = '', Time = '20:58:00', TimeUnit = 'week', Frequency = 1, Point = {"SUN"}, Tag = {"Guild"}},
+	[150] = {id = 150, Message = 'B格猫飞船准备停靠，快来阻止B格猫的入侵！', Start = '2020-05-01 05:00:00', End = '', Time = '19:58:01', TimeUnit = 'week', Frequency = 1, Point = {"SAT"}, Tag = {"Bigcat"}},
+	[151] = {id = 151, Message = '卡普拉公司：我司六大元气美少女被魔王掳走，目前下落不明,请冒险者们立刻集结一同拯救卡普拉小姐姐们', Start = '2020-05-01 05:00:00', End = '', Time = '19:48:00', TimeUnit = 'week', Frequency = 1, Point = {"TUE"}, Tag = {"Bigcat"}},
+	[152] = {id = 152, Message = '【MVP争夺战】已开放报名，和你的战友们并肩作战吧！', Start = '2020-05-01 05:00:00', End = '', Time = '68280', TimeUnit = 'week', Frequency = 1, Point = {"FRI"}, Tag = {"Bigcat"}},
+	[170] = {id = 170, Message = '今晚拍品已定，看看有没有你心仪的商品吧！', Start = '2020-05-01 05:00:00', End = '', Time = '11:58:00', TimeUnit = 'week', Frequency = 1, Point = {"FRI"}, Tag = {"Auction"}},
+	[200] = {id = 200, Message = '魔法乱流正在涌动，变身波利一起大乱斗吧！', Start = '2020-05-01 05:00:00', End = '', Time = '19:58:00', TimeUnit = 'week', Frequency = 1, Point = {"WED"}, Tag = {"Polly"}},
+}
+return Table_JPushSchedule

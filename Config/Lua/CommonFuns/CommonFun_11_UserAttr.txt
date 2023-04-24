@@ -1,0 +1,738 @@
+function CommonFun.calAttrPoint( curPoint,joblv,job,attr )
+  local result={}
+  if job == 0 then
+        if joblv==1 then
+           return curPoint+joblv
+  elseif joblv==2 then
+      if attr=="Str" then
+           return curPoint+2
+        elseif attr=="Vit" then
+           return curPoint+2
+        elseif attr=="Int" then
+           return curPoint+1
+        elseif attr=="Dex" then
+           return curPoint+1
+        elseif attr=="Agi" then
+           return curPoint+1
+        elseif attr=="Luk" then
+           return curPoint+1
+        end      
+  elseif joblv==3 then
+      if attr=="Str" then
+           return curPoint+2
+        elseif attr=="Vit" then
+           return curPoint+2
+        elseif attr=="Int" then
+           return curPoint+2
+        elseif attr=="Dex" then
+           return curPoint+2
+        elseif attr=="Agi" then
+           return curPoint+1
+        elseif attr=="Luk" then
+           return curPoint+1
+        end 
+  elseif joblv==4 then
+      if attr=="Str" then
+           return curPoint+2
+        elseif attr=="Vit" then
+           return curPoint+2
+        elseif attr=="Int" then
+           return curPoint+2
+        elseif attr=="Dex" then
+           return curPoint+2
+        elseif attr=="Agi" then
+           return curPoint+2
+        elseif attr=="Luk" then
+           return curPoint+2
+        end 
+  elseif joblv==5 then
+      if attr=="Str" then
+           return curPoint+3
+        elseif attr=="Vit" then
+           return curPoint+3
+        elseif attr=="Int" then
+           return curPoint+2
+        elseif attr=="Dex" then
+           return curPoint+2
+        elseif attr=="Agi" then
+           return curPoint+2
+        elseif attr=="Luk" then
+           return curPoint+2
+        end 
+  elseif joblv==6 then
+      if attr=="Str" then
+           return curPoint+3
+        elseif attr=="Vit" then
+           return curPoint+3
+        elseif attr=="Int" then
+           return curPoint+3
+        elseif attr=="Dex" then
+           return curPoint+3
+        elseif attr=="Agi" then
+           return curPoint+2
+        elseif attr=="Luk" then
+           return curPoint+2
+        end 
+  elseif joblv==7 then
+      if attr=="Str" then
+           return curPoint+3
+        elseif attr=="Vit" then
+           return curPoint+3
+        elseif attr=="Int" then
+           return curPoint+3
+        elseif attr=="Dex" then
+           return curPoint+3
+        elseif attr=="Agi" then
+           return curPoint+3
+        elseif attr=="Luk" then
+           return curPoint+3
+        end 
+  elseif joblv==8 then
+      if attr=="Str" then
+           return curPoint+4
+        elseif attr=="Vit" then
+           return curPoint+4
+        elseif attr=="Int" then
+           return curPoint+3
+        elseif attr=="Dex" then
+           return curPoint+3
+        elseif attr=="Agi" then
+           return curPoint+3
+        elseif attr=="Luk" then
+           return curPoint+3
+        end 
+  elseif joblv==9 then
+      if attr=="Str" then
+           return curPoint+4
+        elseif attr=="Vit" then
+           return curPoint+4
+        elseif attr=="Int" then
+           return curPoint+4
+        elseif attr=="Dex" then
+           return curPoint+4
+        elseif attr=="Agi" then
+           return curPoint+3
+        elseif attr=="Luk" then
+           return curPoint+3
+        end 
+  elseif joblv==10 then
+      if attr=="Str" then
+           return curPoint+4
+        elseif attr=="Vit" then
+           return curPoint+4
+        elseif attr=="Int" then
+           return curPoint+4
+        elseif attr=="Dex" then
+           return curPoint+4
+        elseif attr=="Agi" then
+           return curPoint+4
+        elseif attr=="Luk" then
+           return curPoint+4
+        end 
+  end     
+  end
+ 
+    return curPoint + CommonFun.calProfessionPropValue(joblv, job, attr)
+   
+end
+------------------------------------------------------------------------职业等级 素质点 加成
+function CommonFun.calProfessionPropValue(joblv, job, attr)
+  if(GameConfig.AttrRatio[job] == nil )then
+    return 0
+  end
+  if(GameConfig.AttrValue[job] == nil )then
+    return 0
+  end
+
+  if joblv<=170 then
+    return math.floor((joblv-10)/160*(GameConfig.AttrRatio[job][attr]-0.5)+0.5)+1
+  elseif joblv>170 and joblv<=200 then 
+    return GameConfig.AttrRatio[job][attr]+math.floor((joblv-170)/30*(GameConfig.AttrValue[job][attr]))+1
+  elseif joblv>200 then
+    return GameConfig.AttrRatio[job][attr]+GameConfig.AttrValue[job][attr]+math.floor((joblv-200)/20*(GameConfig.Attr220Value[job][attr]))+1
+  end
+
+end
+
+-- 传入一个32位整数, 返回32位数组
+function CommonFun.getBits(arg)  
+    arg = arg or 0
+    local bits ={}  
+    for i=1,32 do  
+        if arg >= CommonFun.data32[i] then  
+            bits[33- i]=1  
+            arg=arg-CommonFun.data32[i]  
+        else  
+            bits[33- i]=0  
+        end  
+    end  
+    return bits 
+end 
+
+
+----------计算战斗力（已经弃用）
+--function CommonFun.calcBattlePoint(attr, lv, profession, weapon, skillbt)
+  --local total, extra = CommonFun.calcUserAttrValue(attr, lv, profession, weapon)
+  --local maxhp = total[CommonFun.RoleData.EATTRTYPE_SHOWMAXHP]
+  --local atk = total[CommonFun.RoleData.EATTRTYPE_SHOWATK]
+  --local matk = total[CommonFun.RoleData.EATTRTYPE_SHOWMATK]
+  --local def = total[CommonFun.RoleData.EATTRTYPE_SHOWDEF]
+  --local mdef = total[CommonFun.RoleData.EATTRTYPE_SHOWMDEF]
+  --local hit = total[CommonFun.RoleData.EATTRTYPE_SHOWHIT]
+  --local flee = total[CommonFun.RoleData.EATTRTYPE_SHOWFLEE]
+  --local cri = total[CommonFun.RoleData.EATTRTYPE_SHOWCRI]
+  --local crires = total[CommonFun.RoleData.EATTRTYPE_SHOWCRIRES]
+  --local atkspd = total[CommonFun.RoleData.EATTRTYPE_SHOWATKSPD]
+  --local movespd = total[CommonFun.RoleData.EATTRTYPE_SHOWMOVESPD]
+  --local castspd = total[CommonFun.RoleData.EATTRTYPE_SHOWCASTSPD]
+  --local restorespd = total[CommonFun.RoleData.EATTRTYPE_SHOWRESTORESPD]
+
+  --return maxhp*5 + (atk + matk) / 2 + (def + mdef) + hit + flee + cri*2 + crires*2 + atkspd*10 + movespd*10
+  --      + castspd*10 + restorespd*10 + skillbt*5
+--end
+
+-- user attribute
+function CommonFun.checkRemoteAtk( profession ,WeaponType)
+  ---------------------------------------------------------------流氓穿戴弓时是远程职业
+  if (profession==92 or profession==93 or profession==94) and WeaponType==210 then
+    return true
+  end
+
+  for k,v in pairs(GameConfig.Atkcalculate) do
+    if(v == profession) then
+      return true
+    end
+  end
+end
+
+-----------等差数列求和（已经弃用）
+function CommonFun.CalcSum(num)
+   local result=0
+   for i=num,0,-1 do
+    result=result+i
+   end
+   return result
+end
+
+----------------------------（已经弃用）武器基本攻速(170--长矛;180---剑;190---法杖;200---拳刃;210---弓;220---锤子;230---斧头;240---书;250---匕首;260---乐器;270---鞭子;280---试管;290---拳套)
+function CommonFun.WeaponAtkSpd(type,profession)
+  if type==170 then
+     return SpearAtkSpd[profession]
+  elseif type==180 then
+     return SwordAtkSpd[profession]
+  elseif type==190 then
+     return StaffAtkSpd[profession] 
+  elseif type==200 then
+     return KatarAtkSpd[profession]
+  elseif type==210 then
+     return BowAtkSpd[profession]   
+  elseif type==220 then
+     return MaceAtkSpd[profession] 
+  elseif type== 230 then
+     return AxeAtkSpd[profession]   
+  elseif type==250 then
+     return KnifeAtkSpd[profession]
+  elseif type==290 then
+     return FistAtkSpd[profession]    
+  elseif type==510 or type==511 or type==512 or type==513 or type==514 or type==515 then
+     return ShieldAtkSpd[profession]   
+  end
+  return 0
+end
+
+function CommonFun.calcUserShowAttr(attr,profession,lv,WeaponType)
+  local showresult={}
+  if CommonFun.checkRemoteAtk(profession,WeaponType) then
+    showresult[CommonFun.RoleData.EATTRTYPE_ATK] = attr[CommonFun.RoleData.EATTRTYPE_DEX]*2+math.floor(attr[CommonFun.RoleData.EATTRTYPE_DEX]*attr[CommonFun.RoleData.EATTRTYPE_DEX]/100)+math.floor(attr[CommonFun.RoleData.EATTRTYPE_STR]/5)+math.floor(attr[CommonFun.RoleData.EATTRTYPE_LUK]/5)
+  else
+    showresult[CommonFun.RoleData.EATTRTYPE_ATK] = attr[CommonFun.RoleData.EATTRTYPE_STR]*2+math.floor(attr[CommonFun.RoleData.EATTRTYPE_STR]*attr[CommonFun.RoleData.EATTRTYPE_STR]/100)+math.floor(attr[CommonFun.RoleData.EATTRTYPE_DEX]/5)+math.floor(attr[CommonFun.RoleData.EATTRTYPE_LUK]/5)
+  end
+  showresult[CommonFun.RoleData.EATTRTYPE_DEF]  = attr[CommonFun.RoleData.EATTRTYPE_VIT]
+  showresult[CommonFun.RoleData.EATTRTYPE_MATK] = attr[CommonFun.RoleData.EATTRTYPE_INT]*2+math.floor(attr[CommonFun.RoleData.EATTRTYPE_INT]*attr[CommonFun.RoleData.EATTRTYPE_INT]/100)
+  showresult[CommonFun.RoleData.EATTRTYPE_MDEF] = attr[CommonFun.RoleData.EATTRTYPE_INT]
+  showresult[CommonFun.RoleData.EATTRTYPE_HIT]  = attr[CommonFun.RoleData.EATTRTYPE_DEX]
+  showresult[CommonFun.RoleData.EATTRTYPE_FLEE] = attr[CommonFun.RoleData.EATTRTYPE_AGI]
+  showresult[CommonFun.RoleData.EATTRTYPE_CRI]  = math.floor(attr[CommonFun.RoleData.EATTRTYPE_LUK]/3)
+  showresult[CommonFun.RoleData.EATTRTYPE_CRIRES] = math.floor(attr[CommonFun.RoleData.EATTRTYPE_LUK]/5)
+  showresult[CommonFun.RoleData.EATTRTYPE_ATKSPD] = attr[CommonFun.RoleData.EATTRTYPE_AGI]/100
+  showresult[CommonFun.RoleData.EATTRTYPE_CASTSPD] = attr[CommonFun.RoleData.EATTRTYPE_DEX]/30
+  showresult[CommonFun.RoleData.EATTRTYPE_RESTORESPD] = math.floor(attr[CommonFun.RoleData.EATTRTYPE_VIT]/5)
+  showresult[CommonFun.RoleData.EATTRTYPE_SPRESTORESPD] = math.floor(attr[CommonFun.RoleData.EATTRTYPE_INT]/6)
+  return showresult
+   
+end
+
+function CommonFun.calcUserAttrValue(attr,lv,profession,type,map)
+  local result = {}
+  local extra = {}
+
+  -- protect
+  if profession == 0 then
+    return result, extra
+  end
+ 
+  if  attr[CommonFun.RoleData.EATTRTYPE_DEX] < 0 then
+      
+      attr[CommonFun.RoleData.EATTRTYPE_DEX] = 0
+      result[CommonFun.RoleData.EATTRTYPE_DEX] = 0
+  end    
+
+  if  attr[CommonFun.RoleData.EATTRTYPE_STR] < 0 then
+      
+      attr[CommonFun.RoleData.EATTRTYPE_STR] = 0
+      result[CommonFun.RoleData.EATTRTYPE_STR] = 0
+  end    
+
+  if  attr[CommonFun.RoleData.EATTRTYPE_VIT] < 0 then
+      
+      attr[CommonFun.RoleData.EATTRTYPE_VIT] = 0
+      result[CommonFun.RoleData.EATTRTYPE_VIT] = 0
+  end    
+
+  if  attr[CommonFun.RoleData.EATTRTYPE_INT] < 0 then
+      
+      attr[CommonFun.RoleData.EATTRTYPE_INT] = 0
+      result[CommonFun.RoleData.EATTRTYPE_INT] = 0
+  end    
+
+  if  attr[CommonFun.RoleData.EATTRTYPE_AGI] < 0 then
+      
+      attr[CommonFun.RoleData.EATTRTYPE_AGI] = 0
+      result[CommonFun.RoleData.EATTRTYPE_AGI] = 0
+  end    
+
+  if  attr[CommonFun.RoleData.EATTRTYPE_LUK] < 0 then
+      
+      attr[CommonFun.RoleData.EATTRTYPE_LUK] = 0
+      result[CommonFun.RoleData.EATTRTYPE_LUK] = 0
+  end    
+
+
+
+
+  ----------玩家素质物理攻击计算公式（已经弃用）
+  if CommonFun.checkRemoteAtk(profession,type) then
+    extra[CommonFun.RoleData.EATTRTYPE_ATK] = attr[CommonFun.RoleData.EATTRTYPE_DEX]*2+math.floor(attr[CommonFun.RoleData.EATTRTYPE_DEX]*attr[CommonFun.RoleData.EATTRTYPE_DEX]/100)+math.floor(attr[CommonFun.RoleData.EATTRTYPE_STR]/5)+math.floor(attr[CommonFun.RoleData.EATTRTYPE_LUK]/5) + BaseLvAtkRate1[profession]*lv
+  else
+    extra[CommonFun.RoleData.EATTRTYPE_ATK] = attr[CommonFun.RoleData.EATTRTYPE_STR]*2+math.floor(attr[CommonFun.RoleData.EATTRTYPE_STR]*attr[CommonFun.RoleData.EATTRTYPE_STR]/100)+math.floor(attr[CommonFun.RoleData.EATTRTYPE_DEX]/5)+math.floor(attr[CommonFun.RoleData.EATTRTYPE_LUK]/5) + BaseLvAtkRate1[profession]*lv
+  end
+  ----------玩家素质物理防御计算公式（已经弃用）
+  extra[CommonFun.RoleData.EATTRTYPE_DEF] = attr[CommonFun.RoleData.EATTRTYPE_VIT]
+
+  ----------玩家素质魔法攻击计算公式（已经弃用）
+  extra[CommonFun.RoleData.EATTRTYPE_MATK] = attr[CommonFun.RoleData.EATTRTYPE_INT]*2+math.floor(attr[CommonFun.RoleData.EATTRTYPE_INT]*attr[CommonFun.RoleData.EATTRTYPE_INT]/100)
+  
+  ----------玩家素质魔法防御计算公式（已经弃用）
+  extra[CommonFun.RoleData.EATTRTYPE_MDEF] = attr[CommonFun.RoleData.EATTRTYPE_INT]
+  
+  ----------玩家素质生命上限计算公式（已经弃用）
+  extra[CommonFun.RoleData.EATTRTYPE_MAXHP] = (100+lv*BaseLvRate[profession]+CommonFun.CalcSum(lv)*HpRate[profession]+BaseHp[profession])*(1+attr[CommonFun.RoleData.EATTRTYPE_VIT]/100)
+  
+  ----------玩家素质魔法上限计算公式（已经弃用）
+  extra[CommonFun.RoleData.EATTRTYPE_MAXSP]= (20+(lv*GameConfig.NewRole.recover[profession].sp))*(1+attr[CommonFun.RoleData.EATTRTYPE_INT]/100)
+  
+  ----------玩家素质命中计算公式（已经弃用）
+  extra[CommonFun.RoleData.EATTRTYPE_HIT]  = lv+attr[CommonFun.RoleData.EATTRTYPE_DEX]
+
+  ----------玩家素质闪避计算公式（已经弃用）
+  extra[CommonFun.RoleData.EATTRTYPE_FLEE] = lv+attr[CommonFun.RoleData.EATTRTYPE_AGI]
+
+  ----------玩家素质暴击计算公式（已经弃用）
+  extra[CommonFun.RoleData.EATTRTYPE_CRI] = 1+math.floor(attr[CommonFun.RoleData.EATTRTYPE_LUK]/3)
+
+  ----------玩家素质防暴计算公式（已经弃用）
+  extra[CommonFun.RoleData.EATTRTYPE_CRIRES] =1+math.floor(attr[CommonFun.RoleData.EATTRTYPE_LUK]/5)
+
+  ----------玩家素质爆伤计算公式（已经弃用）
+  extra[CommonFun.RoleData.EATTRTYPE_CRIDAMPER] = 0
+
+  ----------玩家素质爆伤防护计算公式（已经弃用）
+  extra[CommonFun.RoleData.EATTRTYPE_CRIDEFPER] = 0
+ 
+  ----------玩家素质移动速度计算公式（已经弃用）
+  extra[CommonFun.RoleData.EATTRTYPE_MOVESPD] = 1
+
+  ----------玩家素质吟唱速度计算公式（已经弃用）
+  extra[CommonFun.RoleData.EATTRTYPE_CASTSPD] = attr[CommonFun.RoleData.EATTRTYPE_DEX]/30
+  
+  ----------玩家物理攻击百分比计算公式（已经弃用）
+  extra[CommonFun.RoleData.EATTRTYPE_ATKPER] = 0
+
+  ----------玩家物理防御百分比计算公式（已经弃用）
+  extra[CommonFun.RoleData.EATTRTYPE_DEFPER] = 0
+  
+  ----------玩家魔法攻击百分比计算公式（已经弃用）
+  extra[CommonFun.RoleData.EATTRTYPE_MATKPER] = 0
+
+  ----------玩家魔法防御百分比计算公式（已经弃用）
+  extra[CommonFun.RoleData.EATTRTYPE_MDEFPER] = 0
+  
+  ----------玩家素质生命上限百分比计算公式（已经弃用）
+  extra[CommonFun.RoleData.EATTRTYPE_MAXHPPER] = 0
+
+  ----------玩家素质魔法上限百分比计算公式（已经弃用）
+  extra[CommonFun.RoleData.EATTRTYPE_MAXSPPER] = 0
+  
+    ----------玩家素质物理精炼计算公式（已经弃用）
+  extra[CommonFun.RoleData.EATTRTYPE_REFINE] = 0
+
+  ----------玩家素质魔法精炼计算公式（已经弃用）
+  extra[CommonFun.RoleData.EATTRTYPE_MREFINE] = 0
+  
+  ----------玩家素质生命恢复计算公式（已经弃用）
+  extra[CommonFun.RoleData.EATTRTYPE_RESTORESPD] = math.floor(attr[CommonFun.RoleData.EATTRTYPE_VIT]/5)
+  
+  ----------玩家素质魔法恢复计算公式（已经弃用）
+  extra[CommonFun.RoleData.EATTRTYPE_SPRESTORESPD] = 1 + math.floor(attr[CommonFun.RoleData.EATTRTYPE_INT]/6)
+
+  extra[CommonFun.RoleData.EATTRTYPE_EQUIPASPD] = 0
+  
+  extra[CommonFun.RoleData.EATTRTYPE_SKILLASPD] = 0
+  
+  
+ -------------------------------------------------------------------------玩家最终属性（已经弃用）
+  --------装备攻击速度和技能攻击速度的最终计算公式
+  result[CommonFun.RoleData.EATTRTYPE_EQUIPASPD]=extra[CommonFun.RoleData.EATTRTYPE_EQUIPASPD]+attr[CommonFun.RoleData.EATTRTYPE_EQUIPASPD]
+  --if result[CommonFun.RoleData.EATTRTYPE_EQUIPASPD] >= 0.3 then
+     --result[CommonFun.RoleData.EATTRTYPE_EQUIPASPD] = 0.3
+  --end
+  result[CommonFun.RoleData.EATTRTYPE_SKILLASPD]=extra[CommonFun.RoleData.EATTRTYPE_SKILLASPD]+attr[CommonFun.RoleData.EATTRTYPE_SKILLASPD]
+  --if result[CommonFun.RoleData.EATTRTYPE_SKILLASPD] >= 0.5 then
+     --result[CommonFun.RoleData.EATTRTYPE_SKILLASPD] = 0.5
+  --end
+
+  ----------玩家素质攻击速度计算公式
+  ----------最终ASPD=ASPD值+装备ASPD值
+  ----------ASPD值=取整((200-(200-(职业基础ASPD+盾牌ASPD-ASPD校验值+开方((敏捷总和*9.999)+(灵巧总和*0.19212))*ASPD惩罚值))*(1-ASPD药水部分-技能ASPD修正)),3)
+  ----------装备ASPD值=取整((195-ASPD值)*装备ASPD修正),2)
+  ----------ASPD校验值=IF(敏捷总和<205,向上取整((开方(205)-开方(敏捷总和))/7.15,3),0)
+  ----------ASPD惩罚值=IF(职业基础ASPD>145,1-(职业基础ASPD-144)/50,0.96)
+  ----------每秒攻击次数=50/(200-取整(最终ASPD,0))
+  local ASPD_CHCEKVALUE=0
+    if attr[CommonFun.RoleData.EATTRTYPE_AGI]<205 then
+       ASPD_CHCEKVALUE=math.floor((math.sqrt(205)-math.sqrt(attr[CommonFun.RoleData.EATTRTYPE_AGI]))*1000/7.15)/1000
+    else
+       ASPD_CHCEKVALUE=0
+    end
+  local BaseJobASPD=BaseJobAtkSpd[profession]+CommonFun.WeaponAtkSpd(type,profession)
+  local ASPD_PANISHVALUE=0
+    if BaseJobASPD>145 then
+       ASPD_PANISHVALUE=1-(BaseJobASPD-144)/50
+    else
+       ASPD_PANISHVALUE=0.96
+    end      
+  extra[CommonFun.RoleData.EATTRTYPE_ATKSPD]=math.floor((200-(200-(BaseJobASPD-ASPD_CHCEKVALUE+math.sqrt(attr[CommonFun.RoleData.EATTRTYPE_AGI]*9.999)*ASPD_PANISHVALUE))*(1-result[CommonFun.RoleData.EATTRTYPE_SKILLASPD]))*1000)/1000
+  
+  local EquipASPD=math.floor((195-extra[CommonFun.RoleData.EATTRTYPE_ATKSPD])*result[CommonFun.RoleData.EATTRTYPE_EQUIPASPD]*100)/100
+
+  ----------玩家最终攻击速度计算公式（已经弃用）
+  local BaseASPD=extra[CommonFun.RoleData.EATTRTYPE_ATKSPD]+EquipASPD
+  
+  if BaseASPD >= 2275/12 then 
+     BaseASPD  = 2275/12
+  end 
+
+  if BaseASPD <= 50 then
+     BaseASPD  = 50
+  end   
+  ----------
+  result[CommonFun.RoleData.EATTRTYPE_ATKSPD] =50/(200-BaseASPD)
+  
+  if result[CommonFun.RoleData.EATTRTYPE_ATKSPD]<=0 then
+     result[CommonFun.RoleData.EATTRTYPE_ATKSPD]=0
+  end
+
+  ----------玩家最终物理攻击计算公式（已经弃用）
+  result[CommonFun.RoleData.EATTRTYPE_ATK] = extra[CommonFun.RoleData.EATTRTYPE_ATK]+attr[CommonFun.RoleData.EATTRTYPE_ATK]
+  if result[CommonFun.RoleData.EATTRTYPE_ATK]<=0 then
+     result[CommonFun.RoleData.EATTRTYPE_ATK]=0
+  end 
+  ----------玩家最终魔法攻击计算公式（已经弃用）
+  result[CommonFun.RoleData.EATTRTYPE_MATK] = extra[CommonFun.RoleData.EATTRTYPE_MATK]+attr[CommonFun.RoleData.EATTRTYPE_MATK]
+  if result[CommonFun.RoleData.EATTRTYPE_MATK]<=0 then
+     result[CommonFun.RoleData.EATTRTYPE_MATK]=0
+  end
+  ----------玩家最终物理防御计算公式（已经弃用）
+  result[CommonFun.RoleData.EATTRTYPE_DEF] = extra[CommonFun.RoleData.EATTRTYPE_DEF]+attr[CommonFun.RoleData.EATTRTYPE_DEF]
+  if result[CommonFun.RoleData.EATTRTYPE_DEF]<=0 then
+     result[CommonFun.RoleData.EATTRTYPE_DEF]=0
+  end 
+
+  ----------玩家最终魔法防御计算公式（已经弃用）
+  result[CommonFun.RoleData.EATTRTYPE_MDEF] = extra[CommonFun.RoleData.EATTRTYPE_MDEF]+attr[CommonFun.RoleData.EATTRTYPE_MDEF]
+  if result[CommonFun.RoleData.EATTRTYPE_MDEF]<=0 then
+     result[CommonFun.RoleData.EATTRTYPE_MDEF]=0
+  end  
+  ----------玩家最终命中计算公式（已经弃用）
+  result[CommonFun.RoleData.EATTRTYPE_HIT] = (extra[CommonFun.RoleData.EATTRTYPE_HIT]+attr[CommonFun.RoleData.EATTRTYPE_HIT])*(1+attr[CommonFun.RoleData.EATTRTYPE_HITPER])
+  if result[CommonFun.RoleData.EATTRTYPE_HIT]<=0 then
+     result[CommonFun.RoleData.EATTRTYPE_HIT]=0
+  end 
+  ----------玩家最终闪避计算公式（已经弃用）
+  result[CommonFun.RoleData.EATTRTYPE_FLEE] = (extra[CommonFun.RoleData.EATTRTYPE_FLEE]+attr[CommonFun.RoleData.EATTRTYPE_FLEE])*(1+attr[CommonFun.RoleData.EATTRTYPE_FLEEPER])
+  if result[CommonFun.RoleData.EATTRTYPE_FLEE]<=0 then
+     result[CommonFun.RoleData.EATTRTYPE_FLEE]=0
+  end 
+    ----------玩家最终暴击百分比计算公式（已经弃用）
+  result[CommonFun.RoleData.EATTRTYPE_CRIPER] = attr[CommonFun.RoleData.EATTRTYPE_CRIPER]
+  if result[CommonFun.RoleData.EATTRTYPE_CRIPER]<=0 then
+     result[CommonFun.RoleData.EATTRTYPE_CRIPER]=0
+  end 
+  ----------玩家最终暴击计算公式（已经弃用）
+  result[CommonFun.RoleData.EATTRTYPE_CRI] = (extra[CommonFun.RoleData.EATTRTYPE_CRI]+attr[CommonFun.RoleData.EATTRTYPE_CRI])*(1+attr[CommonFun.RoleData.EATTRTYPE_CRIPER])
+  if result[CommonFun.RoleData.EATTRTYPE_CRI]<=0 then
+     result[CommonFun.RoleData.EATTRTYPE_CRI]=0
+  end 
+  ----------玩家最终防暴计算公式（已经弃用）
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] =extra[CommonFun.RoleData.EATTRTYPE_CRIRES]+attr[CommonFun.RoleData.EATTRTYPE_CRIRES]
+  if result[CommonFun.RoleData.EATTRTYPE_CRIRES]<=0 then
+     result[CommonFun.RoleData.EATTRTYPE_CRIRES]=0
+  end
+
+  ----------玩家最终爆伤计算公式（已经弃用）
+  result[CommonFun.RoleData.EATTRTYPE_CRIDAMPER] =extra[CommonFun.RoleData.EATTRTYPE_CRIDAMPER]+attr[CommonFun.RoleData.EATTRTYPE_CRIDAMPER]
+  if result[CommonFun.RoleData.EATTRTYPE_CRIDAMPER]<=0 then
+     result[CommonFun.RoleData.EATTRTYPE_CRIDAMPER]=0
+  end
+
+  ----------玩家最终爆伤防护计算公式（已经弃用）
+  result[CommonFun.RoleData.EATTRTYPE_CRIDEFPER] = extra[CommonFun.RoleData.EATTRTYPE_CRIDEFPER]+attr[CommonFun.RoleData.EATTRTYPE_CRIDEFPER]
+  
+  if result[CommonFun.RoleData.EATTRTYPE_CRIDEFPER]<=0 then
+     result[CommonFun.RoleData.EATTRTYPE_CRIDEFPER]=0
+  end
+  
+  ----------玩家最终移动速度计算公式（已经弃用）
+  result[CommonFun.RoleData.EATTRTYPE_MOVESPD] =(extra[CommonFun.RoleData.EATTRTYPE_MOVESPD]+attr[CommonFun.RoleData.EATTRTYPE_MOVESPD])*(1+attr[CommonFun.RoleData.EATTRTYPE_MOVESPDPER])
+ 
+  if result[CommonFun.RoleData.EATTRTYPE_MOVESPD]<=0 then
+     result[CommonFun.RoleData.EATTRTYPE_MOVESPD]=0
+  end 
+  
+  ----------玩家最终吟唱速度计算公式（已经弃用）
+  result[CommonFun.RoleData.EATTRTYPE_CASTSPD] = extra[CommonFun.RoleData.EATTRTYPE_CASTSPD]+attr[CommonFun.RoleData.EATTRTYPE_CASTSPD]
+  
+  if result[CommonFun.RoleData.EATTRTYPE_CASTSPD]<=0 then
+     result[CommonFun.RoleData.EATTRTYPE_CASTSPD]=0
+  end 
+  
+  ----------玩家最终物理攻击百分比计算公式（已经弃用）
+  result[CommonFun.RoleData.EATTRTYPE_ATKPER] = extra[CommonFun.RoleData.EATTRTYPE_ATKPER]+attr[CommonFun.RoleData.EATTRTYPE_ATKPER]
+
+  if result[CommonFun.RoleData.EATTRTYPE_ATKPER]<=-1 then
+     result[CommonFun.RoleData.EATTRTYPE_ATKPER]=-1
+  end   
+  
+  ----------玩家最终物理防御百分比计算公式（已经弃用）
+  result[CommonFun.RoleData.EATTRTYPE_DEFPER] = extra[CommonFun.RoleData.EATTRTYPE_DEFPER]+attr[CommonFun.RoleData.EATTRTYPE_DEFPER]
+  
+  if result[CommonFun.RoleData.EATTRTYPE_DEFPER] <= -1 then
+     result[CommonFun.RoleData.EATTRTYPE_DEFPER]  = -1
+  end     
+  
+  ----------玩家最终魔法攻击百分比计算公式（已经弃用）
+  result[CommonFun.RoleData.EATTRTYPE_MATKPER] = extra[CommonFun.RoleData.EATTRTYPE_MATKPER]+attr[CommonFun.RoleData.EATTRTYPE_MATKPER]
+  
+  if result[CommonFun.RoleData.EATTRTYPE_MATKPER] <= -1 then
+     result[CommonFun.RoleData.EATTRTYPE_MATKPER]  = -1
+  end 
+  
+  ----------玩家最终魔法防御百分比计算公式（已经弃用）
+  result[CommonFun.RoleData.EATTRTYPE_MDEFPER] = extra[CommonFun.RoleData.EATTRTYPE_MDEFPER]+attr[CommonFun.RoleData.EATTRTYPE_MDEFPER]
+  
+  if result[CommonFun.RoleData.EATTRTYPE_MDEFPER] <= -1 then
+     result[CommonFun.RoleData.EATTRTYPE_MDEFPER]  = -1
+  end  
+  
+  ----------玩家最终生命上限百分比计算公式（已经弃用）
+  result[CommonFun.RoleData.EATTRTYPE_MAXHPPER] = extra[CommonFun.RoleData.EATTRTYPE_MAXHPPER]+attr[CommonFun.RoleData.EATTRTYPE_MAXHPPER]
+  
+  if result[CommonFun.RoleData.EATTRTYPE_MAXHPPER] <= -1 then
+     result[CommonFun.RoleData.EATTRTYPE_MAXHPPER]  = -1
+  end
+  
+  ----------玩家最终生命上限计算公式（已经弃用）
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP] = (extra[CommonFun.RoleData.EATTRTYPE_MAXHP]+attr[CommonFun.RoleData.EATTRTYPE_MAXHP])*(1+result[CommonFun.RoleData.EATTRTYPE_MAXHPPER]) 
+  if map==1 or map==2 then ----map=1 表示pvp,map=2 表示gvg
+      result[CommonFun.RoleData.EATTRTYPE_MAXHP] = 4*(extra[CommonFun.RoleData.EATTRTYPE_MAXHP]+attr[CommonFun.RoleData.EATTRTYPE_MAXHP])*(1+result[CommonFun.RoleData.EATTRTYPE_MAXHPPER]) 
+  end
+  ----------MaxSpPer(玩家魔法上限百分比计算公式)（已经弃用）
+  result[CommonFun.RoleData.EATTRTYPE_MAXSPPER] = extra[CommonFun.RoleData.EATTRTYPE_MAXSPPER]+attr[CommonFun.RoleData.EATTRTYPE_MAXSPPER]
+  
+  if result[CommonFun.RoleData.EATTRTYPE_MAXSPPER] <= -1 then
+     result[CommonFun.RoleData.EATTRTYPE_MAXSPPER]  = -1
+  end
+  
+  ----------玩家最终魔法上限计算公式（已经弃用）
+  result[CommonFun.RoleData.EATTRTYPE_MAXSP]=(extra[CommonFun.RoleData.EATTRTYPE_MAXSP]+attr[CommonFun.RoleData.EATTRTYPE_MAXSP])*(1+result[CommonFun.RoleData.EATTRTYPE_MAXSPPER]) 
+
+
+  ----------玩家最终物理精炼计算公式（已经弃用）
+  result[CommonFun.RoleData.EATTRTYPE_REFINE] = extra[CommonFun.RoleData.EATTRTYPE_REFINE]+attr[CommonFun.RoleData.EATTRTYPE_REFINE]
+
+  ----------玩家最终魔法精炼计算公式（已经弃用）
+  result[CommonFun.RoleData.EATTRTYPE_MREFINE] = extra[CommonFun.RoleData.EATTRTYPE_MREFINE]+attr[CommonFun.RoleData.EATTRTYPE_MREFINE]
+ 
+  result[CommonFun.RoleData.EATTRTYPE_DAMREDUC]  = attr[CommonFun.RoleData.EATTRTYPE_DAMREDUC]
+  if result[CommonFun.RoleData.EATTRTYPE_DAMREDUC] >= 1 then
+     result[CommonFun.RoleData.EATTRTYPE_DAMREDUC]  = 1
+  end   
+  result[CommonFun.RoleData.EATTRTYPE_MDAMREDUC] = attr[CommonFun.RoleData.EATTRTYPE_MDAMREDUC]
+  if result[CommonFun.RoleData.EATTRTYPE_MDAMREDUC] >= 1 then
+     result[CommonFun.RoleData.EATTRTYPE_MDAMREDUC]  = 1
+  end 
+  ----------Hp(玩家当前生命值计算公
+  --result[CommonFun.RoleData.EATTRTYPE_HP] = attr[CommonFun.RoleData.EATTRTYPE_HP]
+
+  ----------Sp(玩家当前魔法值计算公式)
+  --result[CommonFun.RoleData.EATTRTYPE_SP] = attr[CommonFun.RoleData.EATTRTYPE_SP]
+
+  ----------RestoreSpd(玩家生命恢复计算公式)
+  result[CommonFun.RoleData.EATTRTYPE_RESTORESPD] = (extra[CommonFun.RoleData.EATTRTYPE_RESTORESPD]+attr[CommonFun.RoleData.EATTRTYPE_RESTORESPD]+math.floor(result[CommonFun.RoleData.EATTRTYPE_MAXHP]/200))*(1+attr[CommonFun.RoleData.EATTRTYPE_RESTORESPDPER])
+
+  ----------SpRestoreSpd(玩家魔法恢复计算公式)
+  result[CommonFun.RoleData.EATTRTYPE_SPRESTORESPD] = (extra[CommonFun.RoleData.EATTRTYPE_SPRESTORESPD]+attr[CommonFun.RoleData.EATTRTYPE_SPRESTORESPD]+math.floor(result[CommonFun.RoleData.EATTRTYPE_MAXSP]/100))*(1+attr[CommonFun.RoleData.EATTRTYPE_SPRESTORESPDPER])
+
+
+  ----------玩家面板属性计算公式 
+
+  result[CommonFun.RoleData.EATTRTYPE_SHOWATK]=result[CommonFun.RoleData.EATTRTYPE_ATK]*(1+result[CommonFun.RoleData.EATTRTYPE_ATKPER])
+  result[CommonFun.RoleData.EATTRTYPE_SHOWMATK]=result[CommonFun.RoleData.EATTRTYPE_MATK]*(1+result[CommonFun.RoleData.EATTRTYPE_MATKPER])   
+  result[CommonFun.RoleData.EATTRTYPE_SHOWMAXHP]=result[CommonFun.RoleData.EATTRTYPE_MAXHP]
+  result[CommonFun.RoleData.EATTRTYPE_SHOWMAXSP]=result[CommonFun.RoleData.EATTRTYPE_MAXSP]
+  result[CommonFun.RoleData.EATTRTYPE_SHOWDEF]=extra[CommonFun.RoleData.EATTRTYPE_DEF]+(attr[CommonFun.RoleData.EATTRTYPE_DEF])*(1+result[CommonFun.RoleData.EATTRTYPE_DEFPER])    
+  result[CommonFun.RoleData.EATTRTYPE_SHOWMDEF]=extra[CommonFun.RoleData.EATTRTYPE_MDEF]+(attr[CommonFun.RoleData.EATTRTYPE_MDEF])*(1+result[CommonFun.RoleData.EATTRTYPE_MDEFPER]) 
+  result[CommonFun.RoleData.EATTRTYPE_SHOWHIT]=result[CommonFun.RoleData.EATTRTYPE_HIT]    
+  result[CommonFun.RoleData.EATTRTYPE_SHOWFLEE]=result[CommonFun.RoleData.EATTRTYPE_FLEE]  
+  result[CommonFun.RoleData.EATTRTYPE_SHOWCRI]=result[CommonFun.RoleData.EATTRTYPE_CRI]
+  result[CommonFun.RoleData.EATTRTYPE_SHOWCRIRES]=result[CommonFun.RoleData.EATTRTYPE_CRIRES]
+  result[CommonFun.RoleData.EATTRTYPE_SHOWATKSPD]=result[CommonFun.RoleData.EATTRTYPE_ATKSPD]
+  result[CommonFun.RoleData.EATTRTYPE_SHOWMOVESPD]=result[CommonFun.RoleData.EATTRTYPE_MOVESPD]
+  result[CommonFun.RoleData.EATTRTYPE_SHOWCASTSPD]=result[CommonFun.RoleData.EATTRTYPE_CASTSPD] 
+  result[CommonFun.RoleData.EATTRTYPE_SHOWRESTORESPD]=result[CommonFun.RoleData.EATTRTYPE_RESTORESPD]
+
+  for k,v in pairs(result) do
+    if v ~= 0 then
+      result[k] = math.floor(v * 1000 + 0.5) / 1000
+    else
+      result[k] = v
+    end
+  end
+  for k,v in pairs(extra) do
+    if v ~= 0 then
+      extra[k] = math.floor(v*1000 + 0.5)/1000
+    else
+      extra[k] = 0
+    end
+  end
+  return result, extra
+end
+
+function CommonFun.calcUserShowAttrValue(attr, profession, oldlv, newlv,WeaponType)---（已经弃用）
+  local result = {}
+
+ ------------生命值的等级提升效果展示
+  local oldvalue = 50+oldlv*BaseLvRate[profession]+CommonFun.CalcSum(oldlv)*HpRate[profession]+BaseHp[profession]
+  local newvalue = 50+newlv*BaseLvRate[profession]+CommonFun.CalcSum(newlv)*HpRate[profession]+BaseHp[profession]
+  if newvalue > oldvalue + 1 then
+    result[CommonFun.RoleData.EATTRTYPE_MAXHP] = newvalue - oldvalue
+  end
+
+ ------------物理攻击的等级提升效果展示 
+  if CommonFun.checkRemoteAtk(profession,WeaponType) then
+      oldvalue = attr[CommonFun.RoleData.EATTRTYPE_DEX] * 3 + attr[CommonFun.RoleData.EATTRTYPE_DEX] * attr[CommonFun.RoleData.EATTRTYPE_DEX] / 100 + attr[CommonFun.RoleData.EATTRTYPE_STR] / 5 + attr[CommonFun.RoleData.EATTRTYPE_LUK] / 5 + oldlv*BaseLvAtkRate1[profession]
+  else
+      oldvalue = attr[CommonFun.RoleData.EATTRTYPE_STR] * 5 + attr[CommonFun.RoleData.EATTRTYPE_STR] * attr[CommonFun.RoleData.EATTRTYPE_STR] / 100 + attr[CommonFun.RoleData.EATTRTYPE_DEX] / 5 + attr[CommonFun.RoleData.EATTRTYPE_LUK] / 5 + oldlv*BaseLvAtkRate1[profession]
+  end
+  
+  if CommonFun.checkRemoteAtk(profession,WeaponType) then
+      newvalue = attr[CommonFun.RoleData.EATTRTYPE_DEX] * 3 + attr[CommonFun.RoleData.EATTRTYPE_DEX] * attr[CommonFun.RoleData.EATTRTYPE_DEX] / 100 + attr[CommonFun.RoleData.EATTRTYPE_STR] / 5 + attr[CommonFun.RoleData.EATTRTYPE_LUK] / 5 + newlv*BaseLvAtkRate1[profession]
+  else
+      newvalue = attr[CommonFun.RoleData.EATTRTYPE_STR] * 3 + attr[CommonFun.RoleData.EATTRTYPE_STR] * attr[CommonFun.RoleData.EATTRTYPE_STR] / 100 + attr[CommonFun.RoleData.EATTRTYPE_DEX] / 5 + attr[CommonFun.RoleData.EATTRTYPE_LUK] / 5 + newlv*BaseLvAtkRate1[profession]
+  end
+  if newvalue > oldvalue + 1 then
+   result[CommonFun.RoleData.EATTRTYPE_ATK] = newvalue - oldvalue
+  end
+   
+ 
+ ------------魔法攻击的等级提升效果展示   
+  oldvalue = attr[CommonFun.RoleData.EATTRTYPE_INT] * 3 + attr[CommonFun.RoleData.EATTRTYPE_INT] * attr[CommonFun.RoleData.EATTRTYPE_INT] / 100 + oldlv*BaseLvAtkRate2[profession]
+  newvalue = attr[CommonFun.RoleData.EATTRTYPE_INT] * 3 + attr[CommonFun.RoleData.EATTRTYPE_INT] * attr[CommonFun.RoleData.EATTRTYPE_INT] / 100 + newlv*BaseLvAtkRate2[profession]
+  if newvalue > oldvalue + 1 then
+   result[CommonFun.RoleData.EATTRTYPE_MATK] = newvalue - oldvalue
+  end
+  
+ ------------物理防御的等级提升效果展示 
+ 
+  oldvalue= attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * attr[CommonFun.RoleData.EATTRTYPE_VIT] / 100+oldlv*BaseLvDefRate[profession]
+  newvalue= attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * attr[CommonFun.RoleData.EATTRTYPE_VIT] / 100+newlv*BaseLvDefRate[profession]
+  if newvalue > oldvalue + 1 then
+   result[CommonFun.RoleData.EATTRTYPE_DEF] = newvalue - oldvalue
+  end
+  
+ ------------魔法防御的等级提升效果展示 
+ 
+  oldvalue = attr[CommonFun.RoleData.EATTRTYPE_INT] * 2 + attr[CommonFun.RoleData.EATTRTYPE_INT] * attr[CommonFun.RoleData.EATTRTYPE_INT] / 100+oldlv*BaseLvMDefRate[profession]
+  newvalue = attr[CommonFun.RoleData.EATTRTYPE_INT] * 2 + attr[CommonFun.RoleData.EATTRTYPE_INT] * attr[CommonFun.RoleData.EATTRTYPE_INT] / 100+newlv*BaseLvMDefRate[profession]
+  if newvalue > oldvalue + 1 then
+   result[CommonFun.RoleData.EATTRTYPE_MDEF] = newvalue - oldvalue
+  end
+ 
+ 
+ ------------魔法恢复的等级提升效果展示  
+  oldvalue = 20+(oldlv*GameConfig.NewRole.recover[profession].sp)+attr[CommonFun.RoleData.EATTRTYPE_INT]*2
+  newvalue = 20+(newlv*GameConfig.NewRole.recover[profession].sp)+attr[CommonFun.RoleData.EATTRTYPE_INT]*2
+  if newvalue > oldvalue + 1 then
+    result[CommonFun.RoleData.EATTRTYPE_MAXSP] = newvalue - oldvalue
+  end
+ 
+ 
+ ------------命中的等级提升效果展示  
+  oldvalue = oldlv + attr[CommonFun.RoleData.EATTRTYPE_DEX]
+  newvalue = newlv + attr[CommonFun.RoleData.EATTRTYPE_DEX]
+  if newvalue > oldvalue + 1 then
+    result[CommonFun.RoleData.EATTRTYPE_HIT] = newvalue - oldvalue
+  end
+
+ ------------闪避的等级提升效果展示 
+  oldvalue = oldlv + attr[CommonFun.RoleData.EATTRTYPE_AGI]
+  newvalue = newlv + attr[CommonFun.RoleData.EATTRTYPE_AGI]
+  if newvalue > oldvalue + 1 then
+    result[CommonFun.RoleData.EATTRTYPE_FLEE] = newvalue - oldvalue
+  end
+
+  return result
+end
+
+function CommonFun.calcUserShowAttrValuePro(attr, lv, oldpro, newpro,WeaponType)
+  local result = {}
+
+  local oldvalue = 50+lv*BaseLvRate[oldpro]+CommonFun.CalcSum(lv)*HpRate[oldpro]*(1+attr[CommonFun.RoleData.EATTRTYPE_VIT]/100)+attr[CommonFun.RoleData.EATTRTYPE_VIT]*20
+  local newvalue = 50+lv*BaseLvRate[newpro]+CommonFun.CalcSum(lv)*HpRate[newpro]*(1+attr[CommonFun.RoleData.EATTRTYPE_VIT]/100)+attr[CommonFun.RoleData.EATTRTYPE_VIT]*20
+  if newvalue > oldvalue + 1 then
+    result[CommonFun.RoleData.EATTRTYPE_MAXHP] = newvalue - oldvalue
+  end
+
+  if CommonFun.checkRemoteAtk(oldpro,WeaponType) then
+      oldvalue = attr[CommonFun.RoleData.EATTRTYPE_DEX] * 3 + attr[CommonFun.RoleData.EATTRTYPE_DEX] * attr[CommonFun.RoleData.EATTRTYPE_DEX] / 100 + attr[CommonFun.RoleData.EATTRTYPE_STR] / 5 + attr[CommonFun.RoleData.EATTRTYPE_LUK] / 5 + lv*2
+  else
+      oldvalue = attr[CommonFun.RoleData.EATTRTYPE_STR] * 3 + attr[CommonFun.RoleData.EATTRTYPE_STR] * attr[CommonFun.RoleData.EATTRTYPE_STR] / 100 + attr[CommonFun.RoleData.EATTRTYPE_DEX] / 5 + attr[CommonFun.RoleData.EATTRTYPE_LUK] / 5 + lv*2
+  end
+
+  if CommonFun.checkRemoteAtk(newpro,WeaponType) then
+      newvalue = attr[CommonFun.RoleData.EATTRTYPE_DEX] * 3 + attr[CommonFun.RoleData.EATTRTYPE_DEX] * attr[CommonFun.RoleData.EATTRTYPE_DEX] / 100 + attr[CommonFun.RoleData.EATTRTYPE_STR] / 5 + attr[CommonFun.RoleData.EATTRTYPE_LUK] / 5 + lv*2
+  else
+      newvalue = attr[CommonFun.RoleData.EATTRTYPE_STR] * 3 + attr[CommonFun.RoleData.EATTRTYPE_STR] * attr[CommonFun.RoleData.EATTRTYPE_STR] / 100 + attr[CommonFun.RoleData.EATTRTYPE_DEX] / 5 + attr[CommonFun.RoleData.EATTRTYPE_LUK] / 5 + lv*2
+  end
+  if newvalue > oldvalue + 1 then
+   result[CommonFun.RoleData.EATTRTYPE_ATK] = newvalue - oldvalue
+  end
+
+  oldvalue = 20+(lv*GameConfig.NewRole.recover[oldpro].sp)*(1+attr[CommonFun.RoleData.EATTRTYPE_INT]/100)+attr[CommonFun.RoleData.EATTRTYPE_INT]*2
+  newvalue = 20+(lv*GameConfig.NewRole.recover[newpro].sp)*(1+attr[CommonFun.RoleData.EATTRTYPE_INT]/100)+attr[CommonFun.RoleData.EATTRTYPE_INT]*2
+  if newvalue > oldvalue + 1 then
+    result[CommonFun.RoleData.EATTRTYPE_MAXSP] = newvalue - oldvalue
+  end
+
+  return result
+end

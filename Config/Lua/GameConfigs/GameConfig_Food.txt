@@ -1,0 +1,19 @@
+--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+GameConfig.Food = {
+  -- 料理制作基础成功率（根据制作难度等级划分）
+  base_successrate = {75, 68, 61, 54, 47, 40, 33, 26, 19, 12},
+  -- 每级料理品尝等级 增加的营养价值持续时间百分比
+  -- eatlv_addeffect_time = 0.05,
+  -- 每级料理烹饪等级 增加的营养价值百分比
+  -- cooklv_addeffect_pct = 0.1,
+  -- 吃料理的随机的技能Ids
+  eat_skills = {90000001,90001001,90002001}, -- 另外两个技能备个注
+  MaxLastCooked = 12,
+  MaxCookFoodLv = 10,         --最大料理熟练度等级
+  MaxTasterFoodLv = 10,       --最大料理熟练度等级
+  MaxSatiety_Default = 80,    --默认的饱腹度上限
+  CookFoodExpPerLv = 10,      --料理烹饪熟练度每级需要的经验
+  MaxLimitFood_Default = 3,   --默认星级料理buff生效上限
+}

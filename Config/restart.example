@@ -1,0 +1,103 @@
+#!/bin/sh
+
+TMP=$IFS
+IFS='
+'
+#kill php trade server
+for var in $(ps -ux |grep php |grep trade-server |  grep -v grep |grep -v vim)
+do
+        pid=$(echo $var |awk '{ printf "%s ", $2}')
+        pname=$(echo $var |awk '{ printf "%s ", $12}')
+
+        echo $pid
+        echo $pname
+
+        if kill  $pid
+        then
+        echo "stop $pname"
+        else
+        echo "can't stop $pname"
+        fi
+        break
+done
+
+for var in $(ps -u $LOGNAME |grep SuperServer|grep -v grep|grep -v vim)
+do
+  #pid=echo $var |cut -c1-5
+  pid=$(echo $var |awk '{ printf "%s ", $1}')
+  pname=$(echo $var |awk '{ printf "%s ", $4}')
+
+  if kill -2 $pid
+  then
+    echo "stop $pname"
+  else
+    echo "can't stop $pname"
+  fi
+done
+
+sleep 3
+
+for var in $(ps -u $LOGNAME |grep Server|grep -v grep|grep -v vim)
+do
+  #pid=echo $var |cut -c1-5
+  pid=$(echo $var |awk '{ printf "%s ", $1}')
+  pname=$(echo $var |awk '{ printf "%s ", $4}')
+
+  if kill -2 $pid
+  then
+    echo "stop $pname"
+  else
+    echo "can't stop $pname"
+  fi
+done
+
+cont=$(ps -u $LOGNAME |grep Server |grep -v grep|grep -v vim|wc -l)
+while [ $cont -gt 0 ]
+do
+  echo "ServerNum:$cont"
+  sleep 1
+  for var in $(ps -u $LOGNAME |grep Server|grep -v grep|grep -v vim)
+  do
+    pid=$(echo $var |awk '{ printf "%s ", $1}')
+    kill -2 $pid
+  done
+  cont=$(ps -u $LOGNAME |grep Server |grep -v grep|grep -v vim|wc -l)
+done
+
+getServerPids="ps -x | grep trade-server | grep -v grep | grep -v vim"
+
+for var in $(echo $getServerPids | bash)
+do
+  #pid=echo $var |cut -c1-5
+  pid=$(echo $var |awk '{ printf "%s ", $1}')
+  pname=$(echo $var |awk '{ printf "%s ", $4}')
+
+  if kill -2 $pid
+  then
+    echo "stop $pname"
+  else
+    echo "can't stop $pname"
+  fi
+done
+
+cont=$(echo $getServerPids | bash | wc -l)
+while [ $cont -gt 0 ]
+do
+  now=`date +%s`
+  lTime=`expr $now - $sTime`
+  echo "LastTime:$lTime, ServerNum:$cont"
+
+  if [[ $lTime -gt $killGateTime ]]; then
+    for var in $(echo $getServerPids | bash | grep trade-server)
+    do
+      pid=$(echo $var |awk '{ printf "%s ", $1}')
+      echo kill -9 $pid
+      kill -9 $pid
+    done
+  fi
+
+  sleep 1
+  cont=$(echo $getServerPids | bash | wc -l)
+done
+
+./go xd r11 s1

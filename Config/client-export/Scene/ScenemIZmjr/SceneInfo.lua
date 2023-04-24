@@ -1,0 +1,43 @@
+Root={
+	BornPoints={
+		{
+			ID=1,
+			position={
+				1.54150891304016,
+				-1.79199886322021,
+				2.16962432861328
+			}
+		}
+	},
+	ExitPoints={
+
+	},
+	NPCPoints={
+		{
+			uniqueid=0,
+			id=10041,
+			pos={
+				2.29999995231628,
+				1.66999995708466,
+				21.8199996948242
+			},
+			dir=104.385635375977,
+			reborn=0,
+			range=6,
+			territory=15,
+			search=0,
+			scale={
+				1,
+				1
+			},
+			num=2,
+			camp="ENEMY",
+			behavior=27,
+			ai=0,
+			level=0,
+			life=0,
+			orgstate=0,
+			privategear=0
+		}
+	}
+}

@@ -1,0 +1,83 @@
+#!/bin/sh
+
+TMP=$IFS
+IFS='
+'
+killGateTime=60
+killSceneTime=180
+killSessionTime=480
+
+getServerPids="ps -u $LOGNAME | grep Server | grep -v grep | grep -v vim"
+
+for var in $(echo $getServerPids | bash)
+do
+#pid=echo $var |cut -c1-5
+	pid=$(echo $var |awk '{ printf "%s ", $1}')
+	pname=$(echo $var |awk '{ printf "%s ", $4}')
+
+	if kill -2 $pid
+	then 
+		echo "stop $pname"
+	else
+		echo "can't stop $pname"
+	fi
+done
+
+sTime=`date +%s`
+cont=$(echo $getServerPids | bash | wc -l)
+while [ $cont -gt 0 ]
+do
+	now=`date +%s`
+	lTime=`expr $now - $sTime`
+	echo "LastTime:$lTime, ServerNum:$cont"
+
+	if [[ $lTime -gt $killGateTime ]]; then
+		for var in $(echo $getServerPids | bash | grep GateServer)
+		do
+			pid=$(echo $var |awk '{ printf "%s ", $1}')
+			echo kill -9 $pid
+			kill -9 $pid
+		done
+		if [[ $lTime -gt $killSceneTime ]]; then
+			for var in $(echo $getServerPids | bash | grep SceneServer)
+			do
+				pid=$(echo $var |awk '{ printf "%s ", $1}')
+				echo kill -9 $pid
+				kill -9 $pid
+			done
+			if [[ $lTime -gt $killSessionTime ]]; then
+				for var in $(echo $getServerPids | bash | grep SessionServer)
+				do
+					pid=$(echo $var |awk '{ printf "%s ", $1}')
+					echo kill -9 $pid
+					kill -9 $pid
+				done
+				for var in $(echo $getServerPids | bash | grep RecordServer)
+				do
+					pid=$(echo $var |awk '{ printf "%s ", $1}')
+					echo kill -9 $pid
+					kill -9 $pid
+				done
+			fi
+		fi
+	fi
+
+	sleep 1
+	cont=$(echo $getServerPids | bash | wc -l)
+done
+
+getServerPids="ps -x | grep trade-server | grep -v grep | grep -v vim"
+
+for var in $(echo $getServerPids | bash)
+do
+  #pid=echo $var |cut -c1-5
+  pid=$(echo $var |awk '{ printf "%s ", $1}')
+  pname=$(echo $var |awk '{ printf "%s ", $4}')
+
+  if kill -2 $pid
+  then
+  echo "stop $pname"
+  else
+  echo "can't stop $pname"
+  fi
+done

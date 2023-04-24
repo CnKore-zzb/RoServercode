@@ -1,0 +1,8 @@
+#!/bin/sh
+
+cd ../../
+rm -f aaa
+svn up  >> aaa
+./update_resource.sh >> aaa
+make -j8 >> aaa
+./restart >>aaa

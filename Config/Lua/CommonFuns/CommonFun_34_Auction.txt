@@ -1,0 +1,10 @@
+-----------------------拍卖
+function CommonFun.calcAuctionPrice(basePrice, level)
+  if level == 1 then
+    return 10
+  elseif level == 2 then
+    return 100
+  elseif level == 3 then
+    return 1000
+  end
+end

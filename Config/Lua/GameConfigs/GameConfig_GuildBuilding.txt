@@ -1,0 +1,17 @@
+--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+GameConfig.GuildBuilding = {							--  公会设施建造相关
+	max_submit_count = 6, 								--	每人次公会成员每天能够提交的材料分数上限
+	open_cost = {5500,20}, 								--  开启建筑功能时消耗的公会道具
+	npcid_getwelfare =7705,								--	领取公会福利的NPCID
+	uieffect_getwelfare = "PetGift",  					-- 领取公会图标的UI特效
+	lvup_npc_id = 7700,									--升级说话的NpcID
+	gate_npc_id = 7706,									--公会设施的大门ID
+	lvup_finish_msg_id = 3710,							--建造完成的MsgID
+	build_finish_msg_id = 3709,							--升级完成的MsgID
+	lvup_msg_id = 3708,									--升级时说话的MsgID
+	build_msg_id = 3707,								--建造时说话的MsgID
+	--roleeffect_getwelfare = {"PetGift", 1},  			-- 领取公会图标的任务特效 第二个参数表示播放的EP点
+
+}

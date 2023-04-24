@@ -1,0 +1,285 @@
+﻿--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+--包包上限
+ GameConfig.StoreMaxCount= {
+   max = 100,
+ }
+
+--副本中净化怪物时的掉落处理
+GameConfig.ScenePurifyItem = {
+ disappeartime = 1800,
+ dropInterval = 200,
+ purifyrange = 5,
+ gainInterval = 240,
+ maxPurify = 160,
+}
+
+--怪物相框呈现
+GameConfig.MonsterHeadFrame={
+  MonsterHeadFrame =1,
+  MiniHeadFrame =7,
+  MvpHeadFrame =6,
+}
+
+GameConfig.NpcAI = {
+  PickupRange = 10,
+  PickupMaxItem = 20,
+  TeamHelpRange = 7,
+  TeamHelpHp = 90,
+  TeamAttack = {range=6,responseTime=1,emoji=7},
+}
+
+--------------角色六维权值条件------------
+GameConfig.RoleAttrShow= {
+  {BaseLv={0,30},Attr=70},
+  {BaseLv={30,65},Attr=105},
+  {BaseLv={65,100},Attr=140},
+  {BaseLv={100,200},Attr=240},
+  }
+
+--------------获得奖励的表情随机---------------------
+
+GameConfig.RandomExpressionAfterAward= {
+  [1] = 2,
+  [2] = 5,
+  [3] = 7,
+  [4] = 9,
+  [5] = 11,
+  [6] = 17,
+  [7] = 20,
+  [8] = 27,
+  [9] = 29,
+}
+
+--任务相关表格
+GameConfig.QuestTableList = {
+  {key = "Table_Quest", value = Table_Quest},
+  {key = "Table_Quest_2", value = Table_Quest_2},
+  {key = "Table_Quest_3", value = Table_Quest_3},
+  {key = "Table_Quest_4", value = Table_Quest_4},
+  {key = "Table_Quest_5", value = Table_Quest_5},
+  {key = "Table_Quest_6", value = Table_Quest_6},
+  {key = "Table_Quest_7", value = Table_Quest_7},
+  {key = "Table_Quest_8", value = Table_Quest_8},
+  {key = "Table_Quest_9", value = Table_Quest_9},
+  {key = "Table_Quest_61", value = Table_Quest_61},
+}
+
+--被锁定 降低flee & def
+GameConfig.LockEffect = {
+  ------判定循环时间
+  interval = 5,
+  ------判定循环范围
+  range = 2.5,
+  ------闪避上下限数量
+  fleeminnum = 2,
+  fleemaxnum = 7,
+  ------最多闪避降低百分比
+  fleemaxper = 0.5,
+  ------防御上下限数量
+  defminnum = 2,
+  defmaxnum = 7,
+  ------最多防御降低百分比
+  defmaxper = 0.05,
+
+  ------自动反击时间
+  autohittime = 5,
+
+  chainAtkLmt_time = 5,
+}
+
+GameConfig.EffectPath = {
+  leavescene = { effect = "Skill/Teleport", sound = "Common/Teleport" },
+  enterscene = { effect = "Common/15EnemyBirth", sound = "Common/EnterScene"},
+  TeleportSkill={effect = "Skill/Teleport"},
+  BuffImmune={effect="Common/immunity",effectpos=1},   ----异常状态免疫特效
+  BuffResist={effect="Skill/Parry",effectpos=2},
+}
+
+--地图区域名字
+GameConfig.MapArea = {
+  [1] = {id = 1, name = "普隆德拉区域"},
+  [2] = {id = 2, name = "吉芬区域"},
+  [3] = {id = 3, name = "梦罗克区域"},
+  [4] = {id = 4, name = "斐扬区域"},
+  [5] = {id = 5, name = "古城区域"},
+  [6] = {id = 6, name = "艾尔帕兰区域"}
+}
+
+--对对方使用道具距离限制
+GameConfig.UseItemRange = {
+  [10] = {10001,10009},  ------10M
+}
+
+--聊天相关配置
+GameConfig.ChatVoice = {
+  AutoPlay = {2,4,8}
+--自动播放的默认频道，队伍、好友私聊、聊天室
+}
+
+--充气娃娃
+GameConfig.ToyDoll = {
+  Body = {{1, 8}, {11, 16}, {19, 24}, {27, 32}, {35, 40}},
+  Head = {{45001,45016}, {45018,45031}, {45033,45034}, {45036,45038}, {45040,45058}},
+  Hair = {{1, 20}, {998,999}},
+  HairColor = {{1, 8}},
+  time = 150,
+
+  birth_emoji = {odds=100, value={2,27}},  -----出生时表情
+  birth_dialog = {odds=100, value={1312203}}, -----出生时对话
+  disp_emoji = {odds=100, value={1,18,24}},   -----消亡时表情
+  disp_dialog = {odds=100, value={1312204}},  -----消亡时对话
+  normal_emoji = {odds=80, value={4,25,26}},  -----平时表情
+  normal_dialog = {odds=60, value={1312207,1312208,1312209}}, -----平时对话
+  attack_emoji = {odds=80, value={20,23,30}},  -----主人攻击时表情
+  attack_dialog = {odds=60, value={1312205,1312206}}, -----主人攻击时对话
+  emoji_interval = 6,    ------------------------表情间隔时间
+  dialog_interval = 10,   ------------------------对话间隔时间
+}
+
+--二人世界
+GameConfig.ItemImage = {
+  range = 6,
+  npcid = 1524,    --爱心特效
+  lovenpcid = 0,  --装饰NPC
+}
+
+--北森寻宝
+GameConfig.Treasure = {
+  gold_tree_max = 4,
+  gold_tree_refreshtime = 1200,
+  magic_tree_max = 3,
+  magic_tree_refreshtime = 3600,
+  high_tree_max = 2,
+  high_tree_refreshtime = 5400,
+
+  shake_action_npc = 1001,
+  shake_action_monster = 2001,
+  dis_time = 600,
+  known_buff = 6013,
+}
+
+--幽灵相机
+GameConfig.Camera = {
+  summon = {
+    {id = 10019, search=3, disappeartime = 300, dis = 2, odds = 50},
+    {id = 10072, search=3, disappeartime = 300, dis = 2, odds = 50},
+    {id = 110008, search=3, disappeartime = 300, dis = 2, odds = 1, day_maxcnt = 1},
+    interval = 3,
+  },
+}
+
+--登录服务器是自动尝试重连时的次数和延迟秒数
+GameConfig.ReconnectConfig = {
+  ReconnectTimes = 4,
+  ReconnectTimeDelta = 2
+}
+
+--友情之证奖励
+GameConfig.FriendShip = {
+  Reward = {
+    Friend = {
+      MaxLimitCount = 500,  --每周上限
+      Itemid = 147,         --itemid
+      SealCount = 5,        --封印奖励个数
+      DojoCount = 5,        --道场奖励个数   
+      TowerCount_Mini = 2,  --无限塔mini奖励个数 
+      TowerCount_Mvp = 5,   --无限塔MVP奖励个数    
+      LaboratoryCount = 5,  --研究所奖励个数
+      GuildRaid = 2,        --工会副本奖励个数	  
+	PveCard = 5,		--神谕副本奖励个数
+    },
+    Guild = {
+      MaxLimitCount = 500,  --每周上限
+      Itemid = 140,         --itemid
+      SealCount = 5,        --封印奖励个数
+      DojoCount = 5,        --道场奖励个数   
+      TowerCount_Mini = 2,  --无限塔mini奖励个数    
+      TowerCount_Mvp = 5,   --无限塔mvp奖励个数      
+      LaboratoryCount = 5,  --研究所奖励个数  
+      GuildRaid = 2,        --工会副本奖励个数	  
+	PveCard = 5,		--神谕副本奖励个数
+    }
+  }
+}
+
+--道具获取上限对应提示
+GameConfig.GetLimitMsg = {
+     [1] = 64,
+     [7] = 63,
+ }
+
+--半周年庆典
+GameConfig.AuguryActivity = {        -------占卜额外奖励     
+  ActivityID = 14,
+  MailID = 10006,
+  } 
+GameConfig.GuildQuestActivity = {    -------公会任务
+  ActivityID = 15,
+  RewardTimes = 2,
+  }   
+ GameConfig.GuildDonateActivity = {       -------公会捐赠
+  ActivityID = 16,
+  RewardTimes = 2,
+  } 
+GameConfig.GuildFubenActivity = {        -------公会副本
+  ActivityID = 17,
+  RewardTimes = 2,
+  }   
+  
+-- GameConfig.FunctionSwitch = { 
+--   FreeFreyja = 0,    -------免费传送
+--   FreePackage = 0,   -------免费打开仓库
+--   }  
+  
+GameConfig.MontchCardActivity = {
+  ActivityID = 18,
+  MontchCardReward = {
+  [1]={
+      CostCard=1,   --激活月卡数
+      RewardItemId = 710044, --奖励物品
+      Count= 1,  --奖励物品个数  
+  },
+  [2]={
+      CostCard=3,   --激活月卡数
+      RewardItemId = 710044, --奖励物品
+      Count= 2,  --奖励物品个数  
+  },
+  [3]={
+      CostCard=5,   --激活月卡数
+      RewardItemId = 710044, --奖励物品
+      Count= 3,  --奖励物品个数  
+  },
+  }
+}
+
+--------------场景交互--------------------
+GameConfig.SceneInteraction={
+purify =101
+}
+
+--个人相册
+GameConfig.Photo = {
+   DefaultSize = 20, -- 默认大小
+   SkillIncreaseSize = {
+      [50041001] = 15, -- [摄影大师技能id] = 增加大小
+      [50041002] = 15,
+   },
+}
+
+--随机NPC问答奖励配置，reward_count表示每次发放奖励次数--
+GameConfig.QA = {
+  reward_count = 20,
+  reward_map = {
+    {level = 60, rewardid=3038},               --[1,60] 级的 rewardid
+    {level = 120, rewardid=3039}              --[61,120] 级的rewardid
+  }
+}
+
+
+--角色改名冷却时间，单位秒
+GameConfig.PlayerRename = {
+	rename_item = 5526,
+	rename_cooldown = 86400,
+}

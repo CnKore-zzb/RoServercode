@@ -1,0 +1,12 @@
+---
+mysql:
+  user: root
+  pass: admin
+  master: "172.26.24.113:3306"
+  charset: utf8mb4
+  db: ro_xd_r9
+  slave:
+    - "172.26.24.113:3306"
+
+#redis:
+#  - 127.0.0.1:6379

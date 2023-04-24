@@ -1,0 +1,12 @@
+--md5:ea1c506e636c2b33b80f6e38c9ffcfbd
+Table_LotteryGive = { 
+	[1001] = {id = 1001, Year = 2017, Month = 9, LotterBoxItemId = 3863, LotteryItemId = 6068},
+	[1002] = {id = 1002, Year = 2017, Month = 10, LotterBoxItemId = 3864, LotteryItemId = 6069},
+	[1003] = {id = 1003, Year = 2017, Month = 11, LotterBoxItemId = 3865, LotteryItemId = 6070},
+	[1004] = {id = 1004, Year = 2017, Month = 12, LotterBoxItemId = 3866, LotteryItemId = 6071},
+	[1005] = {id = 1005, Year = 2018, Month = 1, LotterBoxItemId = 3867, LotteryItemId = 6072},
+	[1006] = {id = 1006, Year = 2018, Month = 2, LotterBoxItemId = 3871, LotteryItemId = 6074},
+	[1007] = {id = 1007, Year = 2018, Month = 3, LotterBoxItemId = 3877, LotteryItemId = 6079},
+	[1008] = {id = 1008, Year = 2018, Month = 4, LotterBoxItemId = 3881, LotteryItemId = 6083},
+}
+return Table_LotteryGive

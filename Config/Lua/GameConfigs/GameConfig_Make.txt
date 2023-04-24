@@ -1,0 +1,61 @@
+--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+GameConfig.CardMake = {
+  RandomFilter={[0]="所有卡片",
+                [1]="白色",
+                [2]="绿色",
+                [3]="蓝色",
+  },
+  MakeFilter={[0]="全部",
+              [81]="武器",
+              [82]="副手",
+              [83]="盔甲",
+              [84]="披风",
+              [85]="鞋子",
+              [86]="饰品",
+              [87]="头饰",
+  },
+  DecomposeFilter={[0]="所有卡片",
+                  [1]="白色",
+                  [2]="绿色",
+                  [3]="蓝色",
+                  [4]="紫色",
+  },
+  RandomTip={[1]={Min=3, Max=61, Text="本次最高可获得蓝色卡片"},
+            [2]={Min=70, Max=150, Text="本次最高可获得紫色卡片"},
+  },
+}
+
+GameConfig.EquipMake = {
+  npc_action = 38,
+  idle_action = 0,
+  success_emoji = 11,
+}
+
+-- 微笑小姐道具制作
+--preAction npc那个转圈圈
+--userSuccessExpression 玩家成功表情
+--npcSuccessExpression npc成功表情
+--npcSuccessAction npc成功动作
+--npcSuccessEffect npc成功特效 
+GameConfig.Produce = {
+  TraceNpc = {map = 1, npc = 1077,uniqueid = 49},
+  preaction = 200,
+  preactiontime = 2,
+  userSuccessExpression = 20,
+  npcSuccessExpression = 11,
+  npcSuccessAction = 1,
+  npcSuccessEffect = 47,
+}
+
+---------卡片合成类型配置------------
+GameConfig.CardComposeType = {
+  [1] = {name="武器",types={170,180,190,200,210,220,230,240,250,260,270,280,290}},
+  [2] = {name="副手",types={510,511,512,513,514,515}},
+  [3] = {name="盔甲",types={500}},
+  [4] = {name="披风",types={520}},
+  [5] = {name="鞋子",types={530}},
+  [6] = {name="饰品",types={540}},
+  [7] = {name="头饰",types={800}},
+}

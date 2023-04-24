@@ -1,0 +1,581 @@
+----根据排名获取额外积分奖励
+----maxApple 苹果积分上限
+----rank 排名，1,2,3,4
+function CommonFun.calcExtraScore(maxApple, rank)
+
+if rank == nil or maxApple == nil then
+  return 0 
+end
+
+ --苹果额外奖励系数 
+  local appleparam = {
+    [1] = 0.4,
+    [2] = 0.2,
+    [3] = 0.1,
+    [4] = 0,
+    [5] = 0,
+    [6] = 0,
+    [7] = 0,
+    [8] = 0,
+    [9] = 0,
+    [10] = 0,
+  }
+
+  --额外积分
+  local ExtraScore = 0
+
+  if appleparam[rank] == nil then
+    return 0
+  else
+    ExtraScore = maxApple * appleparam[rank]
+    return ExtraScore
+  end  
+end
+
+
+
+function CommonFun.getExpExtra(npczone, npctype, stype, mapid)
+  local extra = 0
+  local mextra = 0
+  local cur = os.time()
+
+  -- npc type
+  if npczone == 1 then
+    local starttime = os.time({year = 2016, month = 2, day = 24, hour = 9, min = 10})
+    local endtime = os.time({year = 2016, month = 2, day = 28, hour = 9, min = 10})
+    if cur >= starttime and cur <= endtime then
+      extra = 0.5
+    end
+  elseif npczone == 3 then
+    local starttime = os.time({year = 2016, month = 2, day = 25, hour = 9, min = 10})
+    local endtime = os.time({year = 2016, month = 2, day = 28, hour = 9, min = 10})
+    if cur >= starttime and cur <= endtime then
+      extra = 1
+    end
+  elseif npczone == 4 then
+    local starttime = os.time({year = 2016, month = 2, day = 25, hour = 9, min = 10})
+    local endtime = os.time({year = 2016, month = 2, day = 26, hour = 9, min = 10})
+    if cur >= starttime and cur <= endtime then
+      extra = 2
+    end
+  elseif npczone == 5 then
+    local starttime = os.time({year = 2016, month = 2, day = 25, hour = 9, min = 10})
+    local endtime = os.time({year = 2016, month = 2, day = 26, hour = 9, min = 10})
+    if cur >= starttime and cur <= endtime then
+      extra = 3
+    end
+  end
+
+  -- map(mapid=value)
+  local mapgroup = {[1] = 0.5, [2] = 2}
+  local starttime = os.time({year = 2016, month = 2, day = 27, hour = 11, min = 15})
+  local endtime = os.time({year = 2016, month = 2, day = 28, hour = 11, min = 20})
+  if cur >= starttime and cur <= endtime then
+    if stype == 1 then
+      if #mapgroup == 0 then
+        mextra = 0
+      else
+        for k,v in pairs(mapgroup) do
+          if k == mapid then
+            mextra = v;
+            break
+          end
+        end
+      end
+    elseif npczone == 1 then
+      if npctype == 3 or npctype == 4 or npctype == 5 then
+        if #mapgroup == 0 then
+          mextra = 0
+        else
+          for k,v in pairs(mapgroup) do
+            if k == mapid then
+              mextra = v;
+              break
+            end
+          end
+        end
+      end
+    end
+  end
+
+  --print("extra = "..extra)
+  --print("mextra = "..mextra)
+  return extra + mextra
+end
+
+
+
+
+
+
+
+--[[
+-- 获得衰减因子
+function CommonFun.getReduceValue(deltalv)
+  local per = { [0]=1.0,[1]=1.0,[2]=1.0,[3]=1.0,[4]=1.0,[5]=1.0,[6]=1.0,[7]=1.0,[8]=1.0,[9]=1.0,[10]=1.0,
+                [11]=1.0,[12]=1.0,[13]=0.8,[14]=0.6,[15]=0.4,[-1]=1.0,[-2]=1.0,[-3]=1.0,[-4]=1.0,[-5]=1.0,
+                [-6]=0.8,[-7]=0.8,[-8]=0.8,[-9]=0.6,[-10]=0.6,[-11]=0.6,[-12]=0.6,[-13]=0.6,[-14]=0.6,
+                [-15]=0.6,[-16]=0.4,[-17]=0.4,[-18]=0.4,[-19]=0.4,[-20]=0.4,[-21]=0.2,[-22]=0.2,[-23]=0.2,
+                [-24]=0.2,[-25]=0.2,[-26]=0.1,[-27]=0.1,[-28]=0.1,[-29]=0.1,[-30]=0.1}
+  local extrper = 0
+  if deltalv > 15 then
+    extrper = 0.4
+  elseif deltalv < -30 then
+    extrper = 0.1
+  else
+    extrper = per[deltalv]
+    if extrper == nil then
+      extrper = 1
+    end
+  end
+
+  return extrper
+end
+--]]
+
+function CommonFun.getItemReduceValue(deltalv, star)
+  local  extrper  = 0
+  local  extrper1 = 0
+  local  extrper2 = 0            
+  
+              
+  if deltalv >= -20 then
+     extrper1=1
+  elseif  -30 <= deltalv and deltalv <= -21 then
+     extrper1=0.8
+  elseif  -40 <= deltalv and deltalv <= -31 then
+     extrper1=0.6
+  elseif  -50 <= deltalv and deltalv <= -41 then
+     extrper1=0.4
+  elseif  deltalv <-50  then
+     extrper1=0.2
+  end 
+  
+  if deltalv >= -10 then
+     extrper2=1
+  elseif  -20 <= deltalv and deltalv <= -11 then
+     extrper2=0.8
+  elseif  -30 <= deltalv and deltalv <= -21 then
+     extrper2=0.6
+  elseif  -40 <= deltalv and deltalv <= -31 then
+     extrper2=0.4
+  elseif  -50 <= deltalv and deltalv <= -41 then
+     extrper2=0.2
+  elseif  deltalv <-50  then
+     extrper2=0.1
+  end  
+  
+  if star ~= nil and star == true then
+     extrper=extrper1
+  else
+     extrper=extrper2   
+  end
+
+  return extrper
+end
+
+function CommonFun.getExpReduceValue(deltalv, star)
+  local per = { [0]=1.0,[1]=1.0,[2]=1.0,[3]=1.0,[4]=1.0,[5]=1.0,[6]=1.0,[7]=1.0,[8]=1.0,[9]=1.0,[10]=1.0,
+                [11]=0.8,[12]=0.8,[13]=0.8,[14]=0.8,[15]=0.8,[16]=0.8,[17]=0.8,[18]=0.8,[19]=0.8,[20]=0.8,[-1]=1.0,[-2]=1.0,[-3]=1.0,[-4]=1.0,[-5]=1.0,
+                [-6]=1.0,[-7]=1.0,[-8]=1.0,[-9]=1.0,[-10]=1.0,[-11]=0.8,[-12]=0.8,[-13]=0.8,[-14]=0.8,
+                [-15]=0.8,[-16]=0.6,[-17]=0.6,[-18]=0.6,[-19]=0.6,[-20]=0.6,[-21]=0.4,[-22]=0.4,[-23]=0.4,
+                [-24]=0.4,[-25]=0.4,[-26]=0.2,[-27]=0.2,[-28]=0.2,[-29]=0.2,[-30]=0.2}
+  local extrper = 0
+  if deltalv > 20 then
+    extrper = 0.5
+  elseif deltalv < -30 then
+    extrper = 0.1
+  else
+    extrper = per[deltalv]
+    if extrper == nil then
+      extrper = 1
+    end
+  end
+
+  return extrper
+end
+
+-- 抗击魔潮倍率
+function CommonFun.getDailyRatio(dailyextra)
+  local ratio =  (1 + dailyextra)
+  return ratio
+end
+
+-- 计算怪物掉落经验
+function CommonFun.calcNpcDropBaseExp(damage, deltalv, npctype, npczone, maxhp, exp, extrabuff, membercount, layer, mapid, stype, killer, dailyextra, star)
+  --print("------------------------------------------")
+  --print("deltalv = "..deltalv)
+  --print("npctype= "..npctype)
+  --print("extrabuff = "..extrabuff)
+  --print("membercount = "..membercount)
+  --print("stype = "..stype)
+  --print("dailyextra= "..dailyextra)
+
+  -- npctype
+  -- 5 : mvp
+
+  -- 伤害保护
+  if damage >= maxhp then
+    damage = maxhp
+  end
+
+ -- print("damage= "..damage)
+ -- print("maxhp= "..maxhp)
+  --print("exp= "..exp)
+
+
+  -- 获取额外经验倍率
+  local extra = CommonFun.getExpExtra(npczone, npctype, stype, mapid)
+  --print("extra = "..extra)
+  local reduce = CommonFun.getExpReduceValue(deltalv, star)
+  --print("reduce = "..reduce)
+
+  if membercount == 0 then
+    membercount = 1
+  end
+
+  -- 计算mvp经验
+  if npctype == 5 then
+    local e1 = (0.2 * killer + 0.8 * damage / maxhp) * exp * ((membercount - 1) * 0.1 + 1) / membercount * reduce 
+    
+    if e1<=1 then
+       e1=1
+    end   
+    
+    local e2 = e1 * CommonFun.getDailyRatio(dailyextra)
+    local result = e2 * (1 + extra)
+    if result <= 0 then
+      result = 1
+    end
+    return result
+  end
+
+  -- 其他怪经验
+ -- local e = exp * ((membercount - 1) * 0.1 + 1) / membercount * reduce * (1 + dailyextra)
+  local e3 = (damage / maxhp) * exp * ((membercount - 1) * 0.1 + 1) / membercount * reduce 
+  
+  if e3<=1 then
+     e3=1
+  end   
+  
+  local e4 = e3 * CommonFun.getDailyRatio(dailyextra)
+
+  local result = e4 * (1 + extra)
+  if result <= 1 then
+    result = 1
+  end
+
+--  print("result = "..result)
+  return result
+end
+
+function CommonFun.openSkillDisplay()
+  -- 0 关闭显示; 1 显示 人打怪; 2 显示 怪打人; 3 显示 1&2;
+  return 0
+end
+
+-- 计算玩家死亡经验掉落
+function CommonFun.calcUserDieDropBaseExp(lv)
+  local tmp =lv*lv*2
+    if lv<=10 and tmp>=50 then
+      return 50
+    else
+      return tmp
+    end
+  end
+
+-- 计算玩家离线时间
+function CommonFun.calcUserOfflineTime(logintime, offlinetime)
+  if logintime < offlinetime + 30 * 60 then
+    return 0
+  end
+  local t = logintime - offlinetime
+  if t > 720 * 60 then
+    t = 720 * 60
+  end
+  return math.ceil(t / 60)
+end
+
+-- 计算玩家离线经验
+function CommonFun.calcUserOfflineExp(level, logintime, offlinetime)
+  if level <= 30 then
+    return 0
+  end
+
+  local min = CommonFun.calcUserOfflineTime(logintime, offlinetime)
+  local exp = min * (1 * level + 10)
+  return exp
+end
+
+-- 计算玩家离线job经验
+function CommonFun.calcUserOfflineJobExp(level, logintime, offlinetime)
+  if level <= 30 then
+    return 0
+  end
+
+  local min = CommonFun.calcUserOfflineTime(logintime, offlinetime)
+  local exp = min * (0.6 * level + 10)
+  return exp
+end
+
+-- 计算抗击魔潮经验池扣除
+function CommonFun.calcDailyExpSub(exp)
+  return exp
+end
+
+-- 计算装备强化所需费用
+function CommonFun.calcEquipStrengthCost(lv, q, t)
+  local qparam = GameConfig.StrengthCost.Quality[q]
+  local tparam = GameConfig.StrengthCost.Type[t]
+  if qparam == nil or tparam == nil then
+    return 0
+  end
+
+  local a1 = lv % 10
+  local b1=GameConfig.StrengthCost.Remainder[a1]
+  local a2=math.floor(lv/10)
+  local b2=GameConfig.StrengthCost.Quotient[a2]
+  
+  local result = GameConfig.StrengthCost.BaseCost * b1 * b2 * qparam * tparam
+
+  --print("base = "..GameConfig.StrengthCost.BaseCost)
+  --print("lv = "..lv)
+  --print("qparam = "..qparam)
+  --print("tparam = "..tparam)
+  --print("b1= "..b1)
+  --print("b2= "..b2)
+    result = result - result % 10
+  --print("result = "..result)
+  return result
+end
+
+
+-- 防沉迷第一段时间
+function CommonFun.getAddictSec1()
+  local sec = 5*60*60 
+  return sec
+end
+
+-- 防沉迷第二段时间
+function CommonFun.getAddictSec2()
+  local sec = 8*60*60
+  return sec
+end
+
+function CommonFun.getAddictBase()
+  return 5*60*60
+end
+
+function CommonFun.getAddictStage()
+  return 3*60*60
+end
+
+
+function CommonFun.GetRandom(array, index)
+
+    -- 随机数最大个数为20, 每个数包含5个随机数, 共可表示100个随机数
+    local MAX_RANDOM_INDEX = 100
+    --return 20,50
+    local group = math.ceil(index / 5)              -- ex: 8 -> 2
+    local key = index - math.floor(index / 5) * 5        -- ex: 8 -> 3, 取第二个数据的第3随机数,(1234567890->56)
+    key = key ~= 0 and key or 5
+
+    if array[group]==nil or index > MAX_RANDOM_INDEX then
+      return 0, index
+    end
+
+    local groupValue = array[group]
+    local value = math.floor(groupValue/math.pow(100, 5-key)) % 100
+
+    local newIndex = index == MAX_RANDOM_INDEX and 1 or index + 1
+
+    return value, newIndex
+end
+
+
+--refactory begin
+-- CommonFun.Params = { -- CalcDamage
+--     skillIDAndLevel,--技能id和技能等级
+--     hitedIndex,--主要被击中目标还是次要被击中目标
+--     hitedCount,--范围内的最大选择个数
+--     -- new
+--     pvpMap,--当前是否PVP地图
+-- }
+
+-- CommonFun.User = {
+--     name,
+--     BaseLv,
+--     race,
+--     shape,
+--     boss,
+
+--     function GetProperty(name)
+--         return 0
+--     end
+
+--     function GetLernedSkillLevel(skillID)
+--         return 0
+--     end
+
+--     function IsEnemy(targetUser)
+--         return false
+--     end
+
+--     -- new
+--     function IgnoreJinzhanDamage()
+--         return false
+--     end
+
+--     function IsFly()
+--         return false
+--     end
+
+--     function SelfBuffChangeSkill()
+--         return nil
+--     end
+
+--     function GetProfressionID()
+--         return 0
+--     end
+
+--     function DefiniteHitAndCritical()
+--         return false
+--     end
+
+--     function GetAttackSkillIDAndLevel()
+--         return 0
+--     end
+
+--     function DamageAlways1()
+--         return false
+--     end
+
+--     funtion GetRandom()
+--         return 0
+--     end
+-- }
+function CommonFun.CalcTeamPwsScore(winteam_ave, loseteam_ave, winmax, losemax,selfscore, iswin)
+  local user_score = 0
+  local winscore = 0
+  local losescore = 0
+  if  selfscore<500 then
+      winscore = 100
+      losescore = 20
+    elseif  selfscore<1200 then
+      winscore = 100
+      losescore = 10
+    elseif  selfscore<2000 then
+      winscore = 100
+      losescore = -20
+    else 
+       winscore = 100
+      losescore = -50
+  end
+
+  if iswin ==true then
+    local a=loseteam_ave-winteam_ave
+    local b=selfscore-winteam_ave
+    local grouppara=1
+    if a==0 then
+      a=1
+    end
+
+    local avepara = 0.3*math.sin(math.min(math.abs(a),50)*math.pi/100)*math.abs(a)/a
+
+    if math.abs(b)>0 then
+       grouppara = 1/math.tan(((math.min(math.abs(b),winmax/2))-0.1)/winmax/4*math.pi)*(((math.min(math.abs(b),winmax/2))-0.1)/winmax/4*math.pi)
+    end
+  user_score=math.max((0.7+avepara)*(0.4+0.6*grouppara)*winscore,1)
+  end
+ if iswin == false then
+   if selfscore<1200 then
+    local a=winteam_ave-loseteam_ave
+    local b=selfscore-loseteam_ave
+    if a==0 then
+      a=1
+    end
+    local grouppara=1
+    local avepara = 0.3*math.sin(math.min(math.abs(a),50)*math.pi/100)*math.abs(a)/a
+  if math.abs(b)>0 then
+     grouppara = 1/math.tan(((math.min(math.abs(b),losemax/2))-0.1)/losemax/4*math.pi)*(((math.min(math.abs(b),losemax/2))-0.1)/losemax/4*math.pi) 
+  end
+   user_score=math.max((0.7+avepara)*(0.4+0.6*grouppara)*losescore,1)
+  elseif selfscore>=1200  then
+    local a=winteam_ave-loseteam_ave
+    local b=selfscore-loseteam_ave
+    if a==0 then
+       a=1
+    end
+    local grouppara=0.25
+    local avepara = -0.3*math.sin(math.min(math.abs(a),50)*math.pi/100)*math.abs(a)/a
+  if math.abs(b)>0 then
+     grouppara = 0.25*math.sin(math.min(math.abs(b),losemax)*math.pi/losemax/2)*math.abs(b)/b
+  end
+    user_score=math.min((0.7+avepara)*(0.75+grouppara)*losescore,-1)
+  end
+end
+    return user_score
+end
+function CommonFun.CalcRaidDeadBossSummonLevel(raidtype, param)
+
+local a =math.random(0,100) 
+local boss_lv=1
+  if raidtype== 2 then
+    if param==1 then
+      return 0
+    elseif param==2 then
+     if a<55 then
+       boss_lv=1
+     elseif a<85 then
+       boss_lv=4
+     else 
+       boss_lv=8
+     end
+    elseif param==3 then
+      if a<35 then
+       boss_lv=1
+      elseif a<80 then
+       boss_lv=4
+      else 
+       boss_lv=8
+      end
+    elseif param==4 then
+      if a<25 then
+       boss_lv=1
+      elseif a<60 then
+       boss_lv=4
+      else 
+       boss_lv=8
+      end
+    end
+  end
+  if raidtype== 3 then
+     if a<40 then
+       boss_lv=1
+     elseif a<80 then
+       boss_lv=4
+     else 
+       boss_lv=8
+     end
+  end
+  if raidtype== 4 then
+     if a<30 then
+       boss_lv=1
+     elseif a<70 then
+       boss_lv=4
+     else 
+       boss_lv=8
+     end
+  end
+  if raidtype== 1 then
+     if a<50 then
+       boss_lv=1
+     elseif a<80 then
+       boss_lv=4
+     else 
+       boss_lv=8
+     end
+  end
+
+  return boss_lv
+end

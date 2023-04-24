@@ -1,0 +1,27 @@
+--md5:2a9ba0287018ff2ea4b3cd3bb934ff09
+Table_ItemPickEffect = { 
+	[12600] = {id = 12600, NameZh = '兴奋剂', Effect = {type="addbuff",id=161160}},
+	[12601] = {id = 12601, NameZh = '滑板鞋', Effect = {type="addbuff",id=161170}},
+	[12602] = {id = 12602, NameZh = '急救箱', Effect = {type="addbuff",id=161180}},
+	[12603] = {id = 12603, NameZh = '护具', Effect = {type="addbuff",id=161190}},
+	[12604] = {id = 12604, NameZh = '火油', Effect = {type="addbuff",id=161200}},
+	[12605] = {id = 12605, NameZh = '大力丸', Effect = {type="addbuff",id=161210}},
+	[12606] = {id = 12606, NameZh = '怀表', Effect = {type="addbuff",id=161220}},
+	[12607] = {id = 12607, NameZh = '护盾', Effect = {type="addbuff",id=161230}},
+	[12608] = {id = 12608, NameZh = '净化器', Effect = {type="killer",id={210000,210001}}},
+	[12609] = {id = 12609, NameZh = '老千牌', Effect = {type="addbuff",id=161270}},
+	[12610] = {id = 12610, NameZh = '托尔的迅捷', Effect = {type="addbuff",id=161390}},
+	[12611] = {id = 12611, NameZh = '女武神的视界', Effect = {type="addbuff",id=161400}},
+	[12612] = {id = 12612, NameZh = '巴德尔的守护', Effect = {type="addbuff",id=161410}},
+	[12613] = {id = 12613, NameZh = '提尔的英勇', Effect = {type="addbuff",id=161420}},
+	[12614] = {id = 12614, NameZh = '奥丁的赐福', Effect = {type="addbuff",id=161430}},
+	[12615] = {id = 12615, NameZh = '洛基的狡诈', Effect = {type="addbuff",id=161440}},
+	[12616] = {id = 12616, NameZh = '芙蕾雅的智慧', Effect = {type="addbuff",id=161450}},
+	[12620] = {id = 12620, NameZh = '40级base卡', Effect = {type="basetolevel",num=40}},
+	[12621] = {id = 12621, NameZh = '80级base卡', Effect = {type="basetolevel",num=80}},
+	[12622] = {id = 12622, NameZh = '1转Job40级', Effect = {type="jobtolevel", num=50}},
+	[12623] = {id = 12623, NameZh = '2转Job40级', Effect = {type="jobtolevel", num=90}},
+	[12624] = {id = 12624, NameZh = '2转进阶Job40', Effect = {type="jobtolevel", num=130}},
+	[12637] = {id = 12637, NameZh = '99级base卡', Effect = {type="basetolevel",num=99}},
+}
+return Table_ItemPickEffect

@@ -1,0 +1,6 @@
+--md5:f33af4a657dbd41d6a070533e0d50d7a
+Table_Ectype = { 
+	[1] = {id = 1, name = '测试场景', picture = '', coordinate = {500,500}, NormalStageID = {100101,100102,100103,100104,100105}, HardStageID = {100101,100102,100103,100104,100105}, rewardsValue1 = 5, rewardID1 = 1, rewardsValue2 = 10, rewardID2 = 2, rewardsValue3 = 15, rewardID3 = 3},
+	[2] = {id = 2, name = '测试场景2', picture = '', coordinate = {800,800}, NormalStageID = {100201,100202,100203,100204,100205}, HardStageID = {100201,100202,100203,100204,100205}, rewardsValue1 = 5, rewardID1 = 1, rewardsValue2 = 10, rewardID2 = 2, rewardsValue3 = 15, rewardID3 = 3},
+}
+return Table_Ectype

@@ -1,0 +1,57 @@
+﻿--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+--转职长廊
+GameConfig.ChangeJob = {
+  cameraGroup1 = {0},
+  cameraGroup2 = {1},
+  movePos = {{0,0,3}, {0,0,18}, {0,0,29.5}},
+}
+
+--修复封印
+GameConfig.Seal = {
+  skillid = 20003001,
+  npcid = 1500,
+  refreshinterval = 60,
+  sealRefresh = 1200,
+  changePositionTime = 300,
+  maxSealNum = 5,
+  itemGuardTime = 60,
+  barSpeed = 16,
+  sealNexttime = 17,
+  sealRange = 15,
+  rewardRange = 7,
+  shakeScreen = "shakescreen amplitude=10, msec=2000, shaketype=1",
+  dropDelay = 2,
+  preActionTime = 1,
+  countDownTime = 5,
+  npclv = {[5]=15, [6]=25, [8]=35, [9]=40, [11]=43, [12]=46, [13]=49, [14]=52, [15]=55, [16]=58, [17]=61, [18]=64, [19]=67, [20]=70, [21]=73, [22]=76, [23]=79, [24]=82, [25]=85, [26]=88, [27]=91, [28]=94, [29]=97, [30]=103, [32]=75, [34]=85, [35]=55},
+  quickfinish_cost = 5522,
+  quickFinishBuff = 119,
+  quickfinish_cost = {{5600,5},{5601, 11},{5602, 14},{5603, 35},{5604, 32},{5605, 23},{5606, 26},{5522, 0}},
+  waitTime = 5, --开启时空裂隙等待时间
+}
+
+--研究所
+GameConfig.Laboratory = {
+  garden = {150,0.1},   --每(150+baselevel*0.1)的研究所积分兑换1个乐园币
+  rob = {1.2,0.02},  --每(1.2+baselevel*0.02)的研究所积分兑换1个银币
+}
+
+--无限塔相关配置
+GameConfig.EndlessTower = {
+   defaultFloor=100,
+   rewardReset=86400,
+   maxskilllv = 10,
+   minibossscale = {1.2,1.5},
+   bossboxpos = {{1, 9, {-9.9, 8, 10.8}}, {10, 99, {-181, 185.5, 15.5}}},
+   rewardbox = {id=1209, scale={2.5, 2.5}, dir=180, behavior=1024},
+   rewardbox_action_unget = 2001,
+   rewardbox_action_get = 2002,
+   rewardbox_range = 1,
+   rewardbox_effect = "Common/79smog",
+   boss_floor_effect = 4,
+   limit_user_lv = 50,
+   record_layer = 10,    --无限塔记录层数
+   deadboss = 100, 
+}

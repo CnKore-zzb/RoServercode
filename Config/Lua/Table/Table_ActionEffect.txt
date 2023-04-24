@@ -1,0 +1,9 @@
+--md5:9a1da80d305e16c1b794cade09ba9718
+Table_ActionEffect = { 
+	[1] = {id = 1, NameZh = '机匠男PLAYSHOW', NameAction = 'playshow', BodyID = 91, EffectID = 1},
+	[2] = {id = 2, NameZh = '机匠女PLAYSHOW', NameAction = 'playshow', BodyID = 92, EffectID = 2},
+	[3] = {id = 3, NameZh = '卡浩PLAYSHOW', NameAction = 'playshow', BodyID = 30047, EffectID = 3},
+	[4] = {id = 4, NameZh = '机匠机甲男银河战士版playshow', NameAction = 'playshow', BodyID = 93, EffectID = 4},
+	[5] = {id = 5, NameZh = '机匠机甲女银河战士版playshow', NameAction = 'playshow', BodyID = 94, EffectID = 5},
+}
+return Table_ActionEffect

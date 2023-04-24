@@ -1,0 +1,219 @@
+------------------------------商人系一坨乱七八糟公式
+function CommonFun.calcExchangePendingCount(srcUser)
+local skilllv_1 = srcUser:GetLernedSkillLevel(262)
+
+return skilllv_1 ~=nil and skilllv_1  
+
+end
+
+-- 商人制作 基础概率计算
+function CommonFun.calcProduceRate(srcUser, etype, category,composeid)
+
+ ------------------------------------------------------------------------------3魔石制作4尖锐合金制作5武器制作 
+ if srcUser == nil then
+    return 0
+ end
+------------------------------------------------武器制作成功率
+ if etype==3 and category==5 then
+
+     ------------------------------------------------------------------------------武器制作
+     local skilllv_1 = srcUser:GetLernedSkillLevel(261)
+     ------------------------------------------------------------------------------武器研究
+     local skilllv_2 = srcUser:GetLernedSkillLevel(214)
+     ------------------------------------------------------------------------------制作大师
+     local skilllv_3 = srcUser:GetLernedSkillLevel(221)
+
+     local Dex    =  srcUser:GetProperty("Dex")
+     local Luk    =  srcUser:GetProperty("Luk")
+
+    local A1     =  (skilllv_1*75+450) + (skilllv_2*50) +(Dex/8 + Luk/8)*(1 + skilllv_3*0.05)*100
+
+  -----------------------------------------------------------------武器制作最大值判断
+     if A1>= 8000  then
+        A1 = 8000
+     end   
+      
+     if skilllv_1 <= 0 then
+        A1 = 0
+     end   
+
+    return A1
+ end
+------------------------------------------------尖锐合金制作成功率
+ if etype==3 and category==4 then
+
+     ------------------------------------------------------------------------------制作大师
+     local skilllv_3 = srcUser:GetLernedSkillLevel(221)
+     ------------------------------------------------------------------------------尖锐合金
+     local skilllv_6 = srcUser:GetLernedSkillLevel(218)
+     
+     local Dex    =  srcUser:GetProperty("Dex")
+     local Luk    =  srcUser:GetProperty("Luk")
+
+     local A2     =  (skilllv_6*100+700) + (Dex/8 + Luk/8)*(1 + skilllv_3*0.05)*100
+
+     -------------------------------------------------------------------尖锐合金最大值判断
+     if A2 >= 8500 then
+        A2  = 8500
+     end   
+     
+     if skilllv_6 <= 0 then
+        A2 = 0
+     end    
+
+    return A2
+ end 
+------------------------------------------------魔石制作成功率
+ if etype==3 and category==3 then
+
+    ------------------------------------------------------------------------------制作大师
+     local skilllv_3 = srcUser:GetLernedSkillLevel(221)
+     ------------------------------------------------------------------------------魔石制作
+     local skilllv_4 = srcUser:GetLernedSkillLevel(269)
+
+     local Dex    =  srcUser:GetProperty("Dex")
+     local Luk    =  srcUser:GetProperty("Luk")
+
+     local A3     =  (skilllv_4*220 + 1810)+(Dex/8 + Luk/8)*(1+skilllv_3*0.05)*100
+
+    -------------------------------------------------------------------魔石最大值判断
+     if A3 >= 9000 then
+        A3  = 9000
+     end   
+     
+     if skilllv_4 <= 0 then
+        A3 = 0
+     end  
+
+    return A3
+ end    
+ ----------------------------------------------炼金制作成功率
+ if etype==4 and (category==8 or category==9) then
+    local BaseRate = {[1310]=5000,[1320]=5000,[1330]=5000,[1340]=3000,[1350]=3000,[1360]=3000,[1370]=3000,[1380]=5000,[1390]=5000,[1400]=0,}
+    ------------------------------------------------------------------------------配药
+    local skilllv_5 = srcUser:GetLernedSkillLevel(418)
+    ------------------------------------------------------------------------------知识药水
+    local skilllv_6 = srcUser:GetLernedSkillLevel(419)
+
+    local Dex    =  srcUser:GetProperty("Dex")
+    local Luk    =  srcUser:GetProperty("Luk")
+
+    local AttrRate = (Dex + Luk)*25
+
+    if AttrRate>3000 then
+        AttrRate = 3000
+    end    
+
+    if BaseRate[composeid] == nil then
+        BaseRate[composeid] =0
+    end
+
+    local A4 = BaseRate[composeid] + skilllv_5*200 + skilllv_6*200 + AttrRate
+
+    if A4>10000 then
+      A4 = 10000
+    end
+
+    return A4
+ end 
+-------------------------------------------------符文石制作成功率
+ if etype==5 and category==11 then
+    local BaseRate = {[1420]=0,[1421]=1000,[1422]=2000,[1423]=0,[1424]=1000,[1425]=500,}
+    local skilllv_fuwen = srcUser:GetLernedSkillLevel(1268)----------符文掌握
+    local Str    =  srcUser:GetProperty("Str")
+    local Int    =  srcUser:GetProperty("Int")
+
+    local Attr  = Str*5 + Int*10
+    if Attr > 2000 then
+        Attr = 2000
+    end
+
+    if BaseRate[composeid] == nil then
+        BaseRate[composeid] =0
+    end
+
+    local A5 = BaseRate[composeid] + skilllv_fuwen*1000 + Attr
+   
+    if A5>10000 then
+      A5 = 10000
+    end
+
+    return A5
+ end
+
+  return 0
+end
+
+-----------------------------------------------------------------------------------交易大师
+function CommonFun.calcTradeMaxPendingCout(srcUser)
+
+local skilllv_1 = srcUser:GetLernedSkillLevel(262)
+
+if srcUser == nil then
+  return 0
+end
+
+  local basecount = 0
+  if GameConfig.Exchange ~= nil then
+    basecount = GameConfig.Exchange.MaxPendingCount
+  end
+
+  -- check skill lv
+  return basecount+skilllv_1
+end
+-----------------------------------------------------------------------------------露天商店 摆摊位
+function CommonFun.calcBoothMaxPendingCout(srcUser)
+
+local skilllv_1 = srcUser:GetLernedSkillLevel(278)
+
+if srcUser == nil then
+  return 0
+end
+
+  local basecount = 0
+  if GameConfig.Booth ~= nil then
+    basecount = GameConfig.Booth.base_pending_count
+  end
+
+  -- check skill lv
+  return basecount+skilllv_1
+end
+----------------------------------------------------------------------交易大师
+
+function CommonFun.calcTradeBackMoneyPer(srcUser)
+local skilllv_1 = srcUser:GetLernedSkillLevel(273)
+local A = skilllv_1*0.2-0.1
+
+if A <= 0 then
+   A  = 0
+end 
+
+if srcUser == nil then
+    return 0
+end
+  return A
+end
+
+
+ ------------------------------------------------------------------------------金属研究
+function CommonFun.calcOrideconResearch(srcUser)
+
+local skilllv_1 = srcUser:GetLernedSkillLevel(270)
+local Dex    =  srcUser:GetProperty("Dex")
+local Luk    =  srcUser:GetProperty("Luk")
+ 
+local DL     =  Dex/6000 + Luk/6000
+
+if DL >= 0.05 then
+   DL  = 0.05
+end     
+
+local Value = skilllv_1*0.005 + DL
+
+if  skilllv_1 <=0 then
+    Value=0
+end    
+
+return Value ~=nil and Value
+
+end  

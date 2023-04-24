@@ -1,0 +1,184 @@
+GameConfig.GvgDroiyan = {
+    -- 出生华丽水晶配置
+	BornGorgeousMetal = {
+    [1] = { pos = {81.2,-7.625,100.1}, color = {1,1,1,1}},
+    [2] = { pos = {-82.703,-7.625,100.153}, color = {1,1,1,1}},
+    [3] = { pos = {-82.819,-7.57,-72.535}, color = {1,1,1,1}},
+    [4] = { pos = {83.924,-7.57,-71.135}, color = {1,1,1,1}},
+    },
+	
+	PrepareLimitArea = {
+	[1] = {pos = {81.2,-7.625,100.1},radius = 32},
+	[2] = {pos = {-82.703,-7.625,100.153},radius = 32},
+	[3] = {pos = {-82.819,-7.57,-72.535},radius = 32},
+	[4] = {pos = {83.924,-7.57,-71.135},radius = 32},
+	},
+	
+	--决战争夺平台
+	RobPlatform = {
+    [1] = {
+     pos = {-1.82, 4.91, 13.37},
+     occupy_range = 12, -- 占领圈范围
+     base_speed = 60, -- 基础速度
+     crystal_num = 2, -- 占领后获取晶体数量
+     show_npc = 7714, -- 光圈npc
+	 name = "华丽核心",
+	 RobPlatform_Area = 12,
+     },
+    [2] = {
+     pos = {-81.94, -8.382, 13.37},
+     occupy_range = 12,
+     base_speed = 60,
+     crystal_num = 1,
+     show_npc = 7715,
+	 name = "西部水晶塔",
+	 RobPlatform_Area = 12,
+     },
+    [3] = {
+     pos = {77.93, -8.37, 12.38},
+     occupy_range = 12,
+     base_speed = 60,
+     crystal_num = 1,
+     show_npc = 7716,
+	 name = "东部水晶塔",
+	 RobPlatform_Area = 12,
+     },
+    },
+	
+	-- 争夺平台的总占领值
+    RobPlatform_RobValue = 3200,
+
+    -- 公会数量与速度修正
+    GuildNumToSpeed = {
+     {guild_num = 1, speed_per = 1},
+     {guild_num = 2, speed_per = 1},
+	 {guild_num = 3, speed_per = 1},
+    },
+
+    -- 玩家数量与速度修正
+    UserNumToSpeed = {
+     {user_num = 1, speed_per = 1},
+     {user_num = 7, speed_per = 1.2},
+	 {user_num = 15, speed_per =  2},
+    },
+ 
+    DefaultShowActionID = 1001 ,    --占领圈默认动作id
+ 
+    -- 营地信息
+    CampInfo = {
+     [1] = {
+      metal_uniqueid = 27, -- 华丽金属uid, 对应地图配置
+      barrier_uniqueid = 23, -- 空气墙uid
+      bp_point = 1, -- 出生点
+	  show_actionid = 2001, --光圈动作id
+      color_name = "ff3a43",
+      },
+     [2] = {
+	  metal_uniqueid = 28, -- 华丽金属uid, 对应地图配置
+      barrier_uniqueid = 21, -- 空气墙uid
+      bp_point = 2, -- 出生点
+	  show_actionid = 3001, --光圈动作id
+      color_name = "21d0fc",      
+      },
+     [3] = {
+      metal_uniqueid = 25, -- 华丽金属uid, 对应地图配置
+      barrier_uniqueid = 24, -- 空气墙uid
+      bp_point = 3, -- 出生点
+	  show_actionid = 4001, --光圈动作id
+      color_name = "d16fff",  
+      },
+     [4] = {
+      metal_uniqueid = 26, -- 华丽金属uid, 对应地图配置
+      barrier_uniqueid = 22, -- 空气墙uid
+      bp_point = 4, -- 出生点
+	  show_actionid = 5001, --光圈动作id
+      color_name = "7bec5f",  
+      },
+     },
+	 
+	RaidID = 9090,   -- 副本id
+    NorthSceneEffectIDs = {2620,2630,2640,2650,2660,2670,2680,2690,2700,2710},    --场景buff效果, 对应PveCardEffect表id
+	SouthSceneEffectIDs = {2720,2730,2740,2750,2760,2770,2780,2790,2800,2810},    --场景buff效果, 对应PveCardEffect表id
+    MetalGodBuff = 152, -- 华丽金属无敌buff
+    MetalGodTime = 180, -- 华丽金属无敌时间
+    SouthBossUids = {1,2,3,4,5,6,7,8,9,10},
+    NorthBossUids = {11,12,13,14,15,16,17,18,19,20},
+    BossIDs = {230010,230020,230030,230040,230050,230060,230070,230080,230090,230100,230110,230120,230130,230140}, 
+	
+    -- 公会奖励
+	GuildReward = {{itemid = 5543, count = 200}},
+	UserReward = {{itemid = 156, count = 2000}},
+	UserStableReward = {{itemid = 3720, count = 2}},
+	
+	-- 排位奖励倍率
+	RankScore = {7,4,2,1},
+	GvgDroiyanReward = {
+     [1] = {
+      win_rate = {0, 3},
+      rank = { 
+        {rank = 1, guild_reward_per = 1, user_reward_per = 1.4},
+        {rank = 2, guild_reward_per = 0.4, user_reward_per = 1.2},
+        {rank = 3, guild_reward_per = 0, user_reward_per = 1.2},
+        {rank = 4, guild_reward_per = 0, user_reward_per = 1},
+       },
+	LvDesc = "辰星组",
+     },
+
+     [2] = {
+      win_rate = {3, 5},
+      rank = {
+        {rank = 1, guild_reward_per = 1, user_reward_per = 1.8},
+        {rank = 2, guild_reward_per = 0.4, user_reward_per = 1.6},
+        {rank = 3, guild_reward_per = 0, user_reward_per = 1.6},
+        {rank = 4, guild_reward_per = 0, user_reward_per = 1.4},
+       },
+	LvDesc = "辉月组",
+     },
+	 
+     [3] = {
+      win_rate = {5, 7},
+      rank = {
+        {rank = 1, guild_reward_per = 1, user_reward_per = 2},
+        {rank = 2, guild_reward_per = 0.6, user_reward_per = 2},
+        {rank = 3, guild_reward_per = 0.4, user_reward_per = 2},
+        {rank = 4, guild_reward_per = 0.2, user_reward_per = 2},
+       },
+	LvDesc = "炎阳组",
+     },
+    },
+	
+	MetalDieExpelTime = 30,  --据点击破惩罚时间
+	
+	FirstBossTime = 60,    --第一次出boss时间
+	MinBossInterval = 120,
+	MaxBossInterval=150,
+	
+	BuffEffectInterval = 30,  --场景效果间隔BUFF
+	
+	WinNeedCrystalNum = 5,    -- 胜利所需水晶数量
+
+	ComposeChipNum = 4,      -- 合成水晶需要的碎片数
+	
+	RewardUserMail = 12109,   --玩家参战奖励邮件
+	
+	TakePartInTime = 180,    --最小参战时间
+	
+	BeginTime=1500,         --公会战开战后, 决战开始还需要的时间
+
+	NoticeTime =300,        --决战开始前一段时间, 提示
+	
+	ExpelSkill = 10152001,  --驱逐2
+	
+    MatchToEnterTime = 120,  --报名到可以进入的时间
+	
+	MatchToFireTime = 300,   --报名到开战的时间
+	
+    TowerOpenTime = 180,    --开战到开放占领塔的时间
+	
+	ItemDispTime = 30,      --掉落BUFF存在时间
+	
+	OneSecJoinUserNum = 50,       --一秒限制进入人数
+	
+	ExtraRewardMail = 12005,	--活动期间额外奖励邮件
+	ExtraRewardMsg = 25808,		--活动期间额外奖励提示
+}

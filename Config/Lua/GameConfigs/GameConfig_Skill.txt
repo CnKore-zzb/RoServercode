@@ -1,0 +1,104 @@
+--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+GameConfig.SkillType = {
+    Attack={type="Attack",name="主动技能"},
+    Buff={type="Buff",name="主动技能"},
+    DeBuff={type="DeBuff",name="主动技能"},
+    Heal={type="Heal",name="主动技能"},
+    Cure={type="Cure",name="主动技能"},
+    Passive={type="Passive",name="被动技能"},
+    Collect={type="Collect",name="主动技能"},
+    Telesport={type="Telesport",name="主动技能"},
+    Summon={type="Summon",name="主动技能"},
+    Reborn={type="Reborn",name="主动技能"},
+    Purify={type="Purify",name="冒险技能",nodrag=1},
+    FakeDead={type="FakeDead",name="冒险技能"},
+    TrapSkill={type="TrapSkill",name="主动技能"},
+    Repair={type="Repair",name="主动技能"},
+    BowlingBash={type="BowlingBash",name="主动技能"},
+    BeatBack={type="BeatBack",name="主动技能"},
+    Barrier={type="Barrier",name="主动技能"},
+    TriggerTrap={type="TriggerTrap",name="主动技能"},
+    Suicide={type="Suicide",name="主动技能"},
+    Function={type="Function",name="主动技能"},
+    GroupReborn={type="GroupReborn",name="主动技能"},
+    MarkHealSkill={type="MarkHealSkill",name="主动技能"},
+    LeadSkill={type="LeadSkill",name="主动技能"},
+    TrapNpc={type="TrapNpc",name="主动技能"},
+    SwordBreak={type="SwordBreak",name="主动技能"},
+    Eat={type="Eat",name="主动技能"},
+    ShowSkill={type="ShowSkill",name="主动技能"},
+    TouchPet={type="TouchPet",name="主动技能"},
+    SummonBeing={type="SummonBeing",name="主动技能"},
+    ReviveBeing={type="ReviveBeing",name="主动技能"},
+    BeingBuff={type="BeingBuff",name="主动技能"},
+    HellPlant={type="HellPlant",name="主动技能"},
+    RandomSkill={type="RandomSkill",name="主动技能"},
+    UseBeingSkill={type="UseBeingSkill",name="主动技能"},
+    StealMoney={type="StealMoney",name="主动技能"},
+    Seize={type="Seize",name="主动技能"},
+    Control={type="Control",name="主动技能"},
+    RemoveTrap={type="RemoveTrap",name="主动技能"},
+    PoliAttack={type="PoliAttack",name="主动技能"},
+    Blink={type="Blink",name="主动技能"},
+    TrapMonster={type="TrapMonster",name="主动技能"},
+    CopySkill={type="CopySkill",name="主动技能"},
+    FastRestore={type="FastRestore",name="主动技能"},
+    SpaceLeap={type="SpaceLeap",name="主动技能"},
+    Transport={type="Transport",name="主动技能"},
+    GoMap={type="GoMap",name="主动技能"},
+    Wedding={type="Wedding",name="主动技能"},
+    ClearEffect={type="ClearEffect",name="主动技能"},
+    CursedCircle={type="CursedCircle",name="主动技能"},
+    RideChange={type="RideChange",name="主动技能"},
+    Revive={type="Revive",name="主动技能"},
+    ElementTrap={type="ElementTrap",name="主动技能"},
+    SummonElement={type="SummonElement",name="主动技能"},
+    StopConcert={type="StopConcert",name="主动技能"},
+    Solo={type="Solo",name="主动技能"},
+    Ensemble={type="Ensemble",name="主动技能"},
+}
+
+--配置广角特写技能的范围
+--freeViewSkill=自由视角，minViewPortSkill=广角镜头，maxViewPortSkill=特写镜头
+GameConfig.PhotographAdSkill = {
+    freeViewSkill = 50006001,
+    minViewPortSkill = 50007001,
+    maxViewPortSkill = 50008001,
+    gostSkill = 50003001,
+    copSkill = 50012001,
+	  cgDisSkill = 50030001,
+}
+
+--配置自动锁敌的冒险技能ID、保护队友、原地警戒
+GameConfig.AutoAimMonster = {SkillId = 50018001, ProtectSkillId = 50025001, UnmovableSkillId = 50026001}
+--冒险技能--眨眼
+GameConfig.Expression_Blink = {
+  needskill = 50015001,
+}
+-----------------------冒险技能搜索MINI怪搜索MVP怪
+GameConfig.Expression_SearchSkill ={
+  searchminiskill=50016001,
+  searchmvpskill =50017001,
+}
+
+
+GameConfig.SkillAutoQueueID = {50044001,"打开或关闭预备技能功能"}
+
+GameConfig.SkillShort = {Auto = 7}   ---自动技能快捷栏上限设置
+
+-----武僧连击自动施放
+GameConfig.AutoSkillGroup = {
+Monk_Combo = {304,305,316,317},
+}
+
+
+--巅峰技能所需要的投入的技能点数
+GameConfig.Peak = {
+	SkillPointToBreak = 120,
+	UnlockExtraSkillPoints = {[1] = 0, [2] = 0, [3] = 30},
+	itemaddlevel = {{item = 5550,num = 9, level = 3}},
+	Evo2PreSkillPoint = {[4] = 150},      --4转技能开启
+}
+     

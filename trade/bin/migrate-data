@@ -1,0 +1,1946 @@
+#!/usr/bin/env php
+<?php
+
+namespace RO\Trade;
+
+use RO\Cmd\EOperType;
+use RO\MySQLi;
+use \Exception;
+
+include __DIR__.'/../vendor/autoload.php';
+
+$shortOpts = '';
+$shortOpts .= 'p:';     // -p 平台名
+$shortOpts .= 'r:';     // -r regionname
+$shortOpts .= 'v:';     // -v 版本
+
+$longOpts = [
+    'local',        // --local 本地开发模式，不重新编译文件
+    'timezone',     // --timezone 时区
+    'debug',        // --debug 使用默认配置参数
+];
+
+$options = getopt($shortOpts, $longOpts);
+
+define('IS_DEBUG', isset($options['debug']));
+
+
+function getInsertSql($table, $data)
+{
+    $fields = [];
+    $values = [];
+    foreach ($data as $key => $field)
+    {
+        $values[] = quoteValue($field);
+        $fields[] = $key;
+    }
+
+    return "INSERT INTO `" . $table . "` (`" . implode('`, `', $fields) . "`) VALUES (" . implode(", ", $values) . ")";
+}
+
+function quoteValue($value)
+{
+    global $myDb;
+
+    if($value instanceof Hex)
+    {
+        return $value->data;
+    }
+    elseif (is_string($value))
+    {
+        return "'" . $myDb->real_escape_string($value) . "'";
+    }
+    elseif (is_null($value))
+    {
+        return 'NULL';
+    }
+    else
+    {
+        # int, float
+        return "'$value'";
+    }
+}
+
+class Hex
+{
+    public $data;
+
+    public function __construct($data)
+    {
+        $this->data = '0x' . bin2hex($data);
+    }
+}
+
+class BatchInsert
+{
+    public $tableName;
+
+    /** @var MySQLi */
+    public $db;
+
+    public $values = [];
+
+    public $fields = [];
+
+    public $batchNum = 1000;
+
+    private $lastSql = '';
+
+    private $_count = 0;
+
+    public function __construct($db, $tableName, $fields)
+    {
+        $this->db = $db;
+        $this->tableName = $tableName;
+        $this->fields = $fields;
+    }
+
+    /**
+     * 添加并批量插入sql, 当添加的数据量达到设置的批量数值则执行插入
+     *
+     * @param $values
+     * @param null $batchNum
+     * @return bool|\mysqli_result
+     */
+    public function addAndBatchExecute($values, $batchNum = null)
+    {
+        if ($batchNum === null) $batchNum = $this->batchNum;
+
+        $this->add($values);
+
+        if (++$this->_count % $batchNum === 0)
+        {
+            $rs = $this->execute();
+            $this->values = [];
+            $this->_count = 0;
+            return $rs;
+        }
+
+        return true;
+    }
+
+    /**
+     * 执行批量插入
+     *
+     * @return bool|\mysqli_result
+     * @throws \Exception
+     */
+    public function execute()
+    {
+        if(empty($this->values)) return true;
+
+        $rs = $this->db->query($this->getBatchInsertSql());
+        if (!$rs)
+        {
+            throw new \Exception($this->tableName . '批量插入失败 Error: ' . $this->getError());
+        }
+
+        return $rs;
+    }
+
+    public function getError()
+    {
+        return $this->db->error;
+    }
+
+    public function add($values)
+    {
+        $newValues = [];
+        foreach ($values as $value)
+        {
+            $newValues[] = $this->quoteValue($value);
+        }
+
+        $this->values[] = $newValues;
+    }
+
+    public function getBatchInsertSql()
+    {
+        $fields = "(`". implode('`, `', $this->fields) ."`)";
+        $refundSql = 'INSERT INTO `' . $this->tableName . '` ' . $fields . ' VALUES ';
+        foreach ($this->values as $values)
+        {
+            $refundSql .= "(" . implode(',', $values) . "), ";
+        }
+
+        $this->lastSql = rtrim($refundSql, ', ') . ';';
+        return $this->lastSql;
+    }
+
+    public function getLastSql()
+    {
+        return $this->lastSql;
+    }
+
+    function quoteValue($value)
+    {
+        if($value instanceof Hex)
+        {
+            return $value->data;
+        }
+        elseif (is_string($value))
+        {
+            return "'" . $this->db->real_escape_string($value) . "'";
+        }
+        elseif (is_null($value))
+        {
+            return 'NULL';
+        }
+        else
+        {
+            # int, float
+            return "'$value'";
+        }
+    }
+}
+
+function logger($label, $warp = false, $color = '[36m')
+{
+    $beg = "\x1b{$color}";
+    $end = "\x1b[39m";
+    list($f, $t) = explode(' ', microtime());
+    $f   = substr($f, 1, 4);
+    $type = 'info';
+    $str = $beg .'['. date("Y-m-d H:i:s", $t) . "{$f}][{$type}]{$end} " . $label;
+    echo (!$warp ? "\r" : "\n") . $str . ($warp ? "\n" : '');
+}
+
+function warn($label)
+{
+    logger($label, true, '[31m');
+}
+
+class Server
+{
+    /**
+     * 物品信息多进程共享表，key 为 itemid
+     *
+     * @var \Swoole\Table
+     */
+    public static $item;
+
+    /**
+     * ItemList 表
+     *
+     *
+     * @var \Swoole\Table
+     */
+    public static $itemList;
+
+    /**
+     * ItemList Id对应的共享表
+     *
+     * @var \Swoole\Table
+     */
+    public static $itemListId2KeyMap;
+
+    /**
+     * 服务器配置
+     *
+     * （从游戏服务器的 GameConfig 文件中读取）
+     *
+     * @var array
+     */
+    public static $configExchange;
+
+    /**
+     * 当前数据目录
+     *
+     * @var string
+     */
+    public static $dataDir;
+
+    /**
+     * JSON配置目录
+     *
+     * @var string
+     */
+    public static $configPath;
+
+    /**
+     * 有--debug参数时,读下面的配置。
+     *
+     * @var array
+     */
+    public static $config = [
+        'destination' => [
+            "master" => "172.26.24.113:3306",
+            "user" => "root",
+            "pass" => "admin",
+            "db"   => "ro_xd_r9",
+            "charset" => "utf8mb4"
+        ],
+        'source'      => [
+            "master" => "172.26.24.113:3306",
+            "user" => "root",
+            "pass" => "admin",
+            "db"   => "ro_xd_r20",
+            "charset" => "utf8mb4"
+        ],
+//        'source'      => [
+//            "master" => "10.1.54.109:5222",
+//            "user" => "backup",
+//            "pass" => "CZ3wMrfGbs3XqU",
+//            "db"   => "ro_xd_r1",
+//            "charset" => "utf8mb4"
+//        ],
+        'roDb' => [
+            "master" => "172.26.24.122:4000",
+            "user" => "root",
+            "pass" => "",
+            "db"   => "ro_xd_r20",
+            "charset" => "utf8mb4"
+        ],
+        'redis' => [
+            "10.1.54.109:6380"
+        ],
+        'regionId' => 10001,
+        'trade' => [
+            'goods' => [
+                'open' => true,
+                'id'   => 0,
+            ],
+            'buy' => [
+                'open' => true,
+                'id'   => 0,
+            ],
+            'sell' => [
+                'open' => true,
+                'id'   => 0,
+            ],
+            'pub' => [
+                'open' => true,
+                'id'   => 0,
+            ],
+            'item' => [
+                'open' => true,
+            ]
+        ]
+    ];
+
+    /**
+     * 分支ID
+     *
+     * 0 - 内网开发
+     *
+     * @var int
+     */
+    public static $branchID = 0;
+
+    /**
+     * 分支ID所对应的Key
+     *
+     * @var array
+     */
+    public static $branchKeys = [
+        0 => 'Debug',   // 内网
+        1 => 'TF',      // 预言之地
+        2 => 'Publish', // 正式服
+    ];
+
+    /**
+     * 平台ID
+     *
+     * @var string
+     */
+    public static $platId;
+
+    /**
+     * 平台名
+     *
+     * 例如: xd
+     *
+     * @var string
+     */
+    public static $platName;
+
+    /**
+     * 区Id
+     *
+     * @var string
+     */
+    public static $regionId;
+
+    /**
+     * 区名
+     *
+     * 例如: r9
+     *
+     * @var string
+     */
+    public static $regionName;
+
+    public function __construct()
+    {
+        $this->checkConfig();
+        $this->onBeforeStart();
+    }
+
+    protected function checkConfig()
+    {
+        if (version_compare(SWOOLE_VERSION, '1.9.6', '<'))
+        {
+            echo '必须 1.9.6 以上版本 Swoole';
+            exit;
+        }
+
+        if (!extension_loaded('ds'))
+        {
+            echo '必须安装ds扩展';
+            exit;
+        }
+
+        global $options;
+
+        if (!isset($options['p']))
+        {
+            $options['p'] = 'xd';
+        }
+
+        if (!isset($options['r']))
+        {
+            $options['r'] = 'r1';
+        }
+
+        self::$platName   = $options['p'];
+        self::$regionName = $options['r'];
+
+
+        if (isset($options['local']))
+        {
+            # 读取配置文件
+            self::$configPath = realpath(__DIR__.'/../config-dev/') .'/';
+            self::$branchID   = 0;
+        }
+        else
+        {
+            if (!is_file(__DIR__ .'/../../branch.lua'))
+            {
+                echo '配置 '. realpath(__DIR__ .'/../../') .'/branch.lua 文件不存在，无法启动';
+                exit;
+            }
+
+            try
+            {
+                $lua = new \Lua();
+                self::$branchID = intval($lua->eval(file_get_contents(__DIR__ . '/../../branch.lua') . "\nreturn BranchID.id"));
+                unset($lua);
+            }
+            catch (\Exception $e)
+            {
+                echo '解析 branch.lua 配置失败, '. $e->getMessage();
+                exit;
+            }
+
+
+            $configDir = realpath(__DIR__ .'/../') .'/config/';
+            self::$configPath = $configDir;
+
+            if (!is_dir($configDir))
+            {
+                if (false === mkdir($configDir, 0755, true))
+                {
+                    echo "配置目录 {$configDir} 无法创建，不能启动\n";
+                    exit;
+                }
+            }
+
+            try
+            {
+                # 重新生成配置
+                self::formatLua2json();
+            }
+            catch (\Exception $e)
+            {
+                echo '解析失败: '. $e->getMessage();
+                exit;
+            }
+        }
+
+        if (!isset(self::$branchKeys[self::$branchID]))
+        {
+            echo "未知 BranchID.id (". self::$branchID .")\n";exit;
+        }
+
+        if (0 === self::$branchID)
+        {
+            logger("当前启动的模式是开发模式", true);
+        }
+
+
+        self::$regionId = self::$config['regionId'];
+
+        if (!isset($options['debug']))
+        {
+            $config = self::loadBranchConfig();
+            self::$config['destination'] = $config['mysql'];
+            self::$config['source'] = $config['mysql'];
+            self::$config['redis'] = $config['redis'];
+            self::$config['roDb'] = $config['roDb'];
+
+            $mysql = new \RO\MySQLi($config['globalDB']);
+            $sql   = "SELECT `regionid`, `platid` FROM `region` WHERE `regionname` = ". $mysql->quote(self::$regionName);
+            if ($rs = $mysql->query($sql))
+            {
+                if ($rs->num_rows > 0)
+                {
+                    $row = $rs->fetch_object();
+                    self::$regionId = (int)$row->regionid;
+                }
+                else
+                {
+                    exit;
+                }
+                $rs->free();
+            }
+        }
+    }
+
+    public function onBeforeStart()
+    {
+        self::$configExchange = self::loadConfig('ExchangeConfig');
+
+        if (!self::$configExchange)
+        {
+            warn('加载交易所配置 ExchangeConfig.json 失败');
+            exit;
+        }
+
+        # 物品表信息
+        self::$item = new \Swoole\Table(1024 * 16);
+        self::$item->column('isTrade',           \Swoole\Table::TYPE_INT, 1);        # 是否售卖
+        self::$item->column('isOverlap',         \Swoole\Table::TYPE_INT, 1);        # 是否堆叠物品
+        self::$item->column('buying',            \Swoole\Table::TYPE_INT, 4);        # 有人正在购买
+        self::$item->column('sellingNum',        \Swoole\Table::TYPE_INT, 2);        # 正在卖的数量
+        self::$item->column('soldNum',           \Swoole\Table::TYPE_INT, 8);        # 近期成交数,该数值会由一个进程管理
+        self::$item->column('price',             \Swoole\Table::TYPE_INT, 4);        # 单价
+        self::$item->column('stock',             \Swoole\Table::TYPE_INT, 4);        # 总库存
+        self::$item->column('priceUpdateTime',   \Swoole\Table::TYPE_INT, 4);        # 价格最后更新时间
+        self::$item->column('cycle',             \Swoole\Table::TYPE_INT, 4);        # 价格调价周期
+        self::$item->column('exchangeNum',       \Swoole\Table::TYPE_INT, 4);        # 公示期交易量，在售物品少于此量的将为公示物品
+        self::$item->column('equipType',         \Swoole\Table::TYPE_INT, 4);        # 装备类型, 不是装备为0;
+        self::$item->column('itemType',          \Swoole\Table::TYPE_INT, 4);        # 物品类型
+        self::$item->column('publicityShowTime', \Swoole\Table::TYPE_INT, 4);        # 公示物品公示时间
+        self::$item->column('category',          \Swoole\Table::TYPE_INT, 4);        # 物品分类ID
+        self::$item->column('publicityNum',      \Swoole\Table::TYPE_INT, 1);        # 公示数
+        self::$item->column('name',              \Swoole\Table::TYPE_STRING, 128);   # 名称
+        self::$item->create();
+
+        # 物品列表信息
+        self::$itemList = new \Swoole\Table(1024 * 256);
+        self::$itemList->column('id',             \Swoole\Table::TYPE_INT, 4);       # ID
+        self::$itemList->column('item_id',        \Swoole\Table::TYPE_INT, 4);       # 物品id
+        self::$itemList->column('stock',          \Swoole\Table::TYPE_INT, 4);       # 库存
+        self::$itemList->column('is_publicity',   \Swoole\Table::TYPE_INT, 1);       # 是否公示
+        self::$itemList->column('pub_buy_people', \Swoole\Table::TYPE_INT, 4);       # 抢购人数
+        self::$itemList->column('pub_price',      \Swoole\Table::TYPE_INT, 8);       # 公示价格
+        self::$itemList->column('end_time',       \Swoole\Table::TYPE_INT, 4);       # 公示期结束时间
+        self::$itemList->column('refine_lv',      \Swoole\Table::TYPE_INT, 1);       # 精炼等级
+        self::$itemList->column('is_damage',      \Swoole\Table::TYPE_INT, 1);       # 是否损坏
+        self::$itemList->column('isOverlap',      \Swoole\Table::TYPE_INT, 1);       # 精炼等级
+        self::$itemList->column('item_data',      \Swoole\Table::TYPE_STRING, 512);  # itemData
+        self::$itemList->create();
+
+        # 加载RO配置
+        try
+        {
+            $this->transferItemInfo();
+            self::initData();
+        }
+        catch (\Exception $e)
+        {
+            warn('[服务启动] 加载配置发生错误, 错误信息:' . $e->getMessage() . ' 错误行数:'. $e->getLine() .' 错误文件:' . $e->getFile());
+            if (IS_DEBUG)
+            {
+                throw $e;
+            }
+
+            exit;
+        }
+    }
+
+    public static function loadBranchConfig()
+    {
+        $config = json_decode(file_get_contents(self::$configPath . 'BranchConfig.json'), true);
+        $branchKey = self::$branchKeys[self::$branchID];
+        if (!isset($config[$branchKey]))
+        {
+            throw new \Exception("指定的分支 {$branchKey} 配置不存在");
+        }
+
+        $config = $config[$branchKey];
+        $rs = [
+            'mysql'    => [],
+            'redis'    => [],
+            'globalDB' => [],
+        ];
+
+        foreach ($config['TradeDataBase'] as $st)
+        {
+            if (!isset($rs['mysql']['master']))
+            {
+                $rs['mysql'] = [
+                    'user'    => $st['user'],
+                    'pass'    => $st['password'],
+                    'master'  => "{$st['ip']}:{$st['port']}",
+                    'slave'   => [],
+                    'charset' => 'utf8mb4',
+                    'db'      => 'ro_'. self::$platName .'_'. self::$regionName,
+                ];
+            }
+            else
+            {
+                $rs['mysql']['slave'][] = "{$st['ip']}:{$st['port']}";
+            }
+        }
+
+        # ro 数据库
+        $st = current($config['DataBase']);
+        $rs['globalDB'] = [
+            'user'    => $st['user'],
+            'pass'    => $st['password'],
+            'master'  => "{$st['ip']}:{$st['port']}",
+            'slave'   => [],
+            'charset' => 'utf8mb4',
+            'db'      => 'ro_global',
+        ];
+
+        $rs['roDb']  = [
+            'user'    => $st['user'],
+            'pass'    => $st['password'],
+            'master'  => "{$st['ip']}:{$st['port']}",
+            'slave'   => [],
+            'charset' => 'utf8mb4',
+            'db'      => 'ro_'. self::$platName .'_'. self::$regionName,
+        ];
+
+        $rs['redis'][] = "{$config['Redis']['ip']}:{$config['Redis']['port']}";
+
+        return $rs;
+    }
+
+
+    /**
+     * 更新物品内存表信息
+     *
+     * 在价格管理进程启动后会执行
+     */
+    protected static function initData()
+    {
+        $sTime    = $begin = microtime(1);
+        $exchange = self::loadConfig('Exchange');
+        if (!$exchange)
+        {
+            warn('读取 Exchange.json 配置失败');
+            exit;
+        }
+
+        $equip = self::loadConfig('Equip');
+        if (!$equip)
+        {
+            warn('读取 Equip.json 配置失败');
+            exit;
+        }
+
+        $item = self::loadConfig('Item');
+        if (!$item)
+        {
+            warn('读取 Item.json 配置失败');
+            exit;
+        }
+
+        # 加载策划表配置
+        RoleDataConfig::loadConfig(self::loadConfig('RoleData'));
+        RefineTradeConfig::loadConfig(self::loadConfig('EquipRefine'));
+        EquipConfig::loadConfig($equip);
+        EnchantConfig::loadConfig(self::loadConfig('EquipEnchant'));
+        EnchantPriceConfig::loadConfig(self::loadConfig('EquipEnchantPrice'));
+
+        $mysql = self::createMySQL(true);
+        $redis = self::createRedis();
+        if (!$mysql || !$redis)
+        {
+            exit;
+        }
+
+        # 物品是否堆叠信息
+        $overlap  = [];
+        $category = [];
+        $begin    = microtime(1);
+        # 读取物品信息
+        $result   = $mysql->query('SELECT * FROM `trade_item_info`');
+        if ($result)
+        {
+            while ($row = $result->fetch_assoc())
+            {
+                $itemId = $row['itemid'];
+
+                if (!isset($exchange[$itemId]))
+                {
+                    continue;
+                }
+
+                if (!isset($item[$itemId]))
+                {
+                    unset($exchange[$itemId]);
+                    warn("[加载配置] Exchange 策划表配置异常，{$itemId} 在 Item 中不存在");
+                }
+
+                if (!isset($exchange[$itemId]['Overlap']))
+                {
+                    logger('Exchange配置表 itemId:' . $itemId . '缺少Overlap参数', true);
+                }
+
+                $itemExc = $exchange[$itemId];
+
+                $data = [
+                    'isTrade'           => (int)$itemExc['Trade'] ?: 0,
+                    'isOverlap'         => isset($itemExc['Overlap']) ? intval($itemExc['Overlap']) : 0,
+                    'name'              => $itemExc['NameZh'],
+                    'buying'            => 0,
+                    'soldNum'           => isset($soldNum[$itemId]) ? $soldNum[$itemId] : 0,
+                    'price'             => (int)$row['last_server_price'],
+                    'priceUpdateTime'   => (int)$row['last_calc_price_time'],
+                    'cycle'             => (int)$row['t'],
+                    'exchangeNum'       => isset($itemExc['ExchangeNum']) ? intval($itemExc['ExchangeNum']) : 0,
+                    'equipType'         => isset($equip[$itemId]['EquipType']) ? (int)$equip[$itemId]['EquipType'] : 0,
+                    'itemType'          => isset($item[$itemId]['Type']) ? (int)$item[$itemId]['Type'] : 0,
+                    'publicityShowTime' => isset($itemExc['ShowTime']) ? $itemExc['ShowTime'] : 0,
+                    'category'          => isset($itemExc['Category']) ? $itemExc['Category'] : 0,
+                ];
+                $overlap[$itemId]  = $data['isOverlap'];
+                $category[$itemId] = $data['category'];
+
+                self::$item->set($itemId, $data);
+
+                unset($exchange[$itemId]);
+            }
+
+            # 释放对象
+            $result->free();
+            unset($result);
+        }
+        else
+        {
+            warn("SQL: {$mysql->last_query}, Error: {$mysql->error}");
+            exit;
+        }
+
+        foreach ($exchange as $itemId => $itemExc)
+        {
+            if (!isset($item[$itemId]))
+            {
+                warn("[加载配置] Exchange 策划表配置异常，{$itemId} 在 Item 中不存在");
+            }
+            $data = [
+                'isTrade'           => $itemExc['Trade'] == 1 ?: 0,
+                'name'              => $itemExc['NameZh'],
+                'isOverlap'         => isset($itemExc['Overlap']) ? intval($itemExc['Overlap']) : 0,
+                'exchangeNum'       => isset($itemExc['ExchangeNum']) ? intval($itemExc['ExchangeNum']) : 0,
+                'equipType'         => isset($equip[$itemId]['EquipType']) ? $equip[$itemId]['EquipType'] : 0,
+                'itemType'          => isset($item[$itemId]['Type']) ? (int)$item[$itemId]['Type'] : 0,
+                'soldNum'           => 0,
+                'publicityShowTime' => isset($itemExc['ShowTime']) ? $itemExc['ShowTime'] : 0,
+                'category'          => isset($itemExc['Category']) ? $itemExc['Category'] : 0,
+            ];
+            $overlap[$itemId]  = $data['isOverlap'];
+            $category[$itemId] = $data['category'];
+
+            self::$item->set($itemId, $data);
+        }
+
+        $begin      = microtime(1);
+        $result     = $mysql->query('SELECT * FROM `trade_item_list`');
+        $itemStocks = [];
+        $pubNum     = [];
+        if ($result)
+        {
+            while ($row = $result->fetch_assoc())
+            {
+                $itemId           = (int)$row['item_id'];
+                $row['id']        = (int)$row['id'];
+                $row['isOverlap'] = $overlap[$itemId] ?: 0;
+                $row['category']  = $category[$itemId] ?: 0;
+
+                if ($row['is_publicity'] == 0)
+                {
+                    $row['end_time']       = 0;
+                    $row['pub_buy_people'] = 0;
+                    $row['pub_price']      = 0;
+                }
+
+                # 更新库存
+                if (!isset($itemStocks[$itemId]))
+                {
+                    $itemStocks[$itemId] = $row['stock'];
+                }
+                else
+                {
+                    $itemStocks[$itemId] += $row['stock'];
+                }
+
+                if ($row['is_publicity'] == 1)
+                {
+                    if (!isset($pubNum[$itemId]))
+                    {
+                        $pubNum[$itemId] = 1;
+                    }
+                    else
+                    {
+                        $pubNum[$itemId] += 1;
+                    }
+                }
+
+                self::$itemList->set($row['item_key'], $row);
+            }
+
+            if ($result->num_rows == 0)
+            {
+                $mysql->query('ALTER TABLE `trade_item_list` AUTO_INCREMENT = 1000000001');
+            }
+
+            $result->free();
+            unset($result);
+        }
+        else
+        {
+            warn("SQL: {$mysql->last_query}, Error: {$mysql->error}");
+            exit;
+        }
+
+        # 更新 Item 表的库存
+        foreach ($itemStocks as $itemId => $value)
+        {
+            self::$item->set($itemId, ['stock' => $value]);
+        }
+        foreach ($pubNum as $itemId => $value)
+        {
+            self::$item->set($itemId, ['publicityNum' => $value]);
+        }
+
+        $mysql->close();
+        $redis->close();
+
+        unset($mysql, $result, $exchange, $equip, $item, $redis);
+    }
+
+
+    /**
+     * 加载一个json配置
+     *
+     * @param string $file 不需要带 .json 后缀
+     * @return array|false
+     */
+    public static function loadConfig($file)
+    {
+        return @json_decode(file_get_contents(self::$configPath . $file .'.json'), true);
+    }
+
+    /**
+     * 编译lua文件到json配置
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    public static function formatLua2json()
+    {
+        $lua2bin  = escapeshellarg(realpath(__DIR__.'/lua2json'));
+        $codePath = escapeshellarg(realpath(__DIR__.'/../../') .'/');
+        $luaPath  = escapeshellarg(realpath(__DIR__.'/../../') .'/Lua/');
+        $confPath = escapeshellarg(self::$configPath);
+        exec("php -f $lua2bin $codePath $luaPath $confPath", $rs);
+        end($rs);
+
+        if (current($rs) == 'ok')return true;
+
+        throw new \Exception(implode("\n", $rs));
+    }
+
+
+    /**
+     * 返回一个 Redis 对象
+     *
+     * @return \RO\Redis|\Redis|\RedisCluster|bool
+     */
+    public static function createRedis()
+    {
+        try
+        {
+            if (count(self::$config['redis']) == 1)
+            {
+                list($host, $port) = explode(':', self::$config['redis'][0]);
+                $redis = new \RO\Redis();
+                $redis->connect($host, $port);
+//                $redis->setOption(\Redis::OPT_PREFIX, 'ro-trade:' . self::$regionId . ':');
+            }
+            else
+            {
+                $redis = new \RO\Redis(null, self::$config['redis']);
+//                $redis->setOption(\Redis::OPT_PREFIX, 'ro_trade:' . self::$regionId . ':');
+            }
+
+            return $redis;
+        }
+        catch (\Exception $e)
+        {
+            warn($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * 创建一个MySQL
+     *
+     * @param bool $master 是否主数据库
+     * @return bool|\RO\MySQLi
+     */
+    public static function createMySQL($master = true)
+    {
+        $obj = new \RO\MySQLi(self::$config['destination'], $master);
+
+        if ($obj->connect_errno)
+        {
+            warn($obj->connect_error);
+            return false;
+        }
+
+        return $obj;
+    }
+
+    /**
+     * 执行itemInfo迁移
+     * @throws \Exception
+     */
+    private function transferItemInfo()
+    {
+        if (!self::$config['trade']['item']['open'])
+        {
+            return;
+        }
+
+        $oldDb = new \RO\MySQLi(self::$config['source'], true);
+        if ($oldDb->connect_errno)
+        {
+            throw new \Exception("error: {$oldDb->connect_error}");
+        }
+
+        $mysql = self::createMySQL(true);
+
+        $rs = $oldDb->query("SELECT * FROM `trade_item_info`");
+        if ($rs)
+        {
+            while($data = $rs->fetch_object())
+            {
+                $sql = "REPLACE INTO `trade_item_info` (`itemid`, `last_server_price`, `last_calc_price_time`, `t`) VALUES ('{$data->itemid}', '{$data->last_server_price}', '{$data->last_calc_price_time}', '{$data->t}')";
+                $rs2 = $mysql->query($sql);
+                if (!$rs2)
+                {
+                    throw new \Exception("sql: {$sql} error: {$mysql->error}");
+                }
+            }
+
+            logger('迁移ItemInfo完毕', true);
+            $rs->free();
+        }
+        else
+        {
+            throw new \Exception("sql: SELECT * FROM `trade_item_info` error: {$oldDb->error}");
+        }
+
+        $mysql->close();
+        $oldDb->close();
+    }
+}
+
+$server = new Server();
+
+global $redis;
+$redis = Server::createRedis();
+
+# 用户信息缓存
+global $playerInfo;
+$playerInfo = [];
+
+
+$roDb = null;
+if (isset(Server::$config['roDb']))
+{
+    $roDb = new \RO\MySQLi(Server::$config['roDb'], true);
+    if ($roDb->connect_errno)
+    {
+        throw new \Exception("error: {$roDb->connect_error}");
+    }
+}
+
+/**
+ * 获取玩家信息
+ *
+ * @param $charId
+ * @return bool|null|string
+ */
+function getPlayerInfo($charId)
+{
+    global $redis;
+    global $playerInfo;
+    global $roDb;
+
+    if (isset($playerInfo[$charId]))
+    {
+        return $playerInfo[$charId];
+    }
+
+    $key = sprintf('%d:gchardata:%d:default:data', Server::$regionId, $charId);
+    if ($info = $redis->hGetAll($key))
+    {
+        if (!isset($info['name']))
+        {
+            $rs = null;
+        } else {
+            $rs = ['name' => $info['name']];
+            $playerInfo[$charId] = $rs;
+            return $rs;
+        }
+    }
+    else
+    {
+        $rs = null;
+    }
+
+    if ($rs === null)
+    {
+        if ($roDb === null)
+            return null;
+
+        $dbRs = $roDb->query("SELECT `name` FROM `charbase` WHERE `charid` = '{$charId}'");
+        if ($dbRs && ($row = $dbRs->fetch_assoc()))
+        {
+            $rs = ['name' => $row['name']];
+            $playerInfo[$charId] = $rs;
+        }
+    }
+
+    return $rs;
+}
+
+ini_set('memory_limit', '16G');
+
+$db = new \RO\MySQLi(Server::$config['source'], true);
+if ($db->connect_errno)
+{
+    throw new \Exception("error: {$db->connect_error}");
+}
+
+global $myDb;
+$myDb = new \RO\MySQLi(Server::$config['destination'], true);
+if ($myDb->connect_errno)
+{
+    throw new \Exception("error: {$db->connect_error}");
+}
+
+
+// 有数据则不执行了
+$rs = $myDb->query("SELECT COUNT(1) AS `count` FROM `trade_item_list`");
+if ($rs && ($count = $rs->fetch_assoc()))
+{
+    if ($count['count'] > 0)
+    {
+        logger('数据已存在,请先把所有表数据清理后再执行迁移');
+        exit;
+    }
+
+    $rs->free();
+    unset($rs);
+}
+
+
+
+$lastGoodsId = 0;
+$lastRecordSold = 0;
+$lastRecordBoughtId = 0;
+
+//----------------         挂单交易记录迁移        ---------------------
+$goodsSwitch = Server::$config['trade']['goods']['open'];
+if ($goodsSwitch === false) goto goodsEnd;
+
+$lastId      = Server::$config['trade']['goods']['id'];
+$limit       = 10000;
+$time        = time() - Server::$configExchange['ExchangeHour'];
+$lastGoodsId = 0;
+$batchObj = new BatchInsert($myDb, 'trade_goods', [
+    'id',
+    'item_id',
+    'item_list_id',
+    'item_key',
+    'char_id',
+    'player_name',
+    'player_zone_id',
+    'time',
+    'status',
+    'count',
+    'stock',
+    'is_overlap',
+    'is_publicity',
+    'end_time',
+    'pub_price',
+    'item_data',
+]);
+
+try
+{
+    $sql = "INSERT INTO `trade_item_list` (`id`, `item_key`, `item_id`, `is_publicity`, `pub_buy_people`, `pub_price`, `end_time`, `refine_lv`, `is_damage`, `is_good_enchant`, `stock`) VALUES ('1000000000', '', '0', '0', '0', '0', '0', '0', '0', '0', '0')";
+    $myDb->query($sql);
+
+    $spendTime = microtime(1);
+    while (true)
+    {
+        $pendingListRs = $db->query("SELECT * FROM `trade_pending_list` WHERE `id` > {$lastId} LIMIT {$limit}");
+
+        if (!$pendingListRs || !$pendingListRs->num_rows)
+        {
+            break;
+        }
+
+        while ($p = $pendingListRs->fetch_assoc())
+        {
+            $lastId      = $p['id'];
+            $itemId      = $p['itemid'];
+            $itemData    = empty($p['itemdata']) ? null : $p['itemdata'];
+            $itemDataObj = empty($p['itemdata']) ? null : new \RO\Cmd\ItemData($p['itemdata']);
+            $isOverlap   = $p['is_overlap'];
+            $count       = $p['count'];
+            $pendingId   = $p['id'];
+            $publicityId = $p['publicity_id'];
+            $endTime     = $p['endtime'];
+            $refineLv    = $p['refine_lv'];
+            $sellerId    = $p['sellerid'];
+            $name        = $p['name'];
+            $pendingTime = $p['pendingtime'];
+
+            if (empty($name))
+            {
+                $info = getPlayerInfo($sellerId);
+                $name = $info ? $info['name'] : '匿名';
+                if (!$info)
+                {
+                    file_put_contents('need_name.txt', "trade_pending_list id:{$lastId} 卖家id:{$sellerId} 缓存中找不到玩家信息\n", FILE_APPEND);
+                }
+            }
+
+            $item = Item::get($itemId, $itemDataObj);
+            if($item == false)
+            {
+                $item = new Item($itemId, [
+                    'itemData' => $itemDataObj,
+                    'isOverlap' => $isOverlap
+                ]);
+            }
+
+            $key = $item->getKey();
+
+            if (!Server::$itemList->exist($key))
+            {
+                $isNew = false;
+                $newItemData = $itemData;
+                $itemListId  = null;
+                $isGoodEnchant = 0;
+                if ($key == $itemId)
+                {
+                    $itemListId = $itemId;
+                }
+
+                if ($itemDataObj !== null)
+                {
+                    if (1 == $item->isOverlap)
+                    {
+                        $newItemData = null;
+                    }
+                    else {
+                        if (!\RO\Utils\ROConfig::isGoodEnchant($itemDataObj))
+                        {
+                            # 清除掉附魔属性
+                            $itemDataObj->clearEnchant();
+                            $isNew = true;
+                        }
+                        else
+                        {
+                            $isGoodEnchant = 1;
+                        }
+                        
+                        if ($itemDataObj->equip->lv > 0)
+                        {
+                            # 清除升级属性
+                            $itemDataObj->equip->clearLv();
+                            $isNew = true;
+                        }
+
+                        if ($isNew)
+                        {
+                            $newItemData = $itemDataObj->serialize();
+                        }
+                    }
+                }
+
+                $data = [
+                    'id' => $itemListId,
+                    'item_key' => $key,
+                    'item_id' => $itemId,
+                    'is_publicity' => 0,
+                    'pub_buy_people' => 0,
+                    'pub_price' => 0,
+                    'end_time' => 0,
+                    'refine_lv' => $refineLv,
+                    'is_damage' => $itemDataObj === null ? 0 : (int) $itemDataObj->equip->damage,
+                    'is_good_enchant' => $isGoodEnchant,
+                    'item_data' => $newItemData === null ? null : new Hex($newItemData),
+                ];
+
+                $sql = getInsertSql('trade_item_list', $data);
+                $rs  = $myDb->query($sql);
+                if ($rs)
+                {
+                    if ($itemListId === null)
+                    {
+                        $data['id'] = $myDb->insert_id;
+                    }
+                    //Server::$instance->info('插入新列表成功, ID:' . $data['id'] . ', 物品id:' . $itemId);
+                }
+                else
+                {
+                    throw new Exception("sql: {$sql} error: {$myDb->error}");
+                }
+
+                $data['item_data'] = $data['item_data'] === null ? null : $data['item_data']->data;
+
+                Server::$itemList->set($key, $data);
+
+            }
+
+            if ($count > 0)
+            {
+                $status = \RO\Trade\Dao\Goods::STATUS_SELLING;
+                if ($pendingTime < $time)
+                {
+                    $status = \RO\Trade\Dao\Goods::STATUS_EXPIRED;
+                }
+
+                $itemListId  = Server::$itemList->get($key)['id'];
+                $isPublicity = 0;
+                if ($publicityId > 0)
+                {
+                    $isPublicity = 1;
+                }
+//                $data = [
+//                    'id'                => $lastId,
+//                    'item_id'           => $itemId,
+//                    'item_list_id'      => $itemListId,
+//                    'item_key'          => $key,
+//                    'char_id'           => $sellerId,
+//                    'player_name'       => $name,
+//                    'player_zone_id'    => 100010002,
+//                    'time'              => $pendingTime,
+//                    'status'            => $status,
+//                    'count'             => $count,
+//                    'stock'             => $count,
+//                    'is_overlap'        => $isOverlap,
+//                    'is_publicity'      => $isPublicity,
+//                    'end_time'          => $endTime,
+//                    'pub_price'         => 0,
+//                    'item_data'         => $itemData == null ? null : '0x' . bin2hex($itemData),
+//                ];
+//
+//                $sql = getInsertSql('trade_goods', $data);
+//                $rs  = $myDb->query($sql);
+
+                $rs = $batchObj->addAndBatchExecute([
+                                                        $lastId,
+                                                        $itemId,
+                                                        $itemListId,
+                                                        $key,
+                                                        $sellerId,
+                                                        $name,
+                                                        100010002,
+                                                        $pendingTime,
+                                                        $status,
+                                                        $count,
+                                                        $count,
+                                                        $item->isOverlap,
+                                                        $isPublicity,
+                                                        $endTime,
+                                                        0,
+                                                        $itemData == null || $item->isOverlap == 1 ? null : new Hex($itemData),
+                                                    ]);
+                if ($rs)
+                {
+                    $lastGoodsId = $myDb->insert_id;
+                    //Server::$instance->info('成功插入上架表 物品id:' . $itemId . ' key:' . $key);
+                }
+                else
+                {
+                    throw new Exception("sql: {$batchObj->getLastSql()} error: {$myDb->error}");
+                }
+            }
+        }
+
+        logger("trade_pending_list数据迁移成功, 迁移最后的id为:{$lastId}");
+
+        $pendingListRs->free();
+        usleep(300);
+    }
+
+    if ($batchObj->execute())
+    {
+        $lastGoodsId = $myDb->insert_id;
+    }
+    else
+    {
+        throw new \Exception("sql: {$batchObj->getLastSql()} error: {$myDb->error}");
+    }
+
+    unset($batchObj);
+
+    $sql = 'DELETE FROM `trade_item_list` WHERE id = 1000000000';
+    $myDb->query($sql);
+
+    logger('挂单记录迁移耗时:' . (microtime(1) - $spendTime), true);
+}
+catch (\Exception $e)
+{
+    warn('trade_pending_list失败的最后id为:' . $lastId . ' 错误信息:' . $e->getMessage());
+}
+
+goodsEnd:
+
+////----------------         卖家交易记录迁移        ---------------------
+$sellSwitch = Server::$config['trade']['sell']['open'];
+if ($sellSwitch === false) goto sellEnd;
+
+$limit          = 10000;
+$expiredTime    = time() - (3 * 86400);
+$lastId         = Server::$config['trade']['sell']['id'];
+$lastRecordSold = 0;
+$expired30time  = time() - (30 * 86400);
+$batchObj = new BatchInsert($myDb, 'trade_record_sold', [
+    'id',
+    'char_id',
+    'player_zone_id',
+    'goods_id',
+    'item_id',
+    'status',
+    'take_status',
+    'time',
+    'count',
+    'price',
+    'refine_lv',
+    'is_damage',
+    'tax',
+    'is_many_people',
+    'buyer_info',
+    'buyers_info',
+    'item_data',
+]);
+
+try
+{
+    $spendTime = microtime(1);
+    while (true)
+    {
+        $soldRs = $db->query("SELECT * FROM `trade_saled_list` WHERE `id` > {$lastId} LIMIT {$limit}");
+        if ($soldRs)
+        {
+            // 无数据了
+            if (!$soldRs->num_rows)
+            {
+                break;
+            }
+
+            while ($data = $soldRs->fetch_assoc())
+            {
+                $lastId    = $data['id'];
+                $status    = $data['status'];
+                $logType   = $data['logtype'];
+                $tradeTime = $data['tradetime'];
+
+                // 已领取且已超过3天的去掉
+                if ($status == 1 && $tradeTime <= $expiredTime)
+                {
+                    continue;
+                }
+
+                // 正在抢购的记录去掉
+                if ($logType == 8)
+                {
+                    continue;
+                }
+
+                // 未领取的记录且超过30天的去掉
+                if ($status == 0 && $tradeTime <= $expired30time)
+                {
+                    continue;
+                }
+
+                $itemId    = $data['itemid'];
+                $price     = $data['price'];
+                $count     = $data['count'];
+                $sellerId  = $data['sellerid'];
+                $buyerId   = $data['buyerid'];
+                $refineLv  = $data['refine_lv'];
+                $tax       = $data['tax'];
+                $damage    = $data['damage'];
+                $buyerInfo = empty($data['buyerinfo']) ? null : new \RO\Cmd\NameInfoList($data['buyerinfo']);
+                $itemData  = empty($data['itemdata']) ? null : $data['itemdata'];
+
+                if ($logType == EOperType::EOperType_AutoOffTheShelf)
+                {
+                    $newStatus = \RO\Trade\Dao\RecordSold::STATUS_AUTO_SHELF;
+                }
+                else
+                {
+                    $newStatus = \RO\Trade\Dao\RecordSold::STATUS_ADDING;
+                }
+
+                $isManyPeople = 0;
+                $info = null;
+                if ($newStatus !== \RO\Trade\Dao\RecordSold::STATUS_AUTO_SHELF)
+                {
+                    if (isset($buyerInfo->name_infos))
+                    {
+                        $info         = $buyerInfo->name_infos[0];
+                        if (count($buyerInfo->name_infos) > 1)
+                        {
+                            $isManyPeople = 1;
+                        }
+                    }
+                }
+
+
+//                $data = [
+//                    'id' => $lastId,
+//                    'char_id' => $sellerId,
+//                    'player_zone_id' => 100010002,
+//                    'goods_id' => 0,
+//                    'item_id' => $itemId,
+//                    'status' => $newStatus,
+//                    'time' => $tradeTime,
+//                    'count' => $count,
+//                    'price' => $price,
+//                    'tax' => $tax,
+//                    'is_many_people' => $isManyPeople,
+//                    'buyer_info' => '0x' . bin2hex($info->serialize()),
+//                    'buyers_info' => $isManyPeople === 0 ? null : '0x' . bin2hex($buyerInfo->serialize()),
+//                    'item_data' => $itemData == null ? null : '0x' . bin2hex($itemData)
+//                ];
+//
+//                $sql = getInsertSql('trade_record_sold', $data);
+//                $rs  = $myDb->query($sql);
+
+                $rs = $batchObj->addAndBatchExecute([
+                                                        $lastId,
+                                                        $sellerId,
+                                                        100010002,
+                                                        0,
+                                                        $itemId,
+                                                        $newStatus,
+                                                        $status,
+                                                        $tradeTime,
+                                                        $count,
+                                                        $price,
+                                                        $refineLv,
+                                                        $damage,
+                                                        $tax,
+                                                        $isManyPeople,
+                                                        $info == null ? null : new Hex($info->serialize()),
+                                                        $isManyPeople === 0 ? null : new Hex($buyerInfo->serialize()),
+                                                        $itemData == null ? null : new Hex($itemData)
+                                                    ]);
+                if ($rs)
+                {
+                    $lastRecordSold = $myDb->insert_id;
+                    //Server::$instance->info('成功');
+                }
+                else
+                {
+                    throw new \Exception("sql: {$batchObj->getLastSql()} error: {$myDb->error}");
+                }
+            }
+
+            logger("trade_saled_list数据迁移成功, 迁移最后的id为:{$lastId}");
+
+
+        }
+
+        $soldRs->free();
+        usleep(300);
+    }
+
+    if ($batchObj->execute())
+    {
+        $lastRecordSold = $myDb->insert_id;
+    }
+    else
+    {
+        throw new \Exception("sql: {$batchObj->getLastSql()} error: {$myDb->error}");
+    }
+
+    unset($batchObj);
+    logger('卖家交易记录迁移耗时:' . (microtime(1) - $spendTime), true);
+}
+catch (\Exception $e)
+{
+    warn('trade_saled_list失败的最后id为:' . $lastId . ' 错误信息' . $e->getMessage());
+}
+
+sellEnd:
+
+////----------------         买家交易记录迁移        ---------------------
+
+$buySwitch = Server::$config['trade']['buy']['open'];
+if ($buySwitch === false) goto buyEnd;
+
+$limit              = 10000;
+$expiredTime        = time() - (3 * 86400);
+$lastId             = Server::$config['trade']['buy']['id'];
+$lastRecordBoughtId = 0;
+$expired30time      = time() - (30 * 86400);
+$batchObj = new BatchInsert($myDb, 'trade_record_bought', [
+    'id',
+    'char_id',
+    'player_name',
+    'player_zone_id',
+    'goods_id',
+    'item_id',
+    'status',
+    'take_status',
+    'time',
+    'count',
+    'total_count',
+    'price',
+    'refine_lv',
+    'is_damage',
+    'is_many_people',
+    'seller_info',
+    'sellers_info',
+    'item_data',
+]);
+
+try
+{
+    $spendTime = microtime(1);
+    while (true)
+    {
+        $buyRs = $db->query("SELECT * FROM `trade_buyed_list` WHERE `id` > {$lastId} LIMIT {$limit}");
+        if ($buyRs)
+        {
+            // 无数据了
+            if (!$buyRs->num_rows)
+            {
+                break;
+            }
+
+            while ($data = $buyRs->fetch_assoc())
+            {
+                $lastId    = $data['id'];
+                $status    = $data['status'];
+                $logType   = $data['logtype'];
+                $tradeTime = $data['tradetime'];
+
+                // 已领取且已超过3天的去掉
+                if ($status == 1 && $tradeTime <= $expiredTime)
+                {
+                    continue;
+                }
+
+                // 正在抢购的记录去掉
+                if ($logType == 8)
+                {
+                    continue;
+                }
+
+                // 未领取的记录且超过30天的去掉
+                if ($status == 0 && $tradeTime <= $expired30time)
+                {
+                    continue;
+                }
+
+                $itemId     = $data['itemid'];
+                $price      = $data['price'];
+                $count      = $data['count'];
+                $sellerId   = $data['sellerid'];
+                $buyerId    = $data['buyerid'];
+                $refineLv   = $data['refine_lv'];
+                $itemData   = empty($data['itemdata']) ? null : $data['itemdata'];
+                $failCount  = $data['failcount'];
+                $damage     = $data['damage'];
+                $totalCount = $data['totalcount'];
+                $sellerInfo = empty($data['sellerinfo']) ? null : new \RO\Cmd\NameInfoList($data['sellerinfo']);
+
+                switch ($logType)
+                {
+                    case \RO\Cmd\EOperType::EOperType_PublicityBuySuccess:
+                        $newStatus = \RO\Trade\Dao\RecordBought::STATUS_PUBLICITY_SUCCESS;
+                        break;
+                    case \RO\Cmd\EOperType::EOperType_PublicityBuyFail:
+                        $newStatus = \RO\Trade\Dao\RecordBought::STATUS_PUBLICITY_CANCEL;
+                        break;
+                    default:
+                        $newStatus = \RO\Trade\Dao\RecordBought::STATUS_PAY_SUCCESS;
+                }
+
+                switch ($logType)
+                {
+                    case \RO\Cmd\EOperType::EOperType_NoramlBuy:
+                        $totalCount = $count;
+                        break;
+                    case \RO\Cmd\EOperType::EOperType_PublicityBuyFail:
+                        $count = $totalCount - $failCount;
+                        break;
+                }
+
+                $isManyPeople = 0;
+                $info         = null;
+                if ($sellerInfo !== null)
+                {
+                    $info = $sellerInfo->name_infos[0];
+                    if (count($sellerInfo->name_infos) > 1)
+                    {
+                        $isManyPeople = 1;
+                    }
+                }
+
+//                $data = [
+//                    'id' => $lastId,
+//                    'char_id' => $sellerId,
+//                    'player_name' => '匿名',
+//                    'player_zone_id' => 100010002,
+//                    'goods_id' => 0,
+//                    'item_id' => $itemId,
+//                    'status' => $newStatus,
+//                    'time' => $tradeTime,
+//                    'count' => $count,
+//                    'total_count' => $totalCount,
+//                    'price' => $price,
+//                    'is_many_people' => $isManyPeople,
+//                    'seller_info' => $info === null ? null : '0x' . bin2hex($info->serialize()),
+//                    'sellers_info' => $isManyPeople === 0 ? null : '0x' . bin2hex($sellerInfo->serialize()),
+//                    'item_data' => $itemData == null ? null : '0x' . bin2hex($itemData),
+//                ];
+//
+//                $sql = getInsertSql('trade_record_bought', $data);
+//                $rs  = $myDb->query($sql);
+
+                $pInfo = getPlayerInfo($buyerId);
+                $name = $pInfo ? $pInfo['name'] : '匿名';
+                if (!$pInfo)
+                {
+                    file_put_contents('need_name.txt', "trade_buyed_list id:{$lastId} 买家id:{$buyerId} 缓存中找不到玩家信息\n", FILE_APPEND);
+                }
+
+                $rs = $batchObj->addAndBatchExecute([
+                                                        $lastId,
+                                                        $buyerId,
+                                                        $name,
+                                                        100010002,
+                                                        0,
+                                                        $itemId,
+                                                        $newStatus,
+                                                        $status,
+                                                        $tradeTime,
+                                                        $count,
+                                                        $totalCount,
+                                                        $price,
+                                                        $refineLv,
+                                                        $damage,
+                                                        $isManyPeople,
+                                                        $info === null ? null : new Hex($info->serialize()),
+                                                        $isManyPeople === 0 ? null : new Hex($sellerInfo->serialize()),
+                                                        $itemData == null ? null : new Hex($itemData),
+                                                    ]);
+
+                if ($rs)
+                {
+                    $lastRecordBoughtId = $myDb->insert_id;
+                }
+                else
+                {
+                    throw new Exception("sql: {$batchObj->getLastSql()} error: {$myDb->error}");
+                }
+            }
+
+            logger("trade_buyed_list数据迁移成功, 迁移最后的id为:{$lastId}");
+            usleep(300);
+        }
+
+        $buyRs->free();
+    }
+
+    if ($batchObj->execute())
+    {
+        $lastRecordBoughtId = $myDb->insert_id;
+    }
+    else
+    {
+        throw new Exception("sql: {$batchObj->getLastSql()} error: {$myDb->error}");
+    }
+
+    logger('买家交易记录迁移耗时:' . (microtime(1) - $spendTime), true);
+    unset($batchObj);
+}
+catch (Exception $e)
+{
+    warn('trade_buyed_list:' . $lastId . ' 错误信息:' . $e->getMessage());
+}
+
+buyEnd:
+
+//------------------------ 公示迁移 -------------------------
+
+$pubSwitch = Server::$config['trade']['pub']['open'];
+if ($pubSwitch === false)
+    goto pubEnd;
+
+$pubId = Server::$config['trade']['pub']['id'];
+try
+{
+    $spendTime = microtime(1);
+    $pubRs = $db->query("SELECT * FROM `trade_publicity` WHERE `id` > {$pubId} AND `endtime` > 0");
+    if ($pubRs && $pubRs->num_rows)
+    {
+        while ($data = $pubRs->fetch_assoc())
+        {
+            $pubId = $data['id'];
+            $itemId = $data['itemid'];
+            $endTime = $data['endtime'];
+            $price = $data['price'];
+            $buy_people = $data['buy_people'];
+            $startTime = $data['starttime'];
+
+
+            $itemKey = $itemId;
+            $itemData = null;
+            // 生成新的itemKey
+            $pendingRs = $db->query("SELECT * FROM `trade_pending_list` WHERE `publicity_id` = {$pubId} LIMIT 1");
+            $itemDataObj = null;
+            if($pendingRs && ($data = $pendingRs->fetch_assoc()))
+            {
+                if ($data['is_overlap'] == 0)
+                {
+                    $itemDataObj = new \RO\Cmd\ItemData($data['itemdata']);
+                    $item = new \RO\Trade\Item($itemId, [
+                        'itemData' => $itemDataObj,
+                        'isOverlap' => $data['is_overlap']
+                    ]);
+
+                    $itemData = $data['itemdata'];
+                    $itemKey = $item->getKey();
+                }
+            }
+            else
+            {
+                warn('迁移的公示id找不到正在挂单的记录, 公示id为:' . $pubId);
+                continue;
+            }
+
+            $myDb->begin_transaction();
+            // 更新为公示
+            $sql = "UPDATE `trade_item_list` SET `is_publicity` = 1, `start_time` = {$startTime}, `end_time` = {$endTime}, `pub_price` = {$price}, `pub_buy_people` = {$buy_people} WHERE `item_key` = '{$itemKey}'";
+            $rs = $myDb->query($sql);
+            if ($rs)
+            {
+                if (!$myDb->affected_rows)
+                {
+                    warn("trade_item_list设为公示无生效的记录, itemKey为{$itemKey}, 可能出现新的挂单物品未写入该表中, 迁移的公示id为:{$pubId}");
+                    continue;
+                }
+            }
+            else
+            {
+                throw new Exception("sql: {$sql} error: {$myDb->error}");
+            }
+
+            $itemListId = $itemId;
+            // 找回对应的itemListId
+            if ($itemKey !== $itemId)
+            {
+                $sql = "SELECT `id` FROM `trade_item_list` WHERE `item_key` = '{$itemKey}'";
+                $rs = $myDb->query($sql);
+                if($rs)
+                {
+                    if($data = $rs->fetch_object())
+                    {
+                        $itemListId = $data->id;
+                    }
+                    else
+                    {
+                        throw new Exception("找不到itemKey为:{$itemKey}的item_list记录,可能出现新的挂单物品未写入该表中");
+                    }
+                }
+                else
+                {
+                    throw new Exception("sql: {$sql} error: {$myDb->error}");
+                }
+                $rs->free();
+            }
+
+            $sql = "UPDATE `trade_goods` SET `pub_price` = {$price} WHERE `item_list_id` = {$itemListId}";
+            $rs = $myDb->query($sql);
+            if ($rs)
+            {
+                if (!$myDb->affected_rows)
+                {
+                    throw new Exception("更新挂单表的公示价格没有一条生效, 可能出现挂单数据缺失");
+                }
+            }
+            else
+            {
+                throw new Exception("sql: {$sql} error: {$myDb->error}");
+            }
+
+            $sql = "SELECT * FROM `trade_publicity_buy` WHERE `publicity_id` = {$pubId}";
+            $rs = $db->query($sql);
+            if($rs)
+            {
+                while ($data = $rs->fetch_assoc())
+                {
+                    $info = getPlayerInfo($data['buyerid']);
+                    $name = $info ? $info['name'] : '匿名';
+                    if (!$info)
+                    {
+                        file_put_contents('need_name.txt', "trade_publicity_buy id:{$data['id']} 买家id:{$data['buyerid']} 缓存中找不到玩家信息\n", FILE_APPEND);
+                    }
+
+                    $isOverlap = Server::$item->get($itemId, 'isOverlap');
+                    if (false !== $isOverlap)
+                    {
+                        if ($isOverlap)
+                        {
+                            $fields = [
+                                'char_id' => $data['buyerid'],
+                                'player_name' => $name,
+                                'player_zone_id' => 100010002,
+                                'goods_id' => 0,
+                                'item_id' => $itemId,
+                                'status' => \RO\Trade\Dao\RecordBought::STATUS_PUBLICITY_PAY_SUCCESS,
+                                'time' => time(),
+                                'publicity_id' => $itemListId,
+                                'end_time' => $endTime,
+                                'count' => 0,
+                                'total_count' => $data['count'],
+                                'price' => $price,
+                                'refine_lv' => $itemDataObj === null ? 0 : $itemDataObj->equip->refinelv,
+                                'is_damage' => $itemDataObj === null ? 0 : (int) $itemDataObj->equip->damage,
+                                'item_data' => $itemData == null ? null : new Hex($itemData),
+                            ];
+
+                            $sql = getInsertSql('trade_record_bought', $fields);
+                            $recordRs  = $myDb->query($sql);
+                            if (!$recordRs)
+                            {
+                                throw new Exception("sql: {$sql} error: {$myDb->error}");
+                            }
+                            else
+                            {
+                                $lastRecordBoughtId = $myDb->insert_id;
+                            }
+                        }
+                        else
+                        {
+                            for($i = 0; $i < $data['count']; $i++)
+                            {
+                                $fields = [
+                                    'char_id' => $data['buyerid'],
+                                    'player_name' => $name,
+                                    'player_zone_id' => 100010002,
+                                    'goods_id' => 0,
+                                    'item_id' => $itemId,
+                                    'status' => \RO\Trade\Dao\RecordBought::STATUS_PUBLICITY_PAY_SUCCESS,
+                                    'time' => time(),
+                                    'publicity_id' => $itemListId,
+                                    'end_time' => $endTime,
+                                    'count' => 0,
+                                    'total_count' => 1,
+                                    'price' => $price,
+                                    'refine_lv' => $itemDataObj === null ? 0 : $itemDataObj->equip->refinelv,
+                                    'is_damage' => $itemDataObj === null ? 0 : (int) $itemDataObj->equip->damage,
+                                    'item_data' => $itemData == null ? null : new Hex($itemData),
+                                ];
+
+                                $sql = getInsertSql('trade_record_bought', $fields);
+                                $recordRs  = $myDb->query($sql);
+                                if (!$recordRs)
+                                {
+                                    throw new Exception("sql: {$sql} error: {$myDb->error}");
+                                }
+                                else
+                                {
+                                    $lastRecordBoughtId = $myDb->insert_id;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("获取itemId: {$itemId}内存中不存在!");
+                    }
+                }
+
+                $rs->free();
+            }
+            else
+            {
+                throw new Exception("sql: {$sql} error: {$db->error}");
+            }
+
+            $myDb->commit();
+            logger("trade_publicity数据迁移成功, 迁移最后的id为:{$pubId}");
+        }
+
+        $pubRs->free();
+    }
+
+    logger('公示记录迁移耗时:' . (microtime(1) - $spendTime), true);
+}
+catch (Exception $e)
+{
+    $myDb->rollback();
+    warn('trade_publicity失败的最后id为:' . $pubId . ' 错误信息:' . $e->getMessage());
+}
+
+pubEnd:
+
+// 可根据该id开始把新数据迁移回老交易所,之前的数据就不用迁移回去了,因为原来就有。
+logger('trade_goods表最后的id为:' . $lastGoodsId, true);
+logger('trade_record_sold表最后的id为:' . $lastRecordSold, true);
+logger('trade_record_bought表最后的id为:' . $lastRecordBoughtId, true);
+
+$db->close();
+$myDb->close();
+unset($rs);
+
+
+logger('正在更新库存中...');
+$myDb = new \RO\MySQLi(Server::$config['destination'], true);
+if ($myDb->connect_errno)
+{
+    throw new \Exception("error: {$db->connect_error}");
+}
+# 更新库存
+$sql = "SELECT SUM(`stock`) AS `stock`, `item_list_id` FROM `trade_goods` WHERE `status` = '1' GROUP BY `item_list_id`";
+$rs  = $myDb->query($sql);
+if ($rs)
+{
+    while ($data = $rs->fetch_object())
+    {
+        if (!$myDb->query("UPDATE `trade_item_list` SET `stock` = {$data->stock} WHERE `id` = '{$data->item_list_id}'"))
+        {
+            warn('[库存更新失败] id:' . $data->item_list_id . ' error msg:' . $myDb->error);
+        }
+    }
+    $rs->free();
+    logger('库存更新完毕!', true);
+}
+
+$myDb->close();
+
+
+
+
+

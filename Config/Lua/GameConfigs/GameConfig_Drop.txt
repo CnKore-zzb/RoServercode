@@ -1,0 +1,37 @@
+--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+--dropInterval 掉落间隔毫秒， pickUpInterval 拾取间隔毫秒, pickUpRadius 拾取半径（游戏中单位),
+--privateOwnTime所有权最大时间毫秒,Quality品质对应特效ID，FloatMsgID浮动框ID,scale比列,ItemPickBallSpeed光球飞行速度
+----场景物品掉落 DropPerform: 1为爆炸烟雾方式  2为坠落动画...当DropPerform为1时，延迟Delay毫秒后，出现物品 Types掉落的道具类型ID,ShowName是否需要显示名字true/false
+--pickedAudio特效飞到玩家身上后播的音效名字
+--ItemBox 道具袋子 ,EquipBox 装备宝箱,Gold 金币 ，Silver银币，Card卡片
+GameConfig.SceneDropItem = {
+    Anims = {
+        ItemBorn = "ItemBorn",
+        ItemDrop = "ItemWait",
+        WrongItem = "ItemWrong",
+        ItemOpen = "ItemOpen",
+    },
+    ItemPickBallSpeed=12,
+    teamValidRange = 10,  --自由拾取模式下有效的范围
+    dropInterval = 200,
+    pickUpInterval = 200,
+    pickUpRadius = 14,
+    privateOwnTime = 10000,
+    disappeartime = 30,
+    FloatMsgID = 6,
+    ItemPickBall = {[1]="Common/31itemsphere",[2]="Common/33Itemget_GN",[3]="Common/34Itemget_BU",[4]="Common/35Itemget_PL",[5]="Common/36Itemget_OG",[6]="Common/37Itemget_RD"},
+    itemPickedEffect = "Common/32itemget",
+    Quality = {[4]="Common/23ItemLight",[5]="Common/22ItemLight"},
+    ItemBox = {Model=3,DropPerform = 1,Delay = 400,Scale = 1.5,ShowName = true,pickedAudio = "Common/PickUpProps"},
+    EquipBox={Model=4,DropPerform = 1,Delay = 400,Scale = 1,ShowName = true,pickedAudio = "Common/PickUpProps"},
+    Gold = {Types={130},Model=1,DropPerform = 2,Scale = 2.5,ShowName = false,pickedAudio = "Common/PickUpGold"},
+    Silver ={Types={131},Model=2,DropPerform = 2,Scale = 2.5,ShowName = false,pickedAudio = "Common/PickUpGold"},
+    Card = {Types={80,110,74},Model=5,DropPerform = 2,Scale = 1.5,ShowName = true,pickedAudio = "Common/PickUpProps"},
+	Skill = {Types={73,76},Model=6,DropPerform = 1,Scale = 1.5,ShowName = true,pickedAudio = "Common/PickUpProps"},
+	Apple = {Types={72},Model=7,DropPerform = 1,Scale = 1,ShowName = true,pickedAudio = "Common/PickUpProps"},
+    dropRange = {{3, 0.5}, {6, 1}, {12, 1.5}, {24, 2}, {9999, 2.5}},
+    
+    pickEffectItemRange = 1,   -- 道具类型74拾取范围
+}

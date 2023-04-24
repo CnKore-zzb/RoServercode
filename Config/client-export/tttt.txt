@@ -1,0 +1,406 @@
+
+require ("Script.TableMathExtension.TableMathExtension")
+_EmptyTable = "_EmptyTable"
+
+function TableToString (savePath, tableName,path)
+	local groupTab = {}
+
+	local optTable = _G[tableName]
+	
+	if nil == optTable then
+		return
+	end
+
+	print("LuaTableToStr:",savePath,tableName,path)
+
+	local contentTb = {}
+	contentTb[#contentTb+1] = string.format("%s = {}\n",tableName)
+	contentTb[#contentTb+1] = "local func_index = function(table, key)\n"
+	contentTb[#contentTb+1] = string.format("\tlocal data = StrTablesManager.GetData(\"%s\", key);\n",tableName)
+	if(tableName == "Table_Npc" or tableName== "Table_Monster")then
+		contentTb[#contentTb+1] = "\treturn StrTablesManager.ProcessMonsterOrNPC(data)\n"
+	else
+		contentTb[#contentTb+1] = "\treturn data\n"
+	end
+	contentTb[#contentTb+1] = "end\n"
+	contentTb[#contentTb+1] = string.format("local Mt_%s = {__index = func_index}\n",tableName)
+	contentTb[#contentTb+1] = string.format("setmetatable(%s,Mt_%s)\n",tableName,tableName)
+	contentTb[#contentTb+1] = string.format("%s_s = {\n",tableName)
+
+	local fields = _G[tableName.."_fields"]
+	if(not fields)then
+		return
+	end
+	local temp = {}
+	for k,v in pairs(optTable) do
+		temp[#temp+1] = v
+	end
+	table.sort(temp,function ( l,r )
+		-- body
+		return l.id < r.id
+	end)
+	local lineStr = nil
+	local single = nil
+	for i=1,#temp do
+		single = temp[i]
+		lineStr = LuaTableToStrByFields(single,fields)
+		lineStr = string.gsub(lineStr, "\"", "\\\"")
+		contentTb[#contentTb+1] = string.format("\t[%s] = \"%s\",\n",single.id,lineStr)
+	end
+	contentTb[#contentTb+1] = " \n}\n"
+	contentTb[#contentTb+1] = string.format("return %s\n",tableName)
+	writefile(savePath, table.concat(contentTb))
+	if(tableName == "Table_Npc")then
+		-- TableToString_OptNpc(optTable,path)
+	elseif(tableName == "Table_Item")then
+		TableToString_OptItem(optTable,path)
+	end
+end
+
+function TableToString_OptNpc (optTable,path)
+	local count = 0
+	for k,v in pairs(optTable) do
+		if(v.AdventureValue and v.AdventureValue >0)then
+			count = count +1
+		end
+	end
+	path = path.."/Table_AdventureNPCCount.txt"
+	writefile(path, count)
+end
+
+function TableToString_OptItem (optTable,path)
+	local contentTb = {}
+	contentTb[#contentTb+1] = "Table_AdventureItem = {\n"
+	for k,v in pairs(optTable) do
+		if(v.AdventureValue == -1)then
+			contentTb[#contentTb+1] = v.id
+			contentTb[#contentTb+1] = ",\n"
+		end
+	end
+	contentTb[#contentTb+1] = "}" 
+	path = path.."/Table_AdventureItem.txt"
+	writefile(path, table.concat(contentTb))
+end
+
+function OptConfigFun (savePath, tableName, OptKey)
+	-- print(string.format("开始处理：savePath:%s,tableName:%s,OptKey:%s",savePath,tableName,OptKey))
+	local groupTab = {}
+
+	local optTable = _G[tableName]
+	
+	if nil == optTable then
+		return
+	end
+
+	local fields = _G[tableName.."_fields"]
+	if(not fields)then
+		return
+	end
+	
+	for key, value in pairs(optTable) do
+		local newKey = {}
+		for i=1,#fields do
+			if value[fields[i]] ~= nil then
+				newKey[#newKey+1] = fields[i]
+			end
+		end
+		newKey = table.concat(newKey)
+		value["####newKey####"] = newKey
+	end
+
+	OptKey = OptKey.."@@@".."####newKey####"
+	local OptKeys = string.split(OptKey,"@@@")
+
+	for id, line in pairs(optTable)do
+		--local groupName = line[OptKey]
+		local groupName = GetLineOptKey(line, OptKeys)
+		
+		if (groupName == nil) then
+			print("错误！！！！！！！！！！！！！！！！！！！！！，有行不包含关键列"..tableName.." :"..id)
+		elseif (groupName == '') then
+			print("警告，关键列为空"..tableName.." :"..id)
+		end
+		
+		if false == table.ContainsKey(groupTab, groupName) then
+			groupTab[groupName] = {}
+		end
+
+		table.insert(groupTab[groupName], id)
+	end
+	
+	local fields = _G[tableName.."_fields"]
+	if(not fields)then
+		return
+	end
+
+	local listMaster = {}
+	for key, group in pairs(groupTab) do
+		
+		table.sort(group, function(f, s) 
+							return f < s 
+					      end)
+		local groupMaster = optTable[group[1]]
+		table.insert(listMaster, groupMaster)
+		
+		for i = 2, #group do
+			
+			local new_Tab = {}
+			
+			for property, pV in pairs(optTable[group[i]]) do
+
+					if table.ContainsKey(groupMaster, property) then
+						
+						if pV == nil then
+	
+						elseif groupMaster[property] == nil then
+							new_Tab[property] = pV
+							
+						elseif type(pV) ~= type(groupMaster[property])then
+							new_Tab[property] = pV
+							
+						elseif type(pV) == 'table' then
+							if LuaTableToStr(pV) ~= LuaTableToStr(groupMaster[property]) then
+								new_Tab[property] = pV
+							end
+						else 
+							if pV ~= groupMaster[property] then
+								new_Tab[property] = pV
+							end						
+						end
+					end
+
+			end
+			
+			optTable[group[i]] = new_Tab
+		end
+	end	
+	table.sort(listMaster, function(f, s) 
+							return f.id < s.id 
+						   end)
+	local contentTb = {}
+	contentTb[#contentTb+1] = tableName
+	contentTb[#contentTb+1] = " = {\n"
+	-- local writeString     = tableName.." = {\n";
+	local metaTableString = ""
+	--setmetatable(Table_Skill[groups[i][j]], __base[groups[i][1]])
+	
+	for i = 1, #listMaster do
+		
+		local theMaster = listMaster[i]
+		--master Write
+		contentTb[#contentTb+1] = "["..theMaster.id.."]="
+		-- writeString = writeString.."["..theMaster.id.."]="
+		--local strMaster = LuaTableToStr(theMaster)
+		local strMaster = LuaTableToStrByFields(theMaster, fields)
+		contentTb[#contentTb+1] = strMaster
+		contentTb[#contentTb+1] = ",\n"
+		-- writeString = writeString..strMaster;
+		-- writeString = writeString..",\n"
+		--member Write
+		--local group = groupTab[theMaster[OptKey]]
+		local groupName = GetLineOptKey(theMaster, OptKeys)		
+		local group = groupTab[groupName]
+		
+		for i = 2, #group do
+			local theMember = optTable[group[i]]
+			contentTb[#contentTb+1] = "["..theMember.id.."]="
+			-- writeString = writeString.."["..theMember.id.."]="
+			--local strMember = LuaTableToStr(theMember)
+			local strMember = LuaTableToStrByFields(theMember, fields)
+			contentTb[#contentTb+1] = strMember
+			contentTb[#contentTb+1] = ",\n"
+			-- writeString = writeString..strMember;
+			-- writeString = writeString..",\n"
+			metaTableString = metaTableString.."setmetatable("..tableName.."["..theMember.id.."],{__index = "..tableName.."["..theMaster.id.."]})\n"
+		end
+		contentTb[#contentTb+1] = "----------\n"
+		-- writeString = writeString.."----------\n"
+	end
+	contentTb[#contentTb+1] = "}\n"
+	contentTb[#contentTb+1] = metaTableString
+	contentTb[#contentTb+1] = string.format("return %s\n",tableName)
+	-- writeString = writeString.."}\n"
+	-- writeString = writeString..metaTableString
+	--return "AAAAADDDS"
+	writefile(savePath, table.concat(contentTb))
+end
+
+function writefile(path, content, mode)
+      mode = mode or "w+b"
+      local file,_ = io.open(path, mode)
+      if file then
+        if file:write(content) == nil then return false end
+        io.close(file)
+        return true
+      else
+        return false
+      end
+end
+
+function LuaTableToStrByFields(opt, fields)
+	-- local retVal = "{"
+	local retTb = {}
+	retTb[#retTb+1] = '{'
+	local bWrite = false
+	for i = 1, #fields do
+		
+		local property = fields[i]
+		local pV 	   = opt[property]
+		
+		if pV ~= nil then
+			if bWrite == true then
+				retTb[#retTb+1] = ", "
+				-- retVal = retVal..", "
+				bWrite = false
+			end
+			if type(property) == 'number' then
+				retTb[#retTb+1] = '['
+				retTb[#retTb+1] = property
+				retTb[#retTb+1] = ']'
+
+				-- retVal = retVal..'['..property..']'
+			else
+				retTb[#retTb+1] = property
+				-- retVal = retVal..property
+			end
+			-- retVal = retVal.." = "
+			retTb[#retTb+1] = " = "
+
+			
+			if type(pV) == 'string' then
+				if _EmptyTable == pV then
+					retTb[#retTb+1] = pV
+					-- retVal = retVal..pV
+				else
+					
+					local spV =  ProcessString(pV)
+					-- retVal = retVal.."'"..spV.."'"
+					retTb[#retTb+1] = "'"
+					retTb[#retTb+1] = spV
+					retTb[#retTb+1] = "'"
+				end
+				
+			elseif type(pV) == 'table' then
+				retTb[#retTb+1] = LuaTableToStr(pV)
+				-- retVal = retVal..LuaTableToStr(pV)
+				
+			elseif type(pV) == 'boolean' then
+				if pV == true then
+					retTb[#retTb+1] = "true"
+					-- retVal = retVal.."true" 
+				else
+					retTb[#retTb+1] = "false"
+					-- retVal = retVal.."false"
+				end
+			else
+				retTb[#retTb+1] = pV
+				-- retVal = retVal..pV
+			end
+			
+			bWrite = true
+
+		end
+	end
+	retTb[#retTb+1] = "}"
+	return table.concat(retTb)
+	-- return retVal
+end
+
+function LuaTableToStr(opt, bMain)
+	local retVal = "{"
+	local retTb = {}
+	retTb[#retTb+1] = "{"
+	local forTimes = 1
+	for property, pV in pairs(opt) do
+		if pV ~= nil then
+			if forTimes > 1 then
+				-- retVal = retVal..", "
+				retTb[#retTb+1] = ", "
+			end
+			if property ~= forTimes then
+				if type(property) == 'number' then
+					-- retVal = retVal..'['..property..']'
+					retTb[#retTb+1] = '['
+					retTb[#retTb+1] = property
+					retTb[#retTb+1] = ']'
+				else
+					retTb[#retTb+1] = property
+					-- retVal = retVal..property
+				end
+				retTb[#retTb+1] = " = "
+				-- retVal = retVal.." = "
+			else
+				--不用写入
+			end
+			
+			if type(pV) == 'string' then
+				if _EmptyTable == pV then
+					retTb[#retTb+1] = pV
+					-- retVal = retVal..pV
+				else
+					local spV = ProcessString(pV)
+					retTb[#retTb+1] = "'"
+					retTb[#retTb+1] = spV
+					retTb[#retTb+1] = "'"
+					-- retVal = retVal.."'"..spV.."'"
+				end
+				
+			elseif type(pV) == 'table' then
+				retTb[#retTb+1] = LuaTableToStr(pV)
+				-- retVal = retVal..LuaTableToStr(pV)
+				
+			elseif type(pV) == 'boolean' then
+				if pV == true then
+					retTb[#retTb+1] = "true"
+					-- retVal = retVal.."true" 
+				else
+					retTb[#retTb+1] = "false"
+					-- retVal = retVal.."false"
+				end
+			else
+				retTb[#retTb+1] = pV
+				-- retVal = retVal..pV
+			end
+			forTimes = forTimes + 1
+		end
+	end
+	retTb[#retTb+1] = "}"
+	-- retVal = retVal.."}"
+	return table.concat(retTb)
+end
+
+function ProcessString(str)
+	local retVal =  string.gsub(str, "\\", "\\\\")
+	retVal = string.gsub(retVal, "\n", "\\n")
+	return retVal
+end
+
+function string.split(str, delimiter)
+    str = tostring(str)
+    delimiter = tostring(delimiter)
+    if (delimiter=='') then return false end
+    local pos,arr = 0, {}
+    -- for each divider found
+    for st,sp in function() return string.find(str, delimiter, pos, true) end do
+        table.insert(arr, string.sub(str, pos, st - 1))
+        pos = sp + 1
+    end
+    table.insert(arr, string.sub(str, pos))
+    return arr
+end
+
+function GetLineOptKey(line, Opts)
+	local retVal = {}
+
+	for i = 1, #Opts do
+		local key = line[Opts[i]]
+		if(key == nil) then
+			retVal[#retVal+1] = "nil"
+		elseif type(key) == 'table' then
+			retVal[#retVal+1] = LuaTableToStr(key)
+		else
+			retVal[#retVal+1] = key
+		end
+	end
+	return table.concat(retVal)
+end

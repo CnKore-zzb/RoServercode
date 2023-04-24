@@ -1,0 +1,8 @@
+if Language == nil then
+    Language = {}
+end
+
+Language.Korean =
+{
+    [1] = {origin = '中文放这里', target = '여기에 중국어 넣기'},
+}

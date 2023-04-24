@@ -1,0 +1,9 @@
+
+---------------------------------------------------经验道具使用之后增加base
+function CommonFun.calcAdventureGuideBaseExp(BaseLv)
+    return 3024*BaseLv
+end
+---------------------------------------------------经验道具使用之后增加base
+function CommonFun.calcAdventureGuideJobExp(BaseLv)
+    return 1728*BaseLv
+end

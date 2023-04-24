@@ -1,0 +1,14 @@
+--md5:3ab580a428761b3e97a0d6f70988dd13
+Table_Effect = { 
+	[1] = {id = 1, NameZh = '吃料理后的特效', GMData = {effect = "Skill/Heal", sound = "Common/Heal",effectpos=0,sync=1}},
+	[2] = {id = 2, NameZh = '宠物好感度特效', GMData = {effect = "Common/catchstep2",effectpos=0,sync=0,times=0}},
+	[3] = {id = 3, NameZh = '冒险教程使用特效', GMData = {effect = "common/GetSuccess",effectpos=3,sync=0}},
+	[4] = {id = 4, NameZh = '智力提升', GMData = {effect = "common/Up_Int_hit",effectpos=3,sync=0}},
+	[5] = {id = 5, NameZh = '敏捷提升', GMData = {effect = "common/Up_Agi_hit",effectpos=3,sync=0}},
+	[6] = {id = 6, NameZh = '耐力提升', GMData = {effect = "common/Up_Vit_hit",effectpos=3,sync=0}},
+	[7] = {id = 7, NameZh = '灵巧提升', GMData = {effect = "common/Up_Dex_hit",effectpos=3,sync=0}},
+	[8] = {id = 8, NameZh = '幸运提升', GMData = {effect = "common/Up_Luk_hit",effectpos=3,sync=0}},
+	[9] = {id = 9, NameZh = '力量提升', GMData = {effect = "common/Up_Str_hit",effectpos=3,sync=0}},
+	[10] = {id = 10, NameZh = '时间胶囊特效', GMData = {effect = "common/SpeedTime",effectpos=3,sync=0}},
+}
+return Table_Effect

@@ -1,0 +1,23 @@
+--md5:53292d74f264bc8f6a522e5e8d7804d5
+Table_BusCarrier = { 
+	[1] = {id = 1, NameZh = '波利气球', NameEn = 'bus_poring', ModelDir = 'Bus/bus_poring', ModelName = 'bus_poring', Texture = 'bus_poring'},
+	[2] = {id = 2, NameZh = '马车', NameEn = 'bus_Carriage', ModelDir = 'Bus/bus_Carriage', ModelName = 'bus_Carriage', Texture = 'bus_Carriage'},
+	[3] = {id = 3, NameZh = '飞毯', NameEn = 'bus_carpet', ModelDir = 'Bus/bus_carpet', ModelName = 'bus_carpet', Texture = 'bus_carpet'},
+	[4] = {id = 4, NameZh = '飞毯紫', NameEn = 'bus_carpet2', ModelDir = 'Bus/bus_carpet2', ModelName = 'bus_carpet2', Texture = 'bus_carpet2'},
+	[5] = {id = 5, NameZh = '硬石猛犸', NameEn = 'bus_HardRock', ModelDir = 'Bus/bus_HardRock', ModelName = 'bus_HardRock', Texture = 'bus_HardRock'},
+	[6] = {id = 6, NameZh = '飞龙', NameEn = 'bus_Acidus', ModelDir = 'Bus/bus_Acidus', ModelName = 'bus_Acidus', Texture = 'bus_Acidus'},
+	[7] = {id = 7, NameZh = '摩天轮仓1', NameEn = 'bus_Cage1', ModelDir = 'Bus/bus_FerrisWheel', ModelName = 'bus_Cage1', Texture = 'bus_Cage1'},
+	[8] = {id = 8, NameZh = '摩天轮仓2', NameEn = 'bus_Cage2', ModelDir = 'Bus/bus_FerrisWheel', ModelName = 'bus_Cage2', Texture = 'bus_Cage2'},
+	[9] = {id = 9, NameZh = '乌鸦', NameEn = 'bus_Crow', ModelDir = 'Bus/bus_Acidus', ModelName = 'bus_Acidus', Texture = 'bus_Acidus'},
+	[10] = {id = 10, NameZh = '飞行书', NameEn = 'bus_MagicBook', ModelDir = 'Bus/bus_carpet', ModelName = 'bus_carpet', Texture = 'bus_carpet'},
+	[11] = {id = 11, NameZh = '鲸', NameEn = 'bus_whale', ModelDir = 'Bus/bus_whale', ModelName = 'bus_whale', Texture = 'bus_whale'},
+	[12] = {id = 12, NameZh = '甲虫', NameEn = 'bus_bug', ModelDir = 'Bus/bus_bug', ModelName = 'bus_bug', Texture = 'bus_bug_red'},
+	[13] = {id = 13, NameZh = '风筝', NameEn = 'bus_kite', ModelDir = 'Bus/bus_kite', ModelName = 'bus_kite', Texture = 'bus_kite_01'},
+	[14] = {id = 14, NameZh = '海豚摇摇乐1', NameEn = 'bus_YoyoPlay', ModelDir = 'Bus/bus_YoyoPlay', ModelName = 'bus_YoyoPlay', Texture = 'bus_YoyoPlay_1'},
+	[15] = {id = 15, NameZh = '海豚摇摇乐1', NameEn = 'bus_YoyoPlay', ModelDir = 'Bus/bus_YoyoPlay', ModelName = 'bus_YoyoPlay', Texture = 'bus_YoyoPlay_2'},
+	[16] = {id = 16, NameZh = '海豚摇摇乐1', NameEn = 'bus_YoyoPlay', ModelDir = 'Bus/bus_YoyoPlay', ModelName = 'bus_YoyoPlay', Texture = 'bus_YoyoPlay_3'},
+	[17] = {id = 17, NameZh = '海豚摇摇乐1', NameEn = 'bus_YoyoPlay', ModelDir = 'Bus/bus_YoyoPlay', ModelName = 'bus_YoyoPlay', Texture = 'bus_YoyoPlay_4'},
+	[18] = {id = 18, NameZh = '蜜月过山车', NameEn = 'bus_RollerCoaster', ModelDir = 'Bus/bus_RollerCoaster', ModelName = 'bus_RollerCoaster', Texture = 'bus_RollerCoaster'},
+	[19] = {id = 19, NameZh = '波利载人气球', NameEn = 'bus_poring', ModelDir = 'Bus/bus_poring', ModelName = 'bus_poring', Texture = 'bus_poring'},
+}
+return Table_BusCarrier

@@ -1,0 +1,34 @@
+--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+--分线
+GameConfig.Tutor = {
+student_baselv_req = 10,	-- 学生要求base等级
+student_menuid =9000,    --解锁menu后解锁功能
+tutor_baselv_req = 90,	-- 导师要求base等级
+student_graduation_baselv_req = 90, --学生毕业要求的等级
+apply_overtime = 3600,	-- 申请列表超时时长(单位:秒)
+apply_interval = 10,	-- 申请间隔
+apply_same_interval = 60,	-- 相同玩家申请间隔
+protecttime = 72,	-- 导师保护时间(单位:小时)
+forbidtime = 24,	-- 惩罚时间(单位:小时)
+max_student = 3,	-- 学生最大上限
+max_recent_student = 30,	-- 最近学生最大上限
+student_graduation_time = 3,	-- 学生毕业所需时间(单位:天)
+student_graduation_reward = 1214,	-- 学生毕业奖励
+teacher_graduation_reward = 1215, --导师毕业奖励
+student_desc ="[c][383838]成为学生，迅速地了解这个世界：[-][/c]\n[c][1f74bf]1.提升升级速度：专属道具，冒险任务，成长奖励，获得大量经验奖励。[-][/c]\n[c][1f74bf]2.获取大量礼物：提升等级，获得丰富的道具，宠物与装备奖励。[-][/c]\n[c][1f74bf]3.达成暖心互动：专属师生道具，导师协助冒险，让你不再一个人孤单！[-][/c]",	--学生描述
+tutor_desc ="[c][383838]招募学生，他们快速地融入这个世界：[-][/c]\n[c][c89635]1.获得更多奖励：协助学生参与冒险，提升等级，答疑解问，获得导师勋章！[-][/c]\n[c][c89635]2.加速角色养成：导师勋章兑换各种道具，更快获取公会贡献，友情之证！[-][/c]\n[c][c89635]3.有爱师生关系：更多互动，带来更多的邂逅，更热闹的世界！[-][/c]",	--导师描述
+call_protecttime = 10,	--请求发送招募时间间隔(单位:秒)
+max_proficiency = 10000, --冒险熟练度的上限
+tutor_menuid = 9001, --成为导师的解锁Menuid
+max_tutor_apply = 100, --导师申请列表内的最大数量
+teacher_graduation_mailid = 11002,  --学生毕业时导师收到的邮件
+teacher_task_mailid	 = 11000, --学生完成每日冒险任务后导师能够收到的邮件
+teacher_grow_mailid = 11001, --学生每次base等级提升时导师能够收到的邮件
+tutor_apply_times = 60, --通过招募界面发送的寻找导师/学生的间隔
+tutor_vip_battletime_per = 3000,  --导师有效战斗时长增效百分比（单位:万分比）
+general_countdown = 8,  --导师匹配正常倒计时弹框计时(单位:秒)
+blacklist_countdown = 10,  --导师匹配备用倒计时弹框计时(单位:秒)
+tutor_vip_max_battletime = 7200,  --导师最大有效战斗时长(单位:秒)
+}

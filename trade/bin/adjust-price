@@ -1,0 +1,75 @@
+#!/usr/bin/env php
+<?php
+error_reporting(7);
+
+function logger($label)
+{
+    echo $label . "\n";
+}
+
+$shortOpts = '';
+$shortOpts .= 'h:';     // -h ip地址
+$shortOpts .= 'u:';     // -u 用户名
+$shortOpts .= 'p:';     // -p 密码
+$shortOpts .= 'd:';     // -d 数据库名
+$shortOpts .= 'f:';     // -f 导入文件
+
+$options = getopt($shortOpts);
+$filename = $options['f'] ?: null;
+$address = explode(':', $options['h'] ?: '127.0.0.1');
+$host = $address[0];
+$port = isset($address[1]) ? $address[1] : 3306;
+$user = $options['u'] ?: 'root';
+$pwd = $options['p'] ?: null;
+$db = $options['d'] ?: null;
+
+try
+{
+    $mysql = new \mysqli($host, $user, $pwd, $db, $port);
+
+    if ($mysql->connect_errno)
+    {
+        throw new Exception($mysql->connect_error);
+    }
+
+    if ($filename)
+    {
+        if (!file_exists($filename))
+            throw new Exception('文件不存在');
+
+        $handle = fopen($filename, 'r');
+        $data = [];
+        while(!feof($handle))
+        {
+            $csv = fgetcsv($handle);
+            if($csv)
+            {
+                $data[$csv[0]] = $csv[1];
+            }
+        }
+
+        if ($data)
+        {
+            foreach ($data as $itemId => $price)
+            {
+                $sql = sprintf("UPDATE `trade_item_info` SET `last_server_price` = '%s', `last_calc_price_time` = '%s' WHERE `itemid` = '%s'", $price, time(), $itemId);
+                if (!($rs = $mysql->query($sql)))
+                {
+                    throw new Exception($mysql->error);
+                }
+            }
+        }
+
+        logger('修改完毕');
+    }
+    else
+    {
+        throw new Exception('请填写参数-f 输入交易所价格修改CSV文件路径');
+    }
+}
+catch (Exception $e)
+{
+    logger($e->getMessage(), '[31m');
+}
+
+

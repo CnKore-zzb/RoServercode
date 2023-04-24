@@ -1,0 +1,14 @@
+--md5:3ef36187f5fcb07fe28a64fb0dc99091
+Table_PetCompose = { 
+	[500380] = {id = 500380, NAME = '人鱼', MaterialPet1 = {id=500010,friendlv=10}, MaterialPet2 = {id=500110,friendlv=10}, MaterialPet3 = {}, ZenyCost = 10000},
+	[500390] = {id = 500390, NAME = '妖道', MaterialPet1 = {id=500030,friendlv=10}, MaterialPet2 = {id=500300,friendlv=10}, MaterialPet3 = {}, ZenyCost = 10000},
+	[500400] = {id = 500400, NAME = '圣诞哥布灵', MaterialPet1 = {id=500320,friendlv=10}, MaterialPet2 = {id=500010,friendlv=10}, MaterialPet3 = {}, ZenyCost = 10000},
+	[500410] = {id = 500410, NAME = '傀儡娃娃', MaterialPet1 = {id=500110,friendlv=10}, MaterialPet2 = {id=500280,friendlv=10}, MaterialPet3 = {}, ZenyCost = 10000},
+	[500420] = {id = 500420, NAME = '狸猫', MaterialPet1 = {id=500020,friendlv=10}, MaterialPet2 = {id=500290,friendlv=10}, MaterialPet3 = {id=500370,friendlv=10}, ZenyCost = 10000},
+	[500430] = {id = 500430, NAME = '鸟人哈比', MaterialPet1 = {id=500250,friendlv=10}, MaterialPet2 = {id=500040,friendlv=10}, MaterialPet3 = {id=500050,friendlv=10}, ZenyCost = 10000},
+	[500440] = {id = 500440, NAME = '艾斯恩魔女', MaterialPet1 = {id=500350,friendlv=10}, MaterialPet2 = {id=500360,friendlv=10}, MaterialPet3 = {}, ZenyCost = 10000},
+	[500450] = {id = 500450, NAME = '米雅毕', MaterialPet1 = {id=500070,friendlv=10}, MaterialPet2 = {id=500410,friendlv=10}, MaterialPet3 = {}, ZenyCost = 10000},
+	[500460] = {id = 500460, NAME = '妖仙女', MaterialPet1 = {id=500060,friendlv=10}, MaterialPet2 = {id=500360,friendlv=10}, MaterialPet3 = {}, ZenyCost = 10000},
+	[500470] = {id = 500470, NAME = '爱丽丝女仆', MaterialPet1 = {id=500100,friendlv=10}, MaterialPet2 = {id=500430,friendlv=10}, MaterialPet3 = {}, ZenyCost = 10000},
+}
+return Table_PetCompose

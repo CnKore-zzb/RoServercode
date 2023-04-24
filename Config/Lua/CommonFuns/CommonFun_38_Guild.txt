@@ -1,0 +1,46 @@
+
+------- 计算公会建设时，随提交次数增加，提交道具数量的增加公式 
+function CommonFun.calcGuildBuildingMaterialItemCount(itemcount, submitcount)
+	if submitcount == 0 then
+	return itemcount	
+	elseif submitcount == 1 then
+	return itemcount
+	elseif submitcount == 2 then
+	return itemcount
+	elseif submitcount == 3 then
+	return itemcount*2
+	elseif submitcount == 4 then
+	return itemcount*2
+	elseif submitcount == 5 then
+	return itemcount*3
+	elseif submitcount == 6 then
+	return itemcount*4
+	end
+	return itemcount*4
+end
+------- 计算重复制造神器时，重复制造神器数量的材料增加的公式
+function CommonFun.calcArtifactMaterialItemCount(type,num,count)
+	if type == 1 then
+		return num
+	elseif type == 2 then
+		if count == 0 then
+			return num
+		elseif count == 1 then
+			return num
+		elseif count == 2 then
+			return math.ceil(num*1.5)
+		else
+			return  num*2
+		end
+	else
+		if count == 0 then
+			return	num
+		elseif count == 1 then
+			return  num
+		elseif count == 2 then
+			return math.ceil(num*1.5)
+		else
+			return  num*2
+		end
+	end
+end

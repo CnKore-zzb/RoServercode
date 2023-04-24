@@ -1,0 +1,33 @@
+﻿--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+GameConfig.MvpBattle = {
+    BaseLevel=70,                             ----活动Base等级要求
+    TeamMumbernumber=1,						----组队人数要求
+    ActivityOpenCondition= {                   ----房间开启与队伍数，建立时间，MVP与Mini数量的数量
+             {TeamNumber =11,MinTime=0,MaxTime=60,MvpNum=5,MiniNum=3,RaidID = 80001,MatchPunishTime = 600},
+             {TeamNumber =10,MinTime=60,MaxTime=90,MvpNum=4,MiniNum=2,RaidID = 80001,MatchPunishTime = 600},
+             {TeamNumber =9,MinTime=90,MaxTime=120,MvpNum=4,MiniNum=2,RaidID = 80001,MatchPunishTime = 600},
+             {TeamNumber =8,MinTime=120,MaxTime=150,MvpNum=3,MiniNum=2,RaidID = 80001,MatchPunishTime = 600},
+             {TeamNumber =7,MinTime=150,MaxTime=180,MvpNum=3,MiniNum=2,RaidID = 80001,MatchPunishTime = 600},
+             {TeamNumber =6,MinTime=180,MaxTime=210,MvpNum=3,MiniNum=1,RaidID = 80003,MatchPunishTime = 600},
+             {TeamNumber =5,MinTime=210,MaxTime=240,MvpNum=2,MiniNum=1,RaidID = 80003,MatchPunishTime = 600},
+             {TeamNumber =4,MinTime=240,MaxTime=270,MvpNum=2,MiniNum=1,RaidID = 80003,MatchPunishTime = 600},
+             {TeamNumber =3,MinTime=270,MaxTime=100000,MvpNum=1,MiniNum=1,RaidID = 80003,MatchPunishTime = 600},             
+},
+            
+    MiniRewardTimes=4,                        ----nimi奖励次数
+    MvpRewardTimes=4,                         ----mvp奖励次数
+    EndDialogID=59247,                        ----结束时NPC说的dialogID
+    EndWaitTime=60,                           ----结束时的清除时间
+    ActivityID = 400,                     ----活动ID
+	MaxMatchTime = 300,                    ---最长匹配时间
+	ActivityTime = "每周五19:00~22:00",           ---活动时间
+	
+    DiePunish = {                                             
+         {interval = {1,15},cd=5},    --死亡间隔秒,+CD秒      
+     },                                                        
+     DiePunishResetTime = 30,           ----重置时间秒         
+     DieMaxCD = 15,                  ----惩罚上限              
+     DieExpelTime = 30,              --强制驱逐时间           
+}  

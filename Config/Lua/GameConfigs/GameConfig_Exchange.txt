@@ -1,0 +1,72 @@
+--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+--交易所相关配置
+GameConfig.Exchange = {
+  ExchangeLevel={[1]={minlv=1,maxlv=100,name="所有等级"},
+         [2]={minlv=1,maxlv=40},
+         [3]={minlv=41,maxlv=70},
+         [4]={minlv=71,maxlv=100},},
+  ExchangeFashion={[0]="全部",
+                   [1]="普通魔物",
+                   [2]="Mini",
+                   [3]="MVP",
+                   [4]="乐园团",
+                   [5]="活动",
+                   [6]="任务",
+                   [7]="其他",},
+  ExchangeLogScreen={[0]="全部",
+                     [1]="出售记录",
+                     [2]="购买记录",
+                     [3]="抢购记录",
+                     [4]="赠送记录",},
+  ExchangeTrade = {[0] = "全部",
+  	           [1] = "交易所",
+                   [2] = "摆摊",},
+  SendMoney={[1]={Resourse="ExchangeExpressBg1",price=0,fontcolor="1F74BF"},
+             [2]={Resourse="ExchangeExpressBg2",price=100000,fontcolor="E8639C",buffid=111},},
+  OpenGift={  --0:内网，1：预言之地，2：正式服
+  [0]=1,
+  [1]=1,
+  [2]=0,
+  },                        --0屏蔽赠送，1开启赠送   
+  ExchangeHour = 24*60*60,           --挂单过期时间
+  ExchangeRate = 0.09,               --交易费率
+  MaxPendingCount = 8,               --每个人的最大挂单数
+  MaxLog=100,                        --交易记录保留数量
+  AdjustPendingInterval = 3*60*60,   --系统补仓间隔，单位秒
+  MaxSearchLog=20,                   --最大搜索历史记录
+  PageNumber=100,                    --交易记录，买卖玩家界面每页记录数 
+  HotTime=8*60*60,                   --热门时间
+  LogTime=3*24*60*60,                --清除日志记录时间
+  ReceiveTime=30*24*60*60,           --未领取日志记录清除时间
+  CantSendTime=29*24*60*60,          --超过该时间的记录无法赠送
+  SendButtonTime=3*24*60*60,         --赠送按钮消失时间  
+  SellCost=0.01,                     --上架费用
+  MaxBoothfee = 10000,               --最大上架费用
+  Cycle_T={4*60*60,8*60*60},         --调价周期
+  Cycle_KT=24*60*60,                 --期望库存周期
+  MaxPriceUp=0.1,                    --涨价最大幅度
+  MinPriceRatio=0.5,                 --最小服务器价格倍率
+  NoDealDropRatio=0.05,              --0交易跌幅
+  UpRate=10,                         --涨幅（1-k/qk)的分母
+  DownRate=50,                       --跌幅（k/qk-1)的分母
+  GoodRate = 1,                      --点赞相性
+  MobPrice = 120000,                 --莫拉比价格
+  Inflation = 0.3,                   --通货膨胀系数
+  LvRate = {3,6,9,16},               --附魔等级系数
+  TypeRate = {0,0.2,0.6},            --附魔类型系数，对应初级，中级，高级
+  SendMoneyLimit=100000,             --赠送所需最低价值
+  SendTime=5*60,                     --赠送持续时间
+  WeekRefineRate = 1000,             --周周期精炼等级调价比例
+  MonthRefineRate = 1000,             --月周期精炼等级调价比例
+  EquipUpRate = 1000,                --升级装备调价比例
+  HeadRatio = {[800]=1.8,[830]=1.8,[850]=1.8,[810]=3.0,[840]=3.0}, -------------交易所头饰附魔价格计算
+  
+  BuyShow="[c][1F74BF]%s[-][/c]正在[c][CF1C0F]抢购期[-][/c]，您购买时需预支全部费用，在[c][CF1C0F]抢购期[-][/c]结束后物品有概率分配给您。\n\n当前抢购成功率为[c][1F74BF]%s[-][/c]。",
+  SellShow1="[c][1F74BF]%s[-][/c]在交易所过于稀缺，上架会进入[c][CF1C0F]抢购期[-][/c]。",
+  SellShow2="[c][1F74BF]%s[-][/c]正在[c][CF1C0F]抢购期[-][/c]，需耐心等待哦！想下架？很遗憾，道具在[c][CF1C0F]抢购期[-][/c]无法下架呢！",
+  SellShow3="[c][1F74BF]%s[-][/c]的[c][CF1C0F]抢购期[-][/c]时间为[c][1F74BF]%s[-][/c]分钟。",
+  SellShow4="[c][1F74BF]%s[-][/c]在交易所过于稀缺，已处于[c][CF1C0F]抢购期[-][/c]。",
+  SendMessage="传递而来这份心意，\n饱含的是爱和守护，\n见证着我们一起冒险的点滴。",
+}

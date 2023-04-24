@@ -1,0 +1,1399 @@
+---------------------------------------------------------------------------------此处计算值若和副本强度计算有重复,以副本值为最终值.否则以此处值为最终值
+function CommonFun.calcNpcAttrValue(extra,attr,profession)
+  local NpcResult={}
+  NpcResult[CommonFun.RoleData.EATTRTYPE_VIT]         = (extra[CommonFun.RoleData.EATTRTYPE_VIT]+attr[CommonFun.RoleData.EATTRTYPE_VIT])*(1+attr[CommonFun.RoleData.EATTRTYPE_VITPER])
+  NpcResult[CommonFun.RoleData.EATTRTYPE_INT]         = (extra[CommonFun.RoleData.EATTRTYPE_INT]+attr[CommonFun.RoleData.EATTRTYPE_INT])*(1+attr[CommonFun.RoleData.EATTRTYPE_INTPER])
+  NpcResult[CommonFun.RoleData.EATTRTYPE_DEX]         = extra[CommonFun.RoleData.EATTRTYPE_DEX]+attr[CommonFun.RoleData.EATTRTYPE_DEX]
+  NpcResult[CommonFun.RoleData.EATTRTYPE_AGI]         = extra[CommonFun.RoleData.EATTRTYPE_AGI]+attr[CommonFun.RoleData.EATTRTYPE_AGI]
+  NpcResult[CommonFun.RoleData.EATTRTYPE_STR]         = extra[CommonFun.RoleData.EATTRTYPE_STR]+attr[CommonFun.RoleData.EATTRTYPE_STR]
+  NpcResult[CommonFun.RoleData.EATTRTYPE_LUK]         = extra[CommonFun.RoleData.EATTRTYPE_LUK]+attr[CommonFun.RoleData.EATTRTYPE_LUK]
+  NpcResult[CommonFun.RoleData.EATTRTYPE_CRI]         = 1+math.floor(NpcResult[CommonFun.RoleData.EATTRTYPE_LUK]/3) --+ extra[CommonFun.RoleData.EATTRTYPE_CRI]+attr[CommonFun.RoleData.EATTRTYPE_CRI]
+  NpcResult[CommonFun.RoleData.EATTRTYPE_CRIRES]      = 1+math.floor(NpcResult[CommonFun.RoleData.EATTRTYPE_LUK]/5) --+ extra[CommonFun.RoleData.EATTRTYPE_CRIRES]+attr[CommonFun.RoleData.EATTRTYPE_CRIRES]
+
+  for key, value in pairs(NpcResult) do
+    if value < 0 then
+       NpcResult[key] = 0
+    end
+  end
+
+  NpcResult[CommonFun.RoleData.EATTRTYPE_DEFPER]      = attr[CommonFun.RoleData.EATTRTYPE_DEFPER]
+  if  NpcResult[CommonFun.RoleData.EATTRTYPE_DEFPER]  <=-1 then 
+      NpcResult[CommonFun.RoleData.EATTRTYPE_DEFPER]  =-1
+  end
+  
+  NpcResult[CommonFun.RoleData.EATTRTYPE_MDEFPER]     = attr[CommonFun.RoleData.EATTRTYPE_MDEFPER]
+  if  NpcResult[CommonFun.RoleData.EATTRTYPE_MDEFPER]  <=-1 then
+      NpcResult[CommonFun.RoleData.EATTRTYPE_MDEFPER]   =-1
+  end
+
+
+  return NpcResult
+
+end
+
+
+-- 无限塔普通怪计算公式
+function CommonFun.calcTowerMonsterNpcAttrValue(attr, Type, classtype, Layer)
+  local result = {}
+
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = (0.0304*Layer*Layer*Layer-1.6383*Layer*Layer+50.113*Layer+59.574)*0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = (0.0304*Layer*Layer*Layer-1.6383*Layer*Layer+50.113*Layer+59.574)*0.4
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 0.0008*Layer*Layer*Layer-0.0494*Layer*Layer+4.5061*Layer+1
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 2*Layer
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (0.2746*Layer*Layer*Layer-5.8627*Layer*Layer+404.87*Layer+84.291)*3
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 2*Layer+50
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = Layer
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = Layer*0.3
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = Layer*0.3
+
+  return result
+end
+
+--------------------------无限塔SmallBoss怪计算公式(这种怪物类型是怪物表中不曾定义的,程序直接传过来计算的一种小首领怪)
+function CommonFun.calcTowerSmallMiniNpcAttrValue(attr, Type, classtype, Layer)
+  local result = {}
+
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = (0.0304*Layer*Layer*Layer-1.6383*Layer*Layer+50.113*Layer+59.574)*0.6
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = (0.0304*Layer*Layer*Layer-1.6383*Layer*Layer+50.113*Layer+59.574)*0.6
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 0.0008*Layer*Layer*Layer-0.0494*Layer*Layer+4.5061*Layer+1
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 2*Layer
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (0.2746*Layer*Layer*Layer-5.8627*Layer*Layer+404.87*Layer+84.291)*1.25*3
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 2*Layer+50
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = Layer
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = Layer*0.3
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = Layer*0.3
+
+  return result
+end
+
+
+--------------------------无限塔Mini怪计算公式
+function CommonFun.calcTowerMiniNpcAttrValue(attr, Type, classtype, Layer)
+  local result = {}
+
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = (0.0304*Layer*Layer*Layer-1.6383*Layer*Layer+50.113*Layer+59.574)*0.8
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = (0.0304*Layer*Layer*Layer-1.6383*Layer*Layer+50.113*Layer+59.574)*0.8
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 0.0008*Layer*Layer*Layer-0.0494*Layer*Layer+4.5061*Layer+1
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 2*Layer
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (0.2746*Layer*Layer*Layer-5.8627*Layer*Layer+404.87*Layer+84.291)*2*3
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 2*Layer+50
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = Layer
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = Layer*0.3
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = Layer*0.3
+
+  return result
+end
+
+-------------------------无限塔Mvp怪计算公式
+function CommonFun.calcTowerMvpNpcAttrValue(attr, Type, classtype, Layer)
+  local result = {}
+ 
+  if Layer >= 80 then
+      result[CommonFun.RoleData.EATTRTYPE_ATK]    = (0.0304*Layer*Layer*Layer-1.6383*Layer*Layer+50.113*Layer+59.574)*0.6
+      result[CommonFun.RoleData.EATTRTYPE_MATK]   = (0.0304*Layer*Layer*Layer-1.6383*Layer*Layer+50.113*Layer+59.574)*0.6
+      result[CommonFun.RoleData.EATTRTYPE_DEF]    = 0.0008*Layer*Layer*Layer-0.0494*Layer*Layer+4.5061*Layer+1
+      result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 2*Layer
+      result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = ((0.2746*Layer*Layer*Layer-5.8627*Layer*Layer+404.87*Layer+84.291)*6*5)*0.6
+      result[CommonFun.RoleData.EATTRTYPE_HIT]    = 2*Layer+50
+      result[CommonFun.RoleData.EATTRTYPE_FLEE]   = Layer
+      result[CommonFun.RoleData.EATTRTYPE_CRI]    = Layer*0.3
+      result[CommonFun.RoleData.EATTRTYPE_CRIRES] = Layer*0.3
+  else
+      result[CommonFun.RoleData.EATTRTYPE_ATK]    = (0.0304*Layer*Layer*Layer-1.6383*Layer*Layer+50.113*Layer+59.574)
+      result[CommonFun.RoleData.EATTRTYPE_MATK]   = (0.0304*Layer*Layer*Layer-1.6383*Layer*Layer+50.113*Layer+59.574)
+      result[CommonFun.RoleData.EATTRTYPE_DEF]    = 0.0008*Layer*Layer*Layer-0.0494*Layer*Layer+4.5061*Layer+1
+      result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 2*Layer
+      result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = ((0.2746*Layer*Layer*Layer-5.8627*Layer*Layer+404.87*Layer+84.291)*6*5)
+      result[CommonFun.RoleData.EATTRTYPE_HIT]    = 2*Layer+50
+      result[CommonFun.RoleData.EATTRTYPE_FLEE]   = Layer
+      result[CommonFun.RoleData.EATTRTYPE_CRI]    = Layer*0.3
+      result[CommonFun.RoleData.EATTRTYPE_CRIRES] = Layer*0.3
+  end
+
+
+  return result
+end
+------------------------------- 亡者boss属性计算
+function calcDeadNpcAttrValue(attr, type, pro, lv)
+  local result = {}
+      result[CommonFun.RoleData.EATTRTYPE_HIT]    = attr[CommonFun.RoleData.EATTRTYPE_HIT] *(1+0.05*lv)
+      result[CommonFun.RoleData.EATTRTYPE_FLEE]   = attr[CommonFun.RoleData.EATTRTYPE_Flee] *(1+0.05*lv)
+      result[CommonFun.RoleData.EATTRTYPE_ATK]    = attr[CommonFun.RoleData.EATTRTYPE_ATK] *(1+0.05*lv+math.floor(lv/4)*0.3)
+      result[CommonFun.RoleData.EATTRTYPE_MATK]   = attr[CommonFun.RoleData.EATTRTYPE_MATK] *(1+0.05*lv+math.floor(lv/4)*0.3)
+      result[CommonFun.RoleData.EATTRTYPE_DEF]    = attr[CommonFun.RoleData.EATTRTYPE_DEF] *(1+0.05*lv+math.floor(lv/4)*0.2)
+      result[CommonFun.RoleData.EATTRTYPE_MDEF]   = attr[CommonFun.RoleData.EATTRTYPE_MDEF] *(1+0.05*lv+math.floor(lv/4)*0.2)
+      result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = attr[CommonFun.RoleData.EATTRTYPE_MAXHP] *(0.6+0.05*lv+lv*lv/50)
+      result[CommonFun.RoleData.EATTRTYPE_ATKSPD] = attr[CommonFun.RoleData.EATTRTYPE_ATKSPD] *(1+math.floor(lv/4)*0.1)
+  return result
+end
+-------------------------无限塔各类型怪强度返回值
+function CommonFun.calcEndlessTowerNpcAttrValue(attr, Type, classtype, Layer)
+  local result = {}
+
+  -- Type 类型
+  -- Type == 1  ENPCTYPE_NPC
+  -- Type == 2  ENPCTYPE_GATHER
+  -- Type == 3  ENPCTYPE_MONSTER
+  -- Type == 4  ENPCTYPE_MINIBOSS
+  -- Type == 5  ENPCTYPE_MVP
+  -- Type == 6  ENPCTYPE_SMALLMINIBOSS
+
+  -- ENPCTYPE_MONSTER 类型
+  if Type == 3 then
+    result = CommonFun.calcTowerMonsterNpcAttrValue(attr, Type, classtype,  Layer)
+
+  -- ENPCTYPE_MINIBOSS 类型
+  elseif Type == 4 then
+    result = CommonFun.calcTowerMiniNpcAttrValue(attr, Type, classtype, Layer)
+
+  -- ENPCTYPE_MVP 类型
+  elseif Type == 5 then
+    result = CommonFun.calcTowerMvpNpcAttrValue(attr, Type, classtype, Layer)
+
+  -- ENPCTYPE_SMALLMINIBOSS 类型
+  elseif Type == 6 then
+    result = CommonFun.calcTowerSmallMiniNpcAttrValue(attr, Type, classtype, Layer)
+  end
+
+  for k,v in pairs(result) do
+    result.k = math.floor(v*1000)/1000
+  end
+
+  return result
+end
+
+-- 研究所怪物属性计算(不包含性格属性)
+function CommonFun.calcLaboratoryNpcAttrValue(attr, level, classtype, roundid)
+  -- classtype 类型
+  -- 11 - 战士
+  -- 12 - 骑士
+  -- 21 - 法师
+  -- 31 - 盗贼
+  -- 41 - 弓手
+  -- 51 - 牧师
+  local result = {}
+  if calsstype==11 then
+        result[CommonFun.RoleData.EATTRTYPE_ATK]    =  (0.34*level*level-8.26*level+72)*0.4
+        result[CommonFun.RoleData.EATTRTYPE_MATK]   =  (0.34*level*level-8.26*level+72)*0.4
+        result[CommonFun.RoleData.EATTRTYPE_DEF]    =  0.0008*level*level*level-0.0494*level*level+4.5061*level+1
+        result[CommonFun.RoleData.EATTRTYPE_MDEF]   =  2*level
+        result[CommonFun.RoleData.EATTRTYPE_MAXHP]  =  (0.1373*level*level*level-2.9336*level*level+202.51*level+40.727)*2*3
+        result[CommonFun.RoleData.EATTRTYPE_HIT]    =  2*level+50
+        result[CommonFun.RoleData.EATTRTYPE_FLEE]   =  level
+        result[CommonFun.RoleData.EATTRTYPE_CRI]    =  level*0.3
+        result[CommonFun.RoleData.EATTRTYPE_CRIRES] =  level*0.3
+
+  elseif calsstype==12 then  
+        result[CommonFun.RoleData.EATTRTYPE_ATK]    =  (0.34*level*level-8.26*level+72)*0.4
+        result[CommonFun.RoleData.EATTRTYPE_MATK]   =  (0.34*level*level-8.26*level+72)*0.4
+        result[CommonFun.RoleData.EATTRTYPE_DEF]    =  0.0008*level*level*level-0.0494*level*level+4.5061*level+1
+        result[CommonFun.RoleData.EATTRTYPE_MDEF]   =  2*level
+        result[CommonFun.RoleData.EATTRTYPE_MAXHP]  =  (0.1373*level*level*level-2.9336*level*level+202.51*level+40.727)*2*3
+        result[CommonFun.RoleData.EATTRTYPE_HIT]    =  2*level+50
+        result[CommonFun.RoleData.EATTRTYPE_FLEE]   =  level
+        result[CommonFun.RoleData.EATTRTYPE_CRI]    =  level*0.3
+        result[CommonFun.RoleData.EATTRTYPE_CRIRES] =  level*0.3
+  elseif calsstype==21 then 
+        result[CommonFun.RoleData.EATTRTYPE_ATK]    =  (0.34*level*level-8.26*level+72)*0.4
+        result[CommonFun.RoleData.EATTRTYPE_MATK]   =  (0.34*level*level-8.26*level+72)*0.4
+        result[CommonFun.RoleData.EATTRTYPE_DEF]    =  0.0008*level*level*level-0.0494*level*level+4.5061*level+1
+        result[CommonFun.RoleData.EATTRTYPE_MDEF]   =  2*level
+        result[CommonFun.RoleData.EATTRTYPE_MAXHP]  =  (0.1373*level*level*level-2.9336*level*level+202.51*level+40.727)*3
+        result[CommonFun.RoleData.EATTRTYPE_HIT]    =  2*level+50
+        result[CommonFun.RoleData.EATTRTYPE_FLEE]   =  level
+        result[CommonFun.RoleData.EATTRTYPE_CRI]    =  level*0.3
+        result[CommonFun.RoleData.EATTRTYPE_CRIRES] =  level*0.3
+  elseif calsstype==31 then
+        result[CommonFun.RoleData.EATTRTYPE_ATK]    =  (0.34*level*level-8.26*level+72)*0.75
+        result[CommonFun.RoleData.EATTRTYPE_MATK]   =  (0.34*level*level-8.26*level+72)*0.75
+        result[CommonFun.RoleData.EATTRTYPE_DEF]    =  0.0008*level*level*level-0.0494*level*level+4.5061*level+1
+        result[CommonFun.RoleData.EATTRTYPE_MDEF]   =  2*level
+        result[CommonFun.RoleData.EATTRTYPE_MAXHP]  =  (0.1373*level*level*level-2.9336*level*level+202.51*level+40.727)*3
+        result[CommonFun.RoleData.EATTRTYPE_HIT]    =  2*level+50
+        result[CommonFun.RoleData.EATTRTYPE_FLEE]   =  level
+        result[CommonFun.RoleData.EATTRTYPE_CRI]    =  level*0.3
+        result[CommonFun.RoleData.EATTRTYPE_CRIRES] =  level*0.3
+  elseif calsstype==41 then  
+        result[CommonFun.RoleData.EATTRTYPE_ATK]    =  (0.34*level*level-8.26*level+72)*0.75
+        result[CommonFun.RoleData.EATTRTYPE_MATK]   =  (0.34*level*level-8.26*level+72)*0.75
+        result[CommonFun.RoleData.EATTRTYPE_DEF]    =  0.0008*level*level*level-0.0494*level*level+4.5061*level+1
+        result[CommonFun.RoleData.EATTRTYPE_MDEF]   =  2*level
+        result[CommonFun.RoleData.EATTRTYPE_MAXHP]  =  (0.1373*level*level*level-2.9336*level*level+202.51*level+40.727)*3
+        result[CommonFun.RoleData.EATTRTYPE_HIT]    =  2*level+50
+        result[CommonFun.RoleData.EATTRTYPE_FLEE]   =  level
+        result[CommonFun.RoleData.EATTRTYPE_CRI]    =  level*0.3
+        result[CommonFun.RoleData.EATTRTYPE_CRIRES] =  level*0.3
+  elseif calsstype==51 then 
+        result[CommonFun.RoleData.EATTRTYPE_ATK]    =  (0.34*level*level-8.26*level+72)*0.5
+        result[CommonFun.RoleData.EATTRTYPE_MATK]   =  (0.34*level*level-8.26*level+72)*0.5
+        result[CommonFun.RoleData.EATTRTYPE_DEF]    =  0.0008*level*level*level-0.0494*level*level+4.5061*level+1
+        result[CommonFun.RoleData.EATTRTYPE_MDEF]   =  2*level
+        result[CommonFun.RoleData.EATTRTYPE_MAXHP]  =  (0.1373*level*level*level-2.9336*level*level+202.51*level+40.727)*2
+        result[CommonFun.RoleData.EATTRTYPE_HIT]    =  2*level+50
+        result[CommonFun.RoleData.EATTRTYPE_FLEE]   =  level
+        result[CommonFun.RoleData.EATTRTYPE_CRI]    =  level*0.3
+        result[CommonFun.RoleData.EATTRTYPE_CRIRES] =  level*0.3
+  else 
+        result[CommonFun.RoleData.EATTRTYPE_ATK]    =  (0.34*level*level-8.26*level+72)*0.5
+        result[CommonFun.RoleData.EATTRTYPE_MATK]   =  (0.34*level*level-8.26*level+72)*0.5
+        result[CommonFun.RoleData.EATTRTYPE_DEF]    =  0.0008*level*level*level-0.0494*level*level+4.5061*level+1
+        result[CommonFun.RoleData.EATTRTYPE_MDEF]   =  2*level
+        result[CommonFun.RoleData.EATTRTYPE_MAXHP]  =  (0.1373*level*level*level-2.9336*level*level+202.51*level+40.727)*2
+        result[CommonFun.RoleData.EATTRTYPE_HIT]    =  2*level+50
+        result[CommonFun.RoleData.EATTRTYPE_FLEE]   =  level
+        result[CommonFun.RoleData.EATTRTYPE_CRI]    =  level*0.3
+        result[CommonFun.RoleData.EATTRTYPE_CRIRES] =  level*0.3
+  end
+
+  return result
+end
+
+-- 封印怪物属性计算
+function CommonFun.calcSealNpcAttrValue(attr, classtype, sealtype, mapid)
+
+-- sealtype
+-- 1 : 组队
+-- 2 : 个人
+-- 3 : 活动
+local result = {}
+local A=GameConfig.Seal.npclv[mapid]
+if A == nil then
+  ---print("------------------")
+  A = 65
+end 
+--print("A = "..A)
+--print("mapid = "..mapid)
+  
+  if  sealtype==1 then
+        result[CommonFun.RoleData.EATTRTYPE_ATK]    =  (0.34*A*A-8.26*A+72)*0.4
+        result[CommonFun.RoleData.EATTRTYPE_MATK]   =  (0.34*A*A-8.26*A+72)*0.23
+        result[CommonFun.RoleData.EATTRTYPE_DEF]    =  0.0008*A*A*A-0.0494*A*A+4.5061*A+1
+        result[CommonFun.RoleData.EATTRTYPE_MDEF]   =  2*A
+        result[CommonFun.RoleData.EATTRTYPE_MAXHP]  =  (0.1373*A*A*A-2.9336*A*A+202.51*A+40.727)
+        result[CommonFun.RoleData.EATTRTYPE_HIT]    =  2*A+50
+        result[CommonFun.RoleData.EATTRTYPE_FLEE]   =  A+50
+        result[CommonFun.RoleData.EATTRTYPE_CRI]    =  A*0.3
+        result[CommonFun.RoleData.EATTRTYPE_CRIRES] =  A*0.3
+  else
+        if A<20 then
+        result[CommonFun.RoleData.EATTRTYPE_ATK]    =  4
+        result[CommonFun.RoleData.EATTRTYPE_MATK]   =  4
+        result[CommonFun.RoleData.EATTRTYPE_DEF]    =  0.0008*A*A*A-0.0494*A*A+4.5061*A+1
+        result[CommonFun.RoleData.EATTRTYPE_MDEF]   =  2*A
+        result[CommonFun.RoleData.EATTRTYPE_MAXHP]  =  (0.1373*A*A*A-2.9336*A*A+202.51*A+40.727)*0.1
+        result[CommonFun.RoleData.EATTRTYPE_HIT]    =  2*A
+        result[CommonFun.RoleData.EATTRTYPE_FLEE]   =  A
+        result[CommonFun.RoleData.EATTRTYPE_CRI]    =  A*0.3
+        result[CommonFun.RoleData.EATTRTYPE_CRIRES] =  A*0.3
+        elseif A<30 and A>=20 then
+        result[CommonFun.RoleData.EATTRTYPE_ATK]    =  (2*(A-19) + 8)*0.5
+        result[CommonFun.RoleData.EATTRTYPE_MATK]   =  (2*(A-19) + 8)*0.2
+        result[CommonFun.RoleData.EATTRTYPE_DEF]    =  0.0008*A*A*A-0.0494*A*A+4.5061*A+1
+        result[CommonFun.RoleData.EATTRTYPE_MDEF]   =  2*A
+        result[CommonFun.RoleData.EATTRTYPE_MAXHP]  =  (0.1373*A*A*A-2.9336*A*A+202.51*A+40.727)*0.1
+        result[CommonFun.RoleData.EATTRTYPE_HIT]    =  2*A
+        result[CommonFun.RoleData.EATTRTYPE_FLEE]   =  A
+        result[CommonFun.RoleData.EATTRTYPE_CRI]    =  A*0.3
+        result[CommonFun.RoleData.EATTRTYPE_CRIRES] =  A*0.3
+        elseif A<40 and A>=30 then
+        result[CommonFun.RoleData.EATTRTYPE_ATK]    =  (3*(A-29) + 25)*0.5
+        result[CommonFun.RoleData.EATTRTYPE_MATK]   =  (3*(A-29) + 25)*0.2
+        result[CommonFun.RoleData.EATTRTYPE_DEF]    =  0.0008*A*A*A-0.0494*A*A+4.5061*A+1
+        result[CommonFun.RoleData.EATTRTYPE_MDEF]   =  2*A
+        result[CommonFun.RoleData.EATTRTYPE_MAXHP]  =  (0.1373*A*A*A-2.9336*A*A+202.51*A+40.727)*0.15
+        result[CommonFun.RoleData.EATTRTYPE_HIT]    =  2*A
+        result[CommonFun.RoleData.EATTRTYPE_FLEE]   =  A
+        result[CommonFun.RoleData.EATTRTYPE_CRI]    =  A*0.3
+        result[CommonFun.RoleData.EATTRTYPE_CRIRES] =  A*0.3
+        elseif A<50 and A>=40 then
+        result[CommonFun.RoleData.EATTRTYPE_ATK]    =  ((A-39) + 57)*0.5
+        result[CommonFun.RoleData.EATTRTYPE_MATK]   =  ((A-39) + 57)*0.2
+        result[CommonFun.RoleData.EATTRTYPE_DEF]    =  0.0008*A*A*A-0.0494*A*A+4.5061*A+1
+        result[CommonFun.RoleData.EATTRTYPE_MDEF]   =  2*A
+        result[CommonFun.RoleData.EATTRTYPE_MAXHP]  =  (0.1373*A*A*A-2.9336*A*A+202.51*A+40.727)*0.15
+        result[CommonFun.RoleData.EATTRTYPE_HIT]    =  2*A
+        result[CommonFun.RoleData.EATTRTYPE_FLEE]   =  A
+        result[CommonFun.RoleData.EATTRTYPE_CRI]    =  A*0.3
+        result[CommonFun.RoleData.EATTRTYPE_CRIRES] =  A*0.3
+        elseif A<60 and A>=50 then
+        result[CommonFun.RoleData.EATTRTYPE_ATK]    =  (2*(A-49) + 69)*0.5
+        result[CommonFun.RoleData.EATTRTYPE_MATK]   =  (2*(A-49) + 69)*0.2
+        result[CommonFun.RoleData.EATTRTYPE_DEF]    =  0.0008*A*A*A-0.0494*A*A+4.5061*A+1
+        result[CommonFun.RoleData.EATTRTYPE_MDEF]   =  2*A
+        result[CommonFun.RoleData.EATTRTYPE_MAXHP]  =  (0.1373*A*A*A-2.9336*A*A+202.51*A+40.727)*0.2
+        result[CommonFun.RoleData.EATTRTYPE_HIT]    =  2*A
+        result[CommonFun.RoleData.EATTRTYPE_FLEE]   =  A
+        result[CommonFun.RoleData.EATTRTYPE_CRI]    =  A*0.3
+        result[CommonFun.RoleData.EATTRTYPE_CRIRES] =  A*0.3
+        elseif A<70 and A>=60 then
+        result[CommonFun.RoleData.EATTRTYPE_ATK]    =  (3*(A-59) + 94)*0.5 
+        result[CommonFun.RoleData.EATTRTYPE_MATK]   =  (3*(A-59) + 94)*0.2
+        result[CommonFun.RoleData.EATTRTYPE_DEF]    =  0.0008*A*A*A-0.0494*A*A+4.5061*A+1
+        result[CommonFun.RoleData.EATTRTYPE_MDEF]   =  2*A
+        result[CommonFun.RoleData.EATTRTYPE_MAXHP]  =  (0.1373*A*A*A-2.9336*A*A+202.51*A+40.727)*0.2
+        result[CommonFun.RoleData.EATTRTYPE_HIT]    =  2*A
+        result[CommonFun.RoleData.EATTRTYPE_FLEE]   =  A
+        result[CommonFun.RoleData.EATTRTYPE_CRI]    =  A*0.3
+        result[CommonFun.RoleData.EATTRTYPE_CRIRES] =  A*0.3
+        elseif A<80 and A>=70 then
+        result[CommonFun.RoleData.EATTRTYPE_ATK]    =  13*(A-69) + 114
+        result[CommonFun.RoleData.EATTRTYPE_MATK]   =  (13*(A-69) + 114)*0.5
+        result[CommonFun.RoleData.EATTRTYPE_DEF]    =  0.0008*A*A*A-0.0494*A*A+4.5061*A+1
+        result[CommonFun.RoleData.EATTRTYPE_MDEF]   =  2*A
+        result[CommonFun.RoleData.EATTRTYPE_MAXHP]  =  (0.1373*A*A*A-2.9336*A*A+202.51*A+40.727)*0.2
+        result[CommonFun.RoleData.EATTRTYPE_HIT]    =  2*A
+        result[CommonFun.RoleData.EATTRTYPE_FLEE]   =  A
+        result[CommonFun.RoleData.EATTRTYPE_CRI]    =  A*0.3
+        result[CommonFun.RoleData.EATTRTYPE_CRIRES] =  A*0.3
+        elseif A<90 and A>=80 then
+        result[CommonFun.RoleData.EATTRTYPE_ATK]    =  7*(A-79) + 242
+        result[CommonFun.RoleData.EATTRTYPE_MATK]   =  (7*(A-79) + 242)*0.5
+        result[CommonFun.RoleData.EATTRTYPE_DEF]    =  0.0008*A*A*A-0.0494*A*A+4.5061*A+1
+        result[CommonFun.RoleData.EATTRTYPE_MDEF]   =  2*A
+        result[CommonFun.RoleData.EATTRTYPE_MAXHP]  =  (0.1373*A*A*A-2.9336*A*A+202.51*A+40.727)*0.2
+        result[CommonFun.RoleData.EATTRTYPE_HIT]    =  2*A
+        result[CommonFun.RoleData.EATTRTYPE_FLEE]   =  A
+        result[CommonFun.RoleData.EATTRTYPE_CRI]    =  A*0.3
+        result[CommonFun.RoleData.EATTRTYPE_CRIRES] =  A*0.3
+
+        elseif A<100 and A>=90 then
+        result[CommonFun.RoleData.EATTRTYPE_ATK]    =  8*(A-89) + 309  
+        result[CommonFun.RoleData.EATTRTYPE_MATK]   =  (8*(A-89) + 309)*0.5
+        result[CommonFun.RoleData.EATTRTYPE_DEF]    =  0.0008*A*A*A-0.0494*A*A+4.5061*A+1
+        result[CommonFun.RoleData.EATTRTYPE_MDEF]   =  2*A
+        result[CommonFun.RoleData.EATTRTYPE_MAXHP]  =  (0.1373*A*A*A-2.9336*A*A+202.51*A+40.727)*0.2
+        result[CommonFun.RoleData.EATTRTYPE_HIT]    =  2*A
+        result[CommonFun.RoleData.EATTRTYPE_FLEE]   =  A
+        result[CommonFun.RoleData.EATTRTYPE_CRI]    =  A*0.3
+        result[CommonFun.RoleData.EATTRTYPE_CRIRES] =  A*0.3
+        end
+  end 
+  
+  return result
+end
+
+
+-------------------------道场各类型怪属性计算
+function CommonFun.calcDojoNpcAttrValue(attr, Type, classtype, DojoLevel)
+
+  local result = {}
+  local A = DojoLevel*DojoLevel/150
+  
+  if A<= 1 then
+     A = 1
+  end 
+     
+  if Type==ENPCTYPE_MONSTER then 
+          result[CommonFun.RoleData.EATTRTYPE_ATK]    = (0.0057*DojoLevel*DojoLevel*DojoLevel-0.3728*DojoLevel*DojoLevel+15.339*DojoLevel-10)*0.2
+          result[CommonFun.RoleData.EATTRTYPE_MATK]   = (0.0057*DojoLevel*DojoLevel*DojoLevel-0.3728*DojoLevel*DojoLevel+15.339*DojoLevel-10)*0.2
+          result[CommonFun.RoleData.EATTRTYPE_DEF]    = (0.0008*DojoLevel*DojoLevel*DojoLevel-0.0494*DojoLevel*DojoLevel+4.5061*DojoLevel+1)
+          result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 2*DojoLevel
+          result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (0.1373*DojoLevel*DojoLevel*DojoLevel-2.9336*DojoLevel*DojoLevel+202.51*DojoLevel+40.727)*0.3
+          result[CommonFun.RoleData.EATTRTYPE_HIT]    = 2*DojoLevel+50
+          result[CommonFun.RoleData.EATTRTYPE_FLEE]   = DojoLevel
+          result[CommonFun.RoleData.EATTRTYPE_CRI]    = DojoLevel*0.3
+          result[CommonFun.RoleData.EATTRTYPE_CRIRES] = DojoLevel*0.3
+  elseif Type==ENPCTYPE_MINIBOSS then
+          result[CommonFun.RoleData.EATTRTYPE_ATK]    = (0.0057*DojoLevel*DojoLevel*DojoLevel-0.3728*DojoLevel*DojoLevel+15.339*DojoLevel-10)*0.5
+          result[CommonFun.RoleData.EATTRTYPE_MATK]   = (0.0057*DojoLevel*DojoLevel*DojoLevel-0.3728*DojoLevel*DojoLevel+15.339*DojoLevel-10)*0.5
+          result[CommonFun.RoleData.EATTRTYPE_DEF]    = (0.0008*DojoLevel*DojoLevel*DojoLevel-0.0494*DojoLevel*DojoLevel+4.5061*DojoLevel+1)
+          result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 2*DojoLevel
+          result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (0.1373*DojoLevel*DojoLevel*DojoLevel-2.9336*DojoLevel*DojoLevel+202.51*DojoLevel+40.727)*0.75
+          result[CommonFun.RoleData.EATTRTYPE_HIT]    = 2*DojoLevel+50
+          result[CommonFun.RoleData.EATTRTYPE_FLEE]   = DojoLevel
+          result[CommonFun.RoleData.EATTRTYPE_CRI]    = DojoLevel*0.3
+          result[CommonFun.RoleData.EATTRTYPE_CRIRES] = DojoLevel*0.3
+  elseif  Type==ENPCTYPE_MVP   then
+          result[CommonFun.RoleData.EATTRTYPE_ATK]    = (0.0057*DojoLevel*DojoLevel*DojoLevel-0.3728*DojoLevel*DojoLevel+15.339*DojoLevel-10)*0.75
+          result[CommonFun.RoleData.EATTRTYPE_MATK]   = (0.0057*DojoLevel*DojoLevel*DojoLevel-0.3728*DojoLevel*DojoLevel+15.339*DojoLevel-10)*0.75
+          result[CommonFun.RoleData.EATTRTYPE_DEF]    = (0.0008*DojoLevel*DojoLevel*DojoLevel-0.0494*DojoLevel*DojoLevel+4.5061*DojoLevel+1)
+          result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 2*DojoLevel
+          result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (0.1373*DojoLevel*DojoLevel*DojoLevel-2.9336*DojoLevel*DojoLevel+202.51*DojoLevel+40.727)*A
+          result[CommonFun.RoleData.EATTRTYPE_HIT]    = 2*DojoLevel+50
+          result[CommonFun.RoleData.EATTRTYPE_FLEE]   = DojoLevel
+          result[CommonFun.RoleData.EATTRTYPE_CRI]    = DojoLevel*0.3
+          result[CommonFun.RoleData.EATTRTYPE_CRIRES] = DojoLevel*0.3
+  else
+          result[CommonFun.RoleData.EATTRTYPE_ATK]    = (0.0057*DojoLevel*DojoLevel*DojoLevel-0.3728*DojoLevel*DojoLevel+15.339*DojoLevel-10)*0.3
+          result[CommonFun.RoleData.EATTRTYPE_MATK]   = (0.0057*DojoLevel*DojoLevel*DojoLevel-0.3728*DojoLevel*DojoLevel+15.339*DojoLevel-10)*0.3
+          result[CommonFun.RoleData.EATTRTYPE_DEF]    = (0.0008*DojoLevel*DojoLevel*DojoLevel-0.0494*DojoLevel*DojoLevel+4.5061*DojoLevel+1)
+          result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 2*DojoLevel
+          result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (0.1373*DojoLevel*DojoLevel*DojoLevel-2.9336*DojoLevel*DojoLevel+202.51*DojoLevel+40.727)*0.6
+          result[CommonFun.RoleData.EATTRTYPE_HIT]    = 2*DojoLevel+50
+          result[CommonFun.RoleData.EATTRTYPE_FLEE]   = DojoLevel
+          result[CommonFun.RoleData.EATTRTYPE_CRI]    = DojoLevel*0.3
+          result[CommonFun.RoleData.EATTRTYPE_CRIRES] = DojoLevel*0.3       
+  end       
+    return result
+
+end
+
+function CommonFun.calcWeaponPetNpcAttrValue(attr, classtype, level, srcUser)
+  local result = {}
+
+  local a=1
+  if srcUser ~= nil and srcUser:HasBuffID(30000) == true then 
+     a=1.1
+  end
+
+  if classtype==51 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    =  (0.15*level*level-3*level+70) + attr[CommonFun.RoleData.EATTRTYPE_ATK]
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   =  (0.1*level*level-3*level+70) + attr[CommonFun.RoleData.EATTRTYPE_MATK]
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    =  level*6 + attr[CommonFun.RoleData.EATTRTYPE_DEF]
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   =  level*2 + attr[CommonFun.RoleData.EATTRTYPE_MDEF]
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  =  (1.5*level*level-10*level+1000) + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    =  3*level+50 + attr[CommonFun.RoleData.EATTRTYPE_HIT]
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   =  level + attr[CommonFun.RoleData.EATTRTYPE_FLEE]
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    =  level*0.3 + attr[CommonFun.RoleData.EATTRTYPE_CRI] 
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] =  level*0.3 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES]
+ elseif classtype==41 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    =  ((0.25*level*level-2*level+70) + attr[CommonFun.RoleData.EATTRTYPE_ATK])*a
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   =  (0.1*level*level-3*level+70) + attr[CommonFun.RoleData.EATTRTYPE_MATK]
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    =  level*6 + attr[CommonFun.RoleData.EATTRTYPE_DEF]
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   =  level*2 + attr[CommonFun.RoleData.EATTRTYPE_MDEF]
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  =  (3*level*level-10*level+1000) + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    =  3*level+50 + attr[CommonFun.RoleData.EATTRTYPE_HIT]
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   =  level + attr[CommonFun.RoleData.EATTRTYPE_FLEE]
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    =  level*0.3 + attr[CommonFun.RoleData.EATTRTYPE_CRI] 
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] =  level*0.3 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES]
+  elseif classtype==11 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    =  (0.15*level*level-3*level+70) + attr[CommonFun.RoleData.EATTRTYPE_ATK]
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   =  (0.1*level*level-3*level+70) + attr[CommonFun.RoleData.EATTRTYPE_MATK]
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    =  level*12 + attr[CommonFun.RoleData.EATTRTYPE_DEF]
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   =  level*4   + attr[CommonFun.RoleData.EATTRTYPE_MDEF]
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  =  ((4.5*level*level-10*level+1000) + attr[CommonFun.RoleData.EATTRTYPE_MAXHP])*a
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    =  3*level+50 + attr[CommonFun.RoleData.EATTRTYPE_HIT]
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   =  level + attr[CommonFun.RoleData.EATTRTYPE_FLEE]
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    =  level*0.3 + attr[CommonFun.RoleData.EATTRTYPE_CRI] 
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] =  level*0.3 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES]
+  elseif classtype==21 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    =  (0.1*level*level-3*level+70) + attr[CommonFun.RoleData.EATTRTYPE_ATK]
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   =  ((0.4*level*level-2*level+70) + attr[CommonFun.RoleData.EATTRTYPE_MATK])*a
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    =  level*6 + attr[CommonFun.RoleData.EATTRTYPE_DEF]
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   =  level*2 + attr[CommonFun.RoleData.EATTRTYPE_MDEF]
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  =  (3*level*level-10*level+1000) + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    =  3*level+50 + attr[CommonFun.RoleData.EATTRTYPE_HIT]
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   =  level + attr[CommonFun.RoleData.EATTRTYPE_FLEE]
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    =  level*0.3 + attr[CommonFun.RoleData.EATTRTYPE_CRI] 
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] =  level*0.3 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES]
+  else  
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    =  (0.15*level*level-3*level+70) + attr[CommonFun.RoleData.EATTRTYPE_ATK]
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   =  (0.1*level*level-3*level+70) + attr[CommonFun.RoleData.EATTRTYPE_MATK]
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    =  level*6 + attr[CommonFun.RoleData.EATTRTYPE_DEF]
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   =  level*2 + attr[CommonFun.RoleData.EATTRTYPE_MDEF]
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  =  (1.5*level*level-10*level+1000) + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    =  3*level+50 + attr[CommonFun.RoleData.EATTRTYPE_HIT]
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   =  level + attr[CommonFun.RoleData.EATTRTYPE_FLEE]
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    =  level*0.3 + attr[CommonFun.RoleData.EATTRTYPE_CRI] 
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] =  level*0.3 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES]
+  end  
+
+  return result
+end
+
+-- 新增宠物属性计算
+function CommonFun.calcPetNpcAttrValue(attr, petlv, classtype)
+  local result = {}
+  -----------1   品质为D
+  -----------11  战士系相关职业  坦克
+  -----------21  法师系相关职业  法攻
+  -----------31  刺客系相关职业  物攻-近
+  -----------41  弓手系相关职业  物攻-远
+  -----------51  牧师系相关职业  辅助
+  -----------61  商人系相关职业  均衡
+  -----------1-C 2-B 3-A 4-S
+  --品质系数
+  local QualityRatio = 0
+  
+  --各品质对应的品质系数判断
+  if classtype == 11 or classtype == 21 or classtype == 31 or classtype == 41 or classtype == 51 or classtype == 61 then
+  QualityRatio = 1.4
+  elseif classtype == 12 or classtype == 22 or classtype == 32 or classtype == 42 or classtype == 52 or classtype == 62 then
+  QualityRatio = 1.8
+  elseif classtype == 13 or classtype == 23 or classtype == 33 or classtype == 43 or classtype == 53 or classtype == 63 then
+  QualityRatio = 2.3
+  elseif classtype == 14 or classtype == 24 or classtype == 34 or classtype == 44 or classtype == 54 or classtype == 64 then
+  QualityRatio = 3
+  else
+  QualityRatio = 1
+  end
+
+  --各职业倾向的六维成长率
+  if classtype==11 or classtype==12 or classtype==13 or classtype==14  then
+  result[CommonFun.RoleData.EATTRTYPE_STR] = (3 + (petlv-1) * 0.216) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_STR]
+  result[CommonFun.RoleData.EATTRTYPE_AGI] = (0.5 + (petlv-1) * 0.036) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_AGI]
+  result[CommonFun.RoleData.EATTRTYPE_VIT] = (4 + (petlv-1) * 0.288) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_VIT]
+  result[CommonFun.RoleData.EATTRTYPE_INT] = (0.5 + (petlv-1) * 0.036) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_INT]
+  result[CommonFun.RoleData.EATTRTYPE_DEX] = (1.5 + (petlv-1) * 0.108) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_DEX]
+  result[CommonFun.RoleData.EATTRTYPE_LUK] = (0.5 + (petlv-1) * 0.036) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_LUK]
+  elseif  classtype==21 or classtype==22 or classtype==23 or classtype==24  then
+  result[CommonFun.RoleData.EATTRTYPE_STR] = (0.5 + (petlv-1) * 0.036) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_STR]
+  result[CommonFun.RoleData.EATTRTYPE_AGI] = (0.5 + (petlv-1) * 0.036) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_AGI]
+  result[CommonFun.RoleData.EATTRTYPE_VIT] = (0.5 + (petlv-1) * 0.036) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_VIT]
+  result[CommonFun.RoleData.EATTRTYPE_INT] = (4 + (petlv-1) * 0.288) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_INT]
+  result[CommonFun.RoleData.EATTRTYPE_DEX] = (4 + (petlv-1) * 0.288) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_DEX]
+  result[CommonFun.RoleData.EATTRTYPE_LUK] = (0.5 + (petlv-1) * 0.036) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_LUK]
+  elseif  classtype==31 or classtype==32 or classtype==33 or classtype==34  then
+  result[CommonFun.RoleData.EATTRTYPE_STR] = (4 + (petlv-1) * 0.288) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_STR]
+  result[CommonFun.RoleData.EATTRTYPE_AGI] = (3 + (petlv-1) * 0.216) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_AGI]
+  result[CommonFun.RoleData.EATTRTYPE_VIT] = (0.5 + (petlv-1) * 0.036) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_VIT]
+  result[CommonFun.RoleData.EATTRTYPE_INT] = (0.5 + (petlv-1) * 0.036) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_INT]
+  result[CommonFun.RoleData.EATTRTYPE_LUK] = (1 + (petlv-1) * 0.072) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_DEX]
+  result[CommonFun.RoleData.EATTRTYPE_DEX] = (1 + (petlv-1) * 0.072) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_LUK]
+  elseif  classtype==41 or classtype==42 or classtype==43 or classtype==44  then
+  result[CommonFun.RoleData.EATTRTYPE_STR] = (0.5 + (petlv-1) * 0.036) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_STR]
+  result[CommonFun.RoleData.EATTRTYPE_AGI] = (3 + (petlv-1) * 0.216) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_AGI]
+  result[CommonFun.RoleData.EATTRTYPE_VIT] = (0.5 + (petlv-1) * 0.036) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_VIT]
+  result[CommonFun.RoleData.EATTRTYPE_INT] = (0.5 + (petlv-1) * 0.036) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_INT]
+  result[CommonFun.RoleData.EATTRTYPE_DEX] = (4 + (petlv-1) * 0.288) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_DEX]
+  result[CommonFun.RoleData.EATTRTYPE_LUK] = (1.5 + (petlv-1) * 0.108) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_LUK]
+  elseif  classtype==51 or classtype==52 or classtype==53 or classtype==54  then
+  result[CommonFun.RoleData.EATTRTYPE_STR] = (0.5 + (petlv-1) * 0.036) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_STR]
+  result[CommonFun.RoleData.EATTRTYPE_AGI] = (0.5 + (petlv-1) * 0.036) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_AGI]
+  result[CommonFun.RoleData.EATTRTYPE_VIT] = (3 + (petlv-1) * 0.216) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_VIT]
+  result[CommonFun.RoleData.EATTRTYPE_INT] = (4 + (petlv-1) * 0.288) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_INT]
+  result[CommonFun.RoleData.EATTRTYPE_DEX] = (1.5 + (petlv-1) * 0.108) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_DEX]
+  result[CommonFun.RoleData.EATTRTYPE_LUK] = (0.5 + (petlv-1) * 0.036) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_LUK]
+  elseif  classtype==61 or classtype==62 or classtype==63 or classtype==64  then
+  result[CommonFun.RoleData.EATTRTYPE_STR] = (2 + (petlv-1) * 0.144) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_STR]
+  result[CommonFun.RoleData.EATTRTYPE_AGI] = (2 + (petlv-1) * 0.144) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_AGI]
+  result[CommonFun.RoleData.EATTRTYPE_VIT] = (0.7 + (petlv-1) * 0.0504) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_VIT]
+  result[CommonFun.RoleData.EATTRTYPE_INT] = (0.5 + (petlv-1) * 0.036) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_INT]
+  result[CommonFun.RoleData.EATTRTYPE_DEX] = (2.5 + (petlv-1) * 0.18) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_DEX]
+  result[CommonFun.RoleData.EATTRTYPE_LUK] = (2.3 + (petlv-1) * 0.1656) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_LUK]
+  else
+  result[CommonFun.RoleData.EATTRTYPE_STR] = (2 + (petlv-1) * 0.144) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_STR]
+  result[CommonFun.RoleData.EATTRTYPE_AGI] = (2 + (petlv-1) * 0.144) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_AGI]
+  result[CommonFun.RoleData.EATTRTYPE_VIT] = (2 + (petlv-1) * 0.144) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_VIT]
+  result[CommonFun.RoleData.EATTRTYPE_INT] = (1 + (petlv-1) * 0.072) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_INT]
+  result[CommonFun.RoleData.EATTRTYPE_DEX] = (2 + (petlv-1) * 0.144) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_DEX]
+  result[CommonFun.RoleData.EATTRTYPE_LUK] = (1 + (petlv-1) * 0.072) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_LUK]
+  end
+
+  --各职业属性换算
+  if  classtype==1 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 78 + (petlv-1) * 6.12 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_STR] * 6.464 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_DEX] *0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 24 + (petlv-1) * 1.91 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 4.444
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 34 + (petlv-1) * 1.72 + attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 34 + (petlv-1) * 1.72 + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 6 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (126 + (petlv-1) * 126.81 + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 50)
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 44 + (petlv-1) * 1.72 + attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 2
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 44 + (petlv-1) * 1.72 + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 2
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 14 + (petlv-1) * 0.28 + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.67
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 12.4 + (petlv-1) * 0.17 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4
+  elseif  classtype==11 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 168 + (petlv-1) * 12.19 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_STR] * 6.464 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_DEX] *0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 18 + (petlv-1) * 1.34 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 4.444
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 76 + (petlv-1) * 4.85 + attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 52 + (petlv-1) *3 + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 6 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (170 + (petlv-1) * 276.5 + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 50)
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 44 + (petlv-1) * 1.78 + attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 2
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 126 + (petlv-1) * 0.57 + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 2
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 12.8 + (petlv-1) * 0.2 + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.67
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 11.7 + (petlv-1) * 0.12 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4
+  elseif classtype==12 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 216 + (petlv-1) * 15.7 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_STR] * 6.464 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_DEX] *0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 18 + (petlv-1) * 1.78 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 4.444
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 94 + (petlv-1) * 6.19 + attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 64 + (petlv-1) * 3.82+ attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 6 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (190 + (petlv-1) * 343.02 + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 50)
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 50 + (petlv-1) * 2.29 + attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 2
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 26 + (petlv-1) * 0.76 + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 2
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 13.6 + (petlv-1) * 0.26 + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.67
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 12.2 + (petlv-1) * 0.15 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4
+  elseif classtype==13 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 276 + (petlv-1) * 20.04 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_STR] * 6.464 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_DEX] *0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 30 + (petlv-1) * 2.17 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 4.444
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 118 + (petlv-1) * 7.91 + attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 76 + (petlv-1) * 4.97 + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 6 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (214 + (petlv-1) * 426.19 + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 50)
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 56 + (petlv-1) * 3 + attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 2
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 32 + (petlv-1) * 0.95 + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 2
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 14.6 + (petlv-1) * 0.33 + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.67
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 12.8 + (petlv-1) * 0.19 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4
+  elseif classtype==14 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 360 + (petlv-1) * 26.17 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_STR] * 6.464 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_DEX] *0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 36 + (petlv-1) * 2.87 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 4.444
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 154 + (petlv-1) * 10.34 + attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 100 + (petlv-1) * 6.44 + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 6 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (248 + (petlv-1) * 542.6 + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 50)
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 74 + (petlv-1) * 3.82 + attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 2
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 38 + (petlv-1) * 1.27 + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 2
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 16.1 + (petlv-1) * 0.43 + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.67
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 13.6 + (petlv-1) * 0.25 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4
+  elseif classtype==21 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 42 + (petlv-1) * 3 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_STR] * 6.464 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_DEX] *0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 144 + (petlv-1) * 10.78 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 4.444
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 16 + (petlv-1) * 0.57 + attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 76 + (petlv-1) * 5.17 + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 6 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (110 + (petlv-1) * 72.76 + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 50)
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 86 + (petlv-1) * 4.85 + attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 2
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 26 + (petlv-1) * 0.57 + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 2
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 12.8 + (petlv-1) * 0.2 + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.67
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 11.7 + (petlv-1) * 0.12 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4
+  elseif classtype==22 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 54 + (petlv-1) * 3.89 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_STR] * 6.464 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_DEX] *0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 186 + (petlv-1) * 13.85 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 4.444
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 16 + (petlv-1) * 0.76 + attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 100 + (petlv-1) * 6.57 + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 6 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (113 + (petlv-1) * 81.07 + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 50)
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 104 + (petlv-1) * 6.19 + attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 2
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 26 + (petlv-1) * 0.76 + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 2
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 13.6 + (petlv-1) * 0.26 + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.67
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 12.2 + (petlv-1) * 0.15 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4
+  elseif classtype==23 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 66 + (petlv-1) * 4.97 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_STR] * 6.464 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_DEX] *0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 240 + (petlv-1) * 17.68 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 4.444
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 22 + (petlv-1) * 0.95 + attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 124 + (petlv-1) * 8.42 + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 6 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (116 + (petlv-1) * 91.46 + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 50)
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 128 + (petlv-1) * 7.91 + attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 2
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 32 + (petlv-1) * 0.95 + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 2
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 14.6 + (petlv-1) * 0.33 + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.67
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 12.8 + (petlv-1) * 0.19 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4
+  elseif classtype==24 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 90 + (petlv-1) * 6.51 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_STR] * 6.464 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_DEX] *0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 318 + (petlv-1) * 23.04 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 4.444
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 28 + (petlv-1) * 1.27 + attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 160 + (petlv-1) * 11.04 + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 6 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (120 + (petlv-1) * 106.02 + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 50)
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 164 + (petlv-1) * 10.34+ attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 2
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 38 + (petlv-1) * 1.27 + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 2
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 16.1 + (petlv-1) * 0.43 + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.67
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 13.6 + (petlv-1) * 0.25 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4
+  elseif classtype==31 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 222 + (petlv-1) * 16.08 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_STR] * 6.464 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_DEX] *0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 18 + (petlv-1) * 1.34 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 4.444
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 16 + (petlv-1) * 0.57 + attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 22 + (petlv-1) * 0.89 + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 6 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (110 + (petlv-1) * 72.76 + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 50)
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 32 + (petlv-1) * 1.21 + attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 2
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 68 + (petlv-1) * 3.63 + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 2
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 15.64 + (petlv-1) * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.67
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 13.36 + (petlv-1) * 0.24 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4
+  elseif classtype==32 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 282 + (petlv-1) * 20.74 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_STR] * 6.464 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_DEX] *0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 18 + (petlv-1) * 1.78 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 4.444
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 16 + (petlv-1) * 0.76 + attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 22 + (petlv-1) * 1.14 + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 6 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (113 + (petlv-1) * 81.07 + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 50)
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 38 + (petlv-1) * 1.53 + attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 2
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 80 + (petlv-1) * 4.65 + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 2
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 17.26 + (petlv-1) * 0.52 + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.67
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 14.32 + (petlv-1) * 0.31 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4
+  elseif classtype==33 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 366 + (petlv-1) * 26.48 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_STR] * 6.464 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_DEX] *0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 30 + (petlv-1) * 2.17 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 4.444
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 22 + (petlv-1) * 0.95 + attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 28 + (petlv-1) * 1.46 + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 6 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (116 + (petlv-1) * 91.46 + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 50)
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 44 + (petlv-1) * 1.97 + attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 2
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 98 + (petlv-1) * 6 + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 2
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 19.24 + (petlv-1) * 0.66 + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.67
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 15.52 + (petlv-1) * 0.39 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4
+  elseif classtype==34 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 474 + (petlv-1) * 34.59 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_STR] * 6.464 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_DEX] *0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 36 + (petlv-1) * 2.87 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 4.444
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 28 + (petlv-1) * 1.27 + attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 34 + (petlv-1) * 1.91 + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 6 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (120 + (petlv-1) * 106.02 + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 50)
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 56 + (petlv-1) * 2.55 + attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 2
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 128 + (petlv-1) * 7.72 + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 2
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 22.06 + (petlv-1) * 0.86 + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.67
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 17.2 + (petlv-1) * 0.51 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4
+  elseif classtype==41 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 156 + (petlv-1) * 11.23 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 4.04 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_STR] * 0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 18 + (petlv-1) * 1.34 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 4.444
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 16 + (petlv-1) * 0.57 + attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 22 + (petlv-1) * 0.89 + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 6 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (110 + (petlv-1) * 72.76 + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 50)
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 86 + (petlv-1) * 4.85 + attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 2
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 68 + (petlv-1) * 3.63 + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 2
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 18.46 + (petlv-1) * 0.6 + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.67
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 15.04 + (petlv-1) * 0.36 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4
+  elseif classtype==42 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 198 + (petlv-1) * 14.42 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 4.444 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_STR] * 0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 18 + (petlv-1) * 1.78 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 4.444
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 16 + (petlv-1) * 0.76 + attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 22 + (petlv-1) * 1.14 + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 6 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (113 + (petlv-1) * 81.07 + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 50)
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 104 + (petlv-1) * 6.19 + attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 2
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 80 + (petlv-1) * 4.65 + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 2
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 20.86 + (petlv-1) * 0.78 + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.67
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 16.48 + (petlv-1) * 0.46 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4
+  elseif classtype==43 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 252 + (petlv-1) * 18.44 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 4.444 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_STR] * 0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 30 + (petlv-1) * 2.17 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 4.444
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 22 + (petlv-1) * 0.95 + attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 28 + (petlv-1) *1.46 + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 6 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (116 + (petlv-1) * 91.46 + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 50)
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 128 + (petlv-1) * 7.91 + attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 2
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 98 + (petlv-1) * 6 + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 2
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 23.86 + (petlv-1) * 0.99 + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.67
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 18.28 + (petlv-1) * 0.59 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4
+  elseif classtype==44 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 330 + (petlv-1) * 24.06 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 4.444 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_STR] * 0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 36 + (petlv-1) * 2.87 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 4.444
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 28 + (petlv-1) * 1.27 + attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 34 + (petlv-1) * 1.91 + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 6 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (120 + (petlv-1) * 106.02 + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 50)
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 164 + (petlv-1) * 10.34 + attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 2
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 128 + (petlv-1) * 7.72 + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 2
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 28.12 + (petlv-1) * 1.3 + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.67
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 20.8 + (petlv-1) * 0.77 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4
+  elseif classtype==51 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 30 + (petlv-1) * 2.42 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_STR] * 6.464 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_DEX] *0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 144 + (petlv-1) * 10.78 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 4.444
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 58 + (petlv-1) * 3.63 + attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 100 + (petlv-1) * 6.63 + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 6 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (153 + (petlv-1) * 218.28 + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 50)
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 44 + (petlv-1) * 1.78 + attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 2
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 26 + (petlv-1) * 0.57 + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 2
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 12.8 + (petlv-1) * 0.2 + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.67
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 11.7 + (petlv-1) * 0.12 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4
+  elseif classtype==52 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 42 + (petlv-1) * 3.12 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_STR] * 6.464 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_DEX] *0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 186 + (petlv-1) * 13.85 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 4.444
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 70 + (petlv-1) * 4.65 + attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 124 + (petlv-1) *8.55 + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 6 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (168 + (petlv-1) * 268.18 + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 50)
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 50 + (petlv-1) * 2.29 + attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 2
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 26 + (petlv-1) * 0.76 + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 2
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 13.6 + (petlv-1) * 0.26 + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.67
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 12.2 + (petlv-1) * 0.15 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4
+  elseif classtype==53 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 54 + (petlv-1) * 4.02 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_STR] * 6.464 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_DEX] *0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 240 + (petlv-1) * 17.68 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 4.444
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 88 + (petlv-1) * 6 + attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 160 + (petlv-1) * 10.91 + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 6 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (186 + (petlv-1) * 330.55 + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 50)
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 56 + (petlv-1) * 3 + attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 2
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 32 + (petlv-1) * 0.95 + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 2
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 14.6 + (petlv-1) * 0.33 + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.67
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 12.8 + (petlv-1) * 0.19 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4
+  elseif classtype==54 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 72 + (petlv-1) * 5.17 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_STR] * 6.464 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_DEX] *0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 318 + (petlv-1) * 23.04 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 4.444
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 118 + (petlv-1) *7.72 + attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 208 + (petlv-1) * 14.23 + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 6 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (212 + (petlv-1) * 417.86 + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 50)
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 74 + (petlv-1) *3.82 + attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 2
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 38 + (petlv-1) * 1.27 + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 2
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 16.1 + (petlv-1) * 0.43 + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.67
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 13.6 + (petlv-1) * 0.25 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 
+  elseif classtype==61 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 120 + (petlv-1) * 9 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_STR] * 6.464 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_DEX] *0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 18 + (petlv-1) * 1.34 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 4.444
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 16 + (petlv-1) * 0.89+ attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 22 + (petlv-1) * 1.02 + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 6 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (113 + (petlv-1) * 86.11+ attr[CommonFun.RoleData.EATTRTYPE_MAXHP]) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 50)
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 62 + (petlv-1) * 3 + attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 2
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 50 + (petlv-1) * 2.42 + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 2
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 23 + (petlv-1) * 0.93 + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.67
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 17.7 + (petlv-1) * 0.55 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4
+  elseif classtype==62 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 156 + (petlv-1) * 11.55 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_STR] * 6.464 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_DEX] *0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 18 + (petlv-1) * 1.78 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 4.444
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 22 + (petlv-1) * 1.08+ attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 28 + (petlv-1) * 1.27+ attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 6 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (117 + (petlv-1) * 97.98+ attr[CommonFun.RoleData.EATTRTYPE_MAXHP]) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 50)
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 74 + (petlv-1) * 3.82 + attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 2
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 62 + (petlv-1) * 3.06 + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 2
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 26.6 + (petlv-1) *1.19 + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.67
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 20 + (petlv-1) * 0.71 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4
+  elseif classtype==63 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 204 + (petlv-1) * 14.74 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_STR] * 6.464 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_DEX] *0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 30 + (petlv-1) * 2.17 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 4.444
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 28 + (petlv-1) * 1.4+ attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 28 + (petlv-1) * 1.72 + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 6 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (121 + (petlv-1) * 112.84 + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 50)
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 86 + (petlv-1) * 4.97 + attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 2
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 74 + (petlv-1) * 3.95 + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 2
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 31.2 + (petlv-1) * 1.53 + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.67
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 22.7 + (petlv-1) * 0.91 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4
+  else
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 264 + (petlv-1) * 19.27 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_STR] * 6.464 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 + attr[CommonFun.RoleData.EATTRTYPE_DEX] *0.4
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 36 + (petlv-1) * 2.87 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 4.444
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 34 + (petlv-1) * 1.78+ attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 2
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 40 + (petlv-1) * 2.17 + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 6 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (127 + (petlv-1) * 133.61 + attr[CommonFun.RoleData.EATTRTYPE_MAXHP]) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 50)
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 110 + (petlv-1) * 6.44 + attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 2
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 92 + (petlv-1) * 5.17 + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 2
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 37.7 + (petlv-1) * 1.99 + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.67
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 26.6 + (petlv-1) * 1.19 + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.4 
+  end  
+
+  return result
+end
+
+  -- 新增宠物面板显示属性
+function CommonFun.PetAttrShow(PetLv, classtype)
+  local result = {}
+  -----------1   品质为D
+  -----------11  战士系相关职业  坦克
+  -----------21  法师系相关职业  法攻
+  -----------31  刺客系相关职业  物攻-近
+  -----------41  弓手系相关职业  物攻-远
+  -----------51  牧师系相关职业  辅助
+  -----------61  商人系相关职业  均衡
+  -----------1-C 2-B 3-A 4-S
+  --品质系数
+  local QualityRatio = 0
+  
+  --各品质对应的品质系数判断
+  if classtype == 11 or classtype == 21 or classtype == 31 or classtype == 41 or classtype == 51 or classtype == 61 then
+  QualityRatio = 1.4
+  elseif classtype == 12 or classtype == 22 or classtype == 32 or classtype == 42 or classtype == 52 or classtype == 62 then
+  QualityRatio = 1.8
+  elseif classtype == 13 or classtype == 23 or classtype == 33 or classtype == 43 or classtype == 53 or classtype == 63 then
+  QualityRatio = 2.3
+  elseif classtype == 14 or classtype == 24 or classtype == 34 or classtype == 44 or classtype == 54 or classtype == 64 then
+  QualityRatio = 3
+  else
+  QualityRatio = 1
+  end
+  PetLv = PetLv or 0
+  
+  --各职业倾向的六维成长率
+  if classtype==11 or classtype==12 or classtype==13 or classtype==14  then
+  result[CommonFun.RoleData.EATTRTYPE_STR] = (3 + PetLv * 0.216) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_AGI] = (0.5 + PetLv * 0.036) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_VIT] = (4 + PetLv * 0.288) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_INT] = (0.5 + PetLv * 0.036) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_DEX] = (1.5 + PetLv * 0.108) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_LUK] = (0.5 + PetLv * 0.036) * QualityRatio
+  elseif  classtype==21 or classtype==22 or classtype==23 or classtype==24  then
+  result[CommonFun.RoleData.EATTRTYPE_STR] = (0.5 + PetLv * 0.036) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_AGI] = (0.5 + PetLv * 0.036) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_VIT] = (0.5 + PetLv * 0.036) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_INT] = (4 + PetLv * 0.288) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_DEX] = (4 + PetLv * 0.288) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_LUK] = (0.5 + PetLv * 0.036) * QualityRatio
+  elseif  classtype==31 or classtype==32 or classtype==33 or classtype==34  then
+  result[CommonFun.RoleData.EATTRTYPE_STR] = (4 + PetLv * 0.288) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_AGI] = (3 + PetLv * 0.216) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_VIT] = (0.5 + PetLv * 0.036) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_INT] = (0.5 + PetLv * 0.036) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_LUK] = (1 + PetLv * 0.072) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_DEX] = (1 + PetLv * 0.072) * QualityRatio
+  elseif  classtype==41 or classtype==42 or classtype==43 or classtype==44  then
+  result[CommonFun.RoleData.EATTRTYPE_STR] = (0.5 + PetLv * 0.036) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_AGI] = (3 + PetLv * 0.216) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_VIT] = (0.5 + PetLv * 0.036) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_INT] = (0.5 + PetLv * 0.036) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_DEX] = (4 + PetLv * 0.288) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_LUK] = (1.5 + PetLv * 0.108) * QualityRatio
+  elseif  classtype==51 or classtype==52 or classtype==53 or classtype==54  then
+  result[CommonFun.RoleData.EATTRTYPE_STR] = (0.5 + PetLv * 0.036) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_AGI] = (0.5 + PetLv * 0.036) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_VIT] = (3 + PetLv * 0.216) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_INT] = (4 + PetLv * 0.288) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_DEX] = (1.5 + PetLv * 0.108) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_LUK] = (0.5 + PetLv * 0.036) * QualityRatio
+  elseif  classtype==61 or classtype==62 or classtype==63 or classtype==64  then
+  result[CommonFun.RoleData.EATTRTYPE_STR] = (2 + PetLv * 0.144) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_AGI] = (2 + PetLv * 0.144) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_VIT] = (0.7 + PetLv * 0.0504) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_INT] = (0.5 + PetLv * 0.036) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_DEX] = (2.5 + PetLv * 0.18) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_LUK] = (2.3 + PetLv * 0.1656) * QualityRatio
+  else
+  result[CommonFun.RoleData.EATTRTYPE_STR] = (2 + PetLv * 0.144) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_AGI] = (2 + PetLv * 0.144) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_VIT] = (2 + PetLv * 0.144) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_INT] = (1 + PetLv * 0.072) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_DEX] = (2 + PetLv * 0.144) * QualityRatio
+  result[CommonFun.RoleData.EATTRTYPE_LUK] = (1 + PetLv * 0.072) * QualityRatio
+  end
+
+   --各职业属性换算
+  if  classtype==1 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 78 + PetLv * 6.12
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 24 + PetLv * 1.91
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 34 + PetLv * 1.72
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 34 + PetLv * 1.72
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = 126 + PetLv * 126.81
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 44 + PetLv * 1.72
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 44 + PetLv * 1.72
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 14 + PetLv * 0.28
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 12.4 + PetLv * 0.17
+  elseif  classtype==11 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 168 + PetLv * 12.19
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 18 + PetLv * 1.34
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 76 + PetLv * 4.85
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 52 + PetLv *3
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = 170 + PetLv * 276.5
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 44 + PetLv * 1.78
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 126 + PetLv * 0.57
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 12.8 + PetLv * 0.2
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 11.7 + PetLv * 0.12
+  elseif classtype==12 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 216 + PetLv * 15.7
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 18 + PetLv * 1.78
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 94 + PetLv * 6.19
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 64 + PetLv * 3.82
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = 190 + PetLv * 343.02
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 50 + PetLv * 2.29
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 26 + PetLv * 0.76
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 13.6 + PetLv * 0.26
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 12.2 + PetLv * 0.15
+  elseif classtype==13 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 276 + PetLv * 20.04
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 30 + PetLv * 2.17
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 118 + PetLv * 7.91
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 76 + PetLv * 4.97
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = 214 + PetLv * 426.19
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 56 + PetLv * 3
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 32 + PetLv * 0.95
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 14.6 + PetLv * 0.33
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 12.8 + PetLv * 0.19
+  elseif classtype==14 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 360 + PetLv * 26.17
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 36 + PetLv * 2.87
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 154 + PetLv * 10.34
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 100 + PetLv * 6.44
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = 248 + PetLv * 542.6
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 74 + PetLv * 3.82
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 38 + PetLv * 1.27
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 16.1 + PetLv * 0.43
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 13.6 + PetLv * 0.25
+  elseif classtype==21 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 42 + PetLv * 3
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 144 + PetLv * 10.78
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 16 + PetLv * 0.57
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 76 + PetLv * 5.17
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = 110 + PetLv * 72.76
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 86 + PetLv * 4.85
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 26 + PetLv * 0.57
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 12.8 + PetLv * 0.2
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 11.7 + PetLv * 0.12
+  elseif classtype==22 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 54 + PetLv * 3.89
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 186 + PetLv * 13.85
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 16 + PetLv * 0.76
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 100 + PetLv * 6.57
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = 113 + PetLv * 81.07
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 104 + PetLv * 6.19
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 26 + PetLv * 0.76
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 13.6 + PetLv * 0.26
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 12.2 + PetLv * 0.15
+  elseif classtype==23 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 66 + PetLv * 4.97
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 240 + PetLv * 17.68
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 22 + PetLv * 0.95
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 124 + PetLv * 8.42
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = 116 + PetLv * 91.46
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 128 + PetLv * 7.91
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 32 + PetLv * 0.95
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 14.6 + PetLv * 0.33
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 12.8 + PetLv * 0.19
+  elseif classtype==24 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 90 + PetLv * 6.51
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 318 + PetLv * 23.04
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 28 + PetLv * 1.27
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 160 + PetLv * 11.04
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = 120 + PetLv * 106.02
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 164 + PetLv * 10.34
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 38 + PetLv * 1.27
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 16.1 + PetLv * 0.43
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 13.6 + PetLv * 0.25
+  elseif classtype==31 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 222 + PetLv * 16.08
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 18 + PetLv * 1.34
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 16 + PetLv * 0.57
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 22 + PetLv * 0.89
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = 110 + PetLv * 72.76
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 32 + PetLv * 1.21
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 68 + PetLv * 3.63
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 15.64 + PetLv * 0.4
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 13.36 + PetLv * 0.24
+  elseif classtype==32 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 282 + PetLv * 20.74
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 18 + PetLv * 1.78
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 16 + PetLv * 0.76
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 22 + PetLv * 1.14
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = 113 + PetLv * 81.07
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 38 + PetLv * 1.53
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 80 + PetLv * 4.65
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 17.26 + PetLv * 0.52
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 14.32 + PetLv * 0.31
+  elseif classtype==33 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 366 + PetLv * 26.48
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 30 + PetLv * 2.17
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 22 + PetLv * 0.95
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 28 + PetLv * 1.46
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = 116 + PetLv * 91.46
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 44 + PetLv * 1.97
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 98 + PetLv * 6
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 19.24 + PetLv * 0.66
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 15.52 + PetLv * 0.39
+  elseif classtype==34 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 474 + PetLv * 34.59
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 36 + PetLv * 2.87
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 28 + PetLv * 1.27
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 34 + PetLv * 1.91
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = 120 + PetLv * 106.02
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 56 + PetLv * 2.55
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 128 + PetLv * 7.72
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 22.06 + PetLv * 0.86
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 17.2 + PetLv * 0.51
+  elseif classtype==41 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 156 + PetLv * 11.23
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 18 + PetLv * 1.34
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 16 + PetLv * 0.57
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 22 + PetLv * 0.89
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = 110 + PetLv * 72.76
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 86 + PetLv * 4.85
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 68 + PetLv * 3.63
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 18.46 + PetLv * 0.6
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 15.04 + PetLv * 0.36
+  elseif classtype==42 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 198 + PetLv * 14.42
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 18 + PetLv * 1.78
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 16 + PetLv * 0.76
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 22 + PetLv * 1.14
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = 113 + PetLv * 81.07
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 104 + PetLv * 6.19
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 80 + PetLv * 4.65
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 20.86 + PetLv * 0.78
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 16.48 + PetLv * 0.46
+  elseif classtype==43 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 252 + PetLv * 18.44
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 30 + PetLv * 2.17
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 22 + PetLv * 0.95
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 28 + PetLv *1.46
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = 116 + PetLv * 91.46
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 128 + PetLv * 7.91
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 98 + PetLv * 6
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 23.86 + PetLv * 0.99
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 18.28 + PetLv * 0.59
+  elseif classtype==44 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 330 + PetLv * 24.06
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 36 + PetLv * 2.87
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 28 + PetLv * 1.27
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 34 + PetLv * 1.91
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = 120 + PetLv * 106.02
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 164 + PetLv * 10.34
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 128 + PetLv * 7.72
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 28.12 + PetLv * 1.3
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 20.8 + PetLv * 0.77
+  elseif classtype==51 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 30 + PetLv * 2.42
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 144 + PetLv * 10.78
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 58 + PetLv * 3.63
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 100 + PetLv * 6.63
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = 153 + PetLv * 218.28
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 44 + PetLv * 1.78
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 26 + PetLv * 0.57
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 12.8 + PetLv * 0.2
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 11.7 + PetLv * 0.12
+  elseif classtype==52 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 42 + PetLv * 3.12
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 186 + PetLv * 13.85
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 70 + PetLv * 4.65
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 124 + PetLv *8.55
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = 168 + PetLv * 268.18
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 50 + PetLv * 2.29
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 26 + PetLv * 0.76
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 13.6 + PetLv * 0.26
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 12.2 + PetLv * 0.15
+  elseif classtype==53 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 54 + PetLv * 4.02
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 240 + PetLv * 17.68
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 88 + PetLv * 6
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 160 + PetLv * 10.91
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = 186 + PetLv * 330.55
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 56 + PetLv * 3
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 32 + PetLv * 0.95
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 14.6 + PetLv * 0.33
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 12.8 + PetLv * 0.19
+  elseif classtype==54 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 72 + PetLv * 5.17
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 318 + PetLv * 23.04
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 118 + PetLv *7.72
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 208 + PetLv * 14.23
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = 212 + PetLv * 417.86
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 74 + PetLv *3.82
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 38 + PetLv * 1.27
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 16.1 + PetLv * 0.43
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 13.6 + PetLv * 0.25 
+  elseif classtype==61 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 120 + PetLv * 9
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 18 + PetLv * 1.34
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 16 + PetLv * 0.89
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 22 + PetLv * 1.02
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = 113 + PetLv * 86.11
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 62 + PetLv * 3
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 50 + PetLv * 2.42
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 23 + PetLv * 0.93
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 17.7 + PetLv * 0.55
+  elseif classtype==62 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 156 + PetLv * 11.55
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 18 + PetLv * 1.78
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 22 + PetLv * 1.08
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 28 + PetLv * 1.27
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = 117 + PetLv * 97.98
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 74 + PetLv * 3.82
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 62 + PetLv * 3.06
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 26.6 + PetLv *1.19
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 20 + PetLv * 0.71
+  elseif classtype==63 then
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 204 + PetLv * 14.74
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 30 + PetLv * 2.17
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 28 + PetLv * 1.4
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 28 + PetLv * 1.72
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = 121 + PetLv * 112.84
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 86 + PetLv * 4.97
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 74 + PetLv * 3.95
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 31.2 + PetLv * 1.53
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 22.7 + PetLv * 0.91
+  else
+  result[CommonFun.RoleData.EATTRTYPE_ATK]    = 264 + PetLv * 19.27
+  result[CommonFun.RoleData.EATTRTYPE_MATK]   = 36 + PetLv * 2.87
+  result[CommonFun.RoleData.EATTRTYPE_DEF]    = 34 + PetLv * 1.78
+  result[CommonFun.RoleData.EATTRTYPE_MDEF]   = 40 + PetLv * 2.17
+  result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = 127 + PetLv * 133.61
+  result[CommonFun.RoleData.EATTRTYPE_HIT]    = 110 + PetLv * 6.44
+  result[CommonFun.RoleData.EATTRTYPE_FLEE]   = 92 + PetLv * 5.17
+  result[CommonFun.RoleData.EATTRTYPE_CRI]    = 37.7 + PetLv * 1.99
+  result[CommonFun.RoleData.EATTRTYPE_CRIRES] = 26.6 + PetLv * 1.19 
+  end  
+
+  return result
+end
+
+
+-- 炼金生命体属性计算
+function CommonFun.calcBeingNpcAttrValue(attr, npcid, npclevel, srcUser)
+  local result = {}
+  if srcUser == nil then
+    return result
+  end
+  
+  local Vit = srcUser:GetProperty("Vit")
+  local Str = srcUser:GetProperty("Str")
+  local Int = srcUser:GetProperty("Int")
+
+  local MaxHp = srcUser:GetProperty("MaxHp")
+
+  local mapid,maptype = srcUser:GetMapInfo()-----------------获取所在地图
+  if maptype==2 or maptype==4 then
+      MaxHp = MaxHp/4
+  end
+
+  local Atk = srcUser:GetProperty("Atk")
+  local MAtk = srcUser:GetProperty("MAtk")
+
+  local Def = srcUser:GetProperty("Def")
+  local MDef = srcUser:GetProperty("MDef")
+
+
+  local Refine = srcUser:GetProperty("Refine")
+  local MRefine = srcUser:GetProperty("MRefine")
+
+  local Hit = srcUser:GetProperty("Hit")
+  local Flee =srcUser:GetProperty("Flee")
+  local Cri =srcUser:GetProperty("Cri")
+  local CriRes =srcUser:GetProperty("CriRes")
+
+  local npcSkillId_1 = srcUser:GetLernedSkillLevel(416) --生命体强化Ⅰ
+  local npcSkillId_2 = srcUser:GetLernedSkillLevel(428) --生命体强化Ⅱ
+  local npcSkillId_3 = srcUser:GetLernedSkillLevel(1127) -- 生命链接
+
+  local QualityRatio = 2
+  local lianjie=0
+  if srcUser:HasBuffID(116310) then
+       lianjie= 0.05*npcSkillId_3-0.25
+  end
+ --------------------------------------强袭双刃斧精炼强袭双刃斧[第七档]90001586
+  local RefineLv7=srcUser:GetEquipedRefineLv(7)
+  local Atk_7=0
+  if  srcUser:HasBuffID(90001586)  and  RefineLv7 > 5 then
+    Atk_7 = (RefineLv7-5)*10
+  end 
+
+  --------------------------------------破灭战斧
+  if  srcUser:HasBuffID(42010)  and  RefineLv7 > 5 then
+    Atk_7 = (RefineLv7-5)*10
+  end 
+
+
+ --------------------------------------强袭双刃斧精炼强袭双刃斧[第八档]90001587
+  local AtkPer_7=0
+  if  srcUser:HasBuffID(90001587)  and  RefineLv7 > 10 then
+     AtkPer_7 = (RefineLv7-10)*0.01
+  end 
+   --------------------------------------破灭战斧
+  if  srcUser:HasBuffID(42010)  and  RefineLv7 > 10 then
+     AtkPer_7 = (RefineLv7-10)*0.01
+  end 
+
+
+
+  if npcid == 600010 then-----------------------丽芙
+    result[CommonFun.RoleData.EATTRTYPE_STR] = (1 + (npclevel-1) * 0.05) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_STR]
+    result[CommonFun.RoleData.EATTRTYPE_AGI] = (1+ (npclevel-1) * 0.05) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_AGI]
+    result[CommonFun.RoleData.EATTRTYPE_VIT] = (7 + (npclevel-1) * 0.04) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_VIT]
+    result[CommonFun.RoleData.EATTRTYPE_INT] = (7 + (npclevel-1) * 0.35) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_INT]
+    result[CommonFun.RoleData.EATTRTYPE_DEX] = (3 + (npclevel-1) * 0.1) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_DEX]
+    result[CommonFun.RoleData.EATTRTYPE_LUK] = (1 + (npclevel-1) * 0.05) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_LUK]
+
+    ----生命体基础属性
+    local BeingBase_ATK = 28 + (npclevel-1) * 0.96
+    local BeingBase_MATK = 66 + (npclevel-1) * 2.81
+    local BeingBase_DEF = 28 + (npclevel-1) * 1.38
+    local BeingBase_MDEF =  42 + (npclevel-1) * 2.09 
+    local BeingBase_MAXHP = 130 + (npclevel-1) * 129.93 
+    local BeingBase_HIT = 62 + (npclevel-1) * 0.6
+    local BeingBase_FLEE = 54 + (npclevel-1) * 0.19
+    local BeingBase_CRI = 51.32 + (npclevel-1) * 0.07
+    local BeingBase_CRIRES =50.8 + (npclevel-1) * 0.04
+
+    ----来自人物属性
+    local BeingToUser_ATK = Str * 0.5 + Atk * 0.02 + Refine * 0.3
+    local BeingToUser_MATK = Int * 3 + MAtk * 0.02 + MRefine * 0.3
+    local BeingToUser_DEF = Vit * 2 + Def * 0.3
+    local BeingToUser_MDEF =  Int * 2 + MDef * 0.3
+    local BeingToUser_MAXHP = Vit * 300 + MaxHp * 0.3
+    local BeingToUser_HIT = 0
+    local BeingToUser_FLEE = Flee * 0.5
+    local BeingToUser_CRI = 0
+    local BeingToUser_CRIRES = CriRes * 0.5
+
+
+    result[CommonFun.RoleData.EATTRTYPE_ATK]    = (BeingBase_ATK + BeingToUser_ATK +Atk_7 + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_STR] * 4.02 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.2 + attr[CommonFun.RoleData.EATTRTYPE_DEX] *0.2)* (1+attr[CommonFun.RoleData.EATTRTYPE_ATKPER])* (1+AtkPer_7)
+    result[CommonFun.RoleData.EATTRTYPE_MATK]   = (BeingBase_MATK + BeingToUser_MATK +Atk_7 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 2.01 + npcSkillId_1 * 100) *  (1+ npcSkillId_2 * 0.01) * (1+attr[CommonFun.RoleData.EATTRTYPE_MATKPER])* (1+AtkPer_7)
+    result[CommonFun.RoleData.EATTRTYPE_DEF]    = BeingBase_DEF + BeingToUser_DEF + attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+    result[CommonFun.RoleData.EATTRTYPE_MDEF]   = BeingBase_MDEF + BeingToUser_MDEF + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 0.5
+    result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (BeingBase_MAXHP + BeingToUser_MAXHP + attr[CommonFun.RoleData.EATTRTYPE_MAXHP] +  npcSkillId_1 * 2000) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 100) * (1 + attr[CommonFun.RoleData.EATTRTYPE_MAXHPPER])
+    if maptype==2 or maptype==4 then
+      result[CommonFun.RoleData.EATTRTYPE_MAXHP] = result[CommonFun.RoleData.EATTRTYPE_MAXHP]*4
+    end
+    result[CommonFun.RoleData.EATTRTYPE_HIT]    = BeingToUser_HIT + BeingToUser_HIT +  attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 1
+    result[CommonFun.RoleData.EATTRTYPE_FLEE]   = BeingBase_FLEE + BeingToUser_FLEE + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 1
+    result[CommonFun.RoleData.EATTRTYPE_CRI]    = BeingBase_CRI + BeingToUser_CRI + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.33
+    result[CommonFun.RoleData.EATTRTYPE_CRIRES] = BeingBase_CRIRES + BeingToUser_CRIRES + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.2
+    result[CommonFun.RoleData.EATTRTYPE_ATKSPD] = 1.5
+    result[CommonFun.RoleData.EATTRTYPE_DAMREDUC] = npcSkillId_2 * 0.02+lianjie
+
+  elseif npcid==600020 then-----------------------艾米斯可魯
+    result[CommonFun.RoleData.EATTRTYPE_STR] = (6 + (npclevel-1) * 0.3) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_STR]
+    result[CommonFun.RoleData.EATTRTYPE_AGI] = (1 + (npclevel-1) * 0.05) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_AGI]
+    result[CommonFun.RoleData.EATTRTYPE_VIT] = (8 + (npclevel-1) * 0.4) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_VIT]
+    result[CommonFun.RoleData.EATTRTYPE_INT] = (2 + (npclevel-1) * 0.1) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_INT]
+    result[CommonFun.RoleData.EATTRTYPE_DEX] = (2 + (npclevel-1) * 0.1) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_DEX]
+    result[CommonFun.RoleData.EATTRTYPE_LUK] = (1 + (npclevel-1) * 0.05) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_LUK]
+
+    ----生命体基础属性
+    local BeingBase_ATK = 108 + (npclevel-1) * 4.94
+    local BeingBase_MATK = 26 + (npclevel-1) * 0.79
+    local BeingBase_DEF = 32 + (npclevel-1) * 1.6
+    local BeingBase_MDEF =  24 + (npclevel-1) * 1.19
+    local BeingBase_MAXHP = 134 + (npclevel-1) * 141.43 
+    local BeingBase_HIT = 58 + (npclevel-1) * 0.38
+    local BeingBase_FLEE = 54 + (npclevel-1) * 0.19
+    local BeingBase_CRI = 51.32 + (npclevel-1) * 0.07
+    local BeingBase_CRIRES =50.8 + (npclevel-1) * 0.04
+
+    ----来自人物属性
+    local BeingToUser_ATK = Str * 5 + Atk * 0.02 + Refine * 0.3
+    local BeingToUser_MATK = Int * 0.5 + MAtk * 0.02 + MRefine * 0.3
+    local BeingToUser_DEF = Vit * 4 + Def * 0.6
+    local BeingToUser_MDEF =  Int * 4+ MDef * 0.6
+    local BeingToUser_MAXHP = Vit * 500 + MaxHp * 0.3
+    local BeingToUser_HIT = Hit * 0.5
+    local BeingToUser_FLEE = Flee * 0.5
+    local BeingToUser_CRI = Cri * 0.5
+    local BeingToUser_CRIRES = CriRes * 0.5
+
+  ----------------------------------------------------------------炼金铠甲 + 强袭战斧或者合金炼金装甲 + 强袭战斧（炼金铠甲 + 强袭双刃斧或者合金炼金装甲 + 强袭双刃斧)
+   -------------------------------------- 破灭战斧
+    local Num1 = srcUser:GetBuffLayer(91000141)
+    local Num2 = srcUser:GetBuffLayer(91000721)
+    
+    local AtkPer_1 = 0.03
+    local AtkPer_2 = 0
+   
+    if srcUser:HasBuffID(91000141) or srcUser:HasBuffID(91000721) then
+        AtkPer_2 =( Num1 + Num2 )* AtkPer_1
+    end
+  --------------------------------------强袭双刃斧精炼+15 或 破灭战斧
+
+   local WeaponRefineLv=srcUser:GetEquipedRefineLv(7)
+   if srcUser:HasBuffID(90001583) or  srcUser:HasBuffID(42010)  then
+    if WeaponRefineLv ==15 then
+       AtkPer_2 = AtkPer_2+0.1
+    end
+  end
+
+
+
+
+
+
+    result[CommonFun.RoleData.EATTRTYPE_ATK]    = (BeingBase_ATK + BeingToUser_ATK +Atk_7  + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_STR] * 4.02 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.2 + attr[CommonFun.RoleData.EATTRTYPE_DEX] *0.2 + npcSkillId_1 * 100) * (1+AtkPer_2+AtkPer_7) * (1+attr[CommonFun.RoleData.EATTRTYPE_ATKPER])
+    result[CommonFun.RoleData.EATTRTYPE_MATK]   = (BeingBase_MATK + BeingToUser_MATK +Atk_7 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 2.01) * (1+attr[CommonFun.RoleData.EATTRTYPE_MATKPER])* (1+AtkPer_7)
+    result[CommonFun.RoleData.EATTRTYPE_DEF]    = BeingBase_DEF + BeingToUser_DEF + attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1
+    result[CommonFun.RoleData.EATTRTYPE_MDEF]   = BeingBase_MDEF + BeingToUser_MDEF + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 0.5
+    result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (BeingBase_MAXHP + BeingToUser_MAXHP + attr[CommonFun.RoleData.EATTRTYPE_MAXHP] ) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 100) *  (1+ npcSkillId_2 * 0.01) * (1 + attr[CommonFun.RoleData.EATTRTYPE_MAXHPPER])
+    if maptype==2 or maptype==4 then
+      result[CommonFun.RoleData.EATTRTYPE_MAXHP] = result[CommonFun.RoleData.EATTRTYPE_MAXHP]*4
+    end
+    result[CommonFun.RoleData.EATTRTYPE_HIT]    = BeingToUser_HIT + BeingToUser_HIT +  attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 1
+    result[CommonFun.RoleData.EATTRTYPE_FLEE]   = BeingBase_FLEE + BeingToUser_FLEE + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 1
+    result[CommonFun.RoleData.EATTRTYPE_CRI]    = BeingBase_CRI + BeingToUser_CRI + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.33
+    result[CommonFun.RoleData.EATTRTYPE_CRIRES] = BeingBase_CRIRES + BeingToUser_CRIRES + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.2
+    result[CommonFun.RoleData.EATTRTYPE_ATKSPD] = 1 + npcSkillId_1 * 0.05  + npcSkillId_2 * 0.05
+
+  elseif npcid==600030 then-----------------------巴尼米乐斯
+    result[CommonFun.RoleData.EATTRTYPE_STR] = (1 + (npclevel-1) * 0.05) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_STR]
+    result[CommonFun.RoleData.EATTRTYPE_AGI] = (1+ (npclevel-1) * 0.05) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_AGI]
+    result[CommonFun.RoleData.EATTRTYPE_VIT] = (6 + (npclevel-1) * 0.35) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_VIT]
+    result[CommonFun.RoleData.EATTRTYPE_INT] = (8 + (npclevel-1) * 0.4) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_INT]
+    result[CommonFun.RoleData.EATTRTYPE_DEX] = (3 + (npclevel-1) * 0.1) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_DEX]
+    result[CommonFun.RoleData.EATTRTYPE_LUK] = (1 + (npclevel-1) * 0.05) * QualityRatio + attr[CommonFun.RoleData.EATTRTYPE_LUK]
+
+    ----生命体基础属性
+    local BeingBase_ATK = 28 + (npclevel-1) * 0.96
+    local BeingBase_MATK = 74 + (npclevel-1) * 3.21
+    local BeingBase_DEF = 24 + (npclevel-1) * 1.19
+    local BeingBase_MDEF =  44 + (npclevel-1) * 2.19
+    local BeingBase_MAXHP = 126 + (npclevel-1) * 118.44
+    local BeingBase_HIT = 62 + (npclevel-1) * 0.6
+    local BeingBase_FLEE = 54 + (npclevel-1) * 0.19
+    local BeingBase_CRI = 51.32 + (npclevel-1) * 0.07
+    local BeingBase_CRIRES =50.8 + (npclevel-1) * 0.04
+
+    ----来自人物属性
+    local BeingToUser_ATK = Str * 1 + Atk * 0.02 + Refine * 0.3
+    local BeingToUser_MATK = Int * 4.5 + MAtk * 0.02 + MRefine * 0.3
+    local BeingToUser_DEF = Vit * 1 + Def * 0.3
+    local BeingToUser_MDEF =  Int * 1 + MDef * 0.3
+    local BeingToUser_MAXHP = Vit * 300 + MaxHp * 0.3
+    local BeingToUser_HIT = 0
+    local BeingToUser_FLEE = Flee * 0.5
+    local BeingToUser_CRI = 0
+    local BeingToUser_CRIRES = CriRes * 0.5
+
+  
+ 
+
+    result[CommonFun.RoleData.EATTRTYPE_ATK]    = (BeingBase_ATK + BeingToUser_ATK +Atk_7  + attr[CommonFun.RoleData.EATTRTYPE_ATK] + attr[CommonFun.RoleData.EATTRTYPE_STR] * 4.02 + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.2 + attr[CommonFun.RoleData.EATTRTYPE_DEX] *0.2 )* (1+attr[CommonFun.RoleData.EATTRTYPE_ATKPER])* (1+AtkPer_7)
+    result[CommonFun.RoleData.EATTRTYPE_MATK]   = (BeingBase_MATK + BeingToUser_MATK +Atk_7 + attr[CommonFun.RoleData.EATTRTYPE_MATK] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 2.01 + npcSkillId_1 * 100) * (1+ npcSkillId_2 * 0.01) * (1+attr[CommonFun.RoleData.EATTRTYPE_MATKPER])* (1+AtkPer_7)
+    result[CommonFun.RoleData.EATTRTYPE_DEF]    = BeingBase_DEF + BeingToUser_DEF + attr[CommonFun.RoleData.EATTRTYPE_DEF] + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 1 + npcSkillId_1 * 40
+    result[CommonFun.RoleData.EATTRTYPE_MDEF]   = BeingBase_MDEF + BeingToUser_MDEF + attr[CommonFun.RoleData.EATTRTYPE_MDEF] + attr[CommonFun.RoleData.EATTRTYPE_INT] * 1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] * 0.5
+    result[CommonFun.RoleData.EATTRTYPE_MAXHP]  = (BeingBase_MAXHP + BeingToUser_MAXHP + attr[CommonFun.RoleData.EATTRTYPE_MAXHP] ) * (1 + attr[CommonFun.RoleData.EATTRTYPE_VIT] / 100) * (1 + attr[CommonFun.RoleData.EATTRTYPE_MAXHPPER])
+    if maptype==2 or maptype==4 then
+      result[CommonFun.RoleData.EATTRTYPE_MAXHP] = result[CommonFun.RoleData.EATTRTYPE_MAXHP]*4
+    end
+    result[CommonFun.RoleData.EATTRTYPE_HIT]    = BeingToUser_HIT + BeingToUser_HIT +  attr[CommonFun.RoleData.EATTRTYPE_HIT] + attr[CommonFun.RoleData.EATTRTYPE_DEX] * 1
+    result[CommonFun.RoleData.EATTRTYPE_FLEE]   = BeingBase_FLEE + BeingToUser_FLEE + attr[CommonFun.RoleData.EATTRTYPE_FLEE] + attr[CommonFun.RoleData.EATTRTYPE_AGI] * 1
+    result[CommonFun.RoleData.EATTRTYPE_CRI]    = BeingBase_CRI + BeingToUser_CRI + attr[CommonFun.RoleData.EATTRTYPE_CRI] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.33
+    result[CommonFun.RoleData.EATTRTYPE_CRIRES] = BeingBase_CRIRES + BeingToUser_CRIRES + attr[CommonFun.RoleData.EATTRTYPE_CRIRES] + attr[CommonFun.RoleData.EATTRTYPE_LUK] * 0.2
+    result[CommonFun.RoleData.EATTRTYPE_ATKSPD] = 1.5
+    result[CommonFun.RoleData.EATTRTYPE_DAMREDUC] = npcSkillId_2 * 0.02+lianjie
+  end
+
+  return result
+  
+end

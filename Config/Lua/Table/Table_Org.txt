@@ -1,0 +1,24 @@
+--md5:21c70bfa943c9a129331d117f63d11e8
+Table_Org = { 
+	[1] = {id = 1, NameZh = '', Emblem = '', Leader = '', Superior = '', HQ = '', Force = '', Info = '没有名字的组织。用于一般民众'},
+	[2] = {id = 2, NameZh = '乐园团', Emblem = '', Leader = '', Superior = '冒险者公会', HQ = '普隆德拉', Force = '卢恩·米德加尔特王国', Info = ''},
+	[3] = {id = 3, NameZh = '卡普拉公司', Emblem = '', Leader = '', Superior = '', HQ = '艾尔帕兰', Force = '中立', Info = ''},
+	[4] = {id = 4, NameZh = '冒险者公会', Emblem = '', Leader = '', Superior = '', HQ = '普隆德拉', Force = '卢恩·米德加尔特王国', Info = ''},
+	[5] = {id = 5, NameZh = '生体工学研究所', Emblem = '', Leader = '', Superior = '雷根贝勒公司', HQ = '里希塔乐镇', Force = '修发兹发德共和国', Info = ''},
+	[6] = {id = 6, NameZh = '战斗训练所', Emblem = '', Leader = '', Superior = '雷根贝勒公司', HQ = '普隆德拉', Force = '', Info = ''},
+	[7] = {id = 7, NameZh = '雷根贝勒公司', Emblem = '', Leader = '', Superior = '', HQ = '', Force = '', Info = ''},
+	[8] = {id = 8, NameZh = '《国家地理》杂志社', Emblem = '', Leader = '', Superior = '', HQ = '普隆德拉', Force = '卢恩·米德加尔特王国', Info = ''},
+	[9] = {id = 9, NameZh = '下水道讨伐队', Emblem = '', Leader = '', Superior = '普隆德拉城防军', HQ = '普隆德拉', Force = '卢恩·米德加尔特王国', Info = ''},
+	[10] = {id = 10, NameZh = '普隆德拉城防军', Emblem = '', Leader = '', Superior = '', HQ = '普隆德拉', Force = '卢恩·米德加尔特王国', Info = ''},
+	[11] = {id = 11, NameZh = '皇家骑士团', Emblem = '', Leader = '', Superior = '', HQ = '普隆德拉', Force = '卢恩·米德加尔特王国', Info = ''},
+	[12] = {id = 12, NameZh = '圣歌教团', Emblem = '', Leader = '', Superior = '', HQ = '普隆德拉', Force = '卢恩·米德加尔特王国', Info = ''},
+	[13] = {id = 13, NameZh = '魔法公会', Emblem = '', Leader = '', Superior = '', HQ = '吉芬', Force = '卢恩·米德加尔特王国', Info = ''},
+	[14] = {id = 14, NameZh = '猎人公会', Emblem = '', Leader = '', Superior = '', HQ = '斐扬', Force = '卢恩·米德加尔特王国', Info = ''},
+	[15] = {id = 15, NameZh = '刺客公会', Emblem = '', Leader = '', Superior = '', HQ = '梦罗克', Force = '卢恩·米德加尔特王国', Info = ''},
+	[16] = {id = 16, NameZh = '艾尔贝塔商会', Emblem = '', Leader = '', Superior = '', HQ = '艾尔贝塔', Force = '卢恩·米德加尔特王国', Info = ''},
+	[17] = {id = 17, NameZh = '巧妇部', Emblem = '', Leader = '', Superior = '', HQ = '普隆德拉', Force = '卢恩·米德加尔特王国', Info = ''},
+	[18] = {id = 18, NameZh = '准他企划社', Emblem = '', Leader = '', Superior = '', HQ = '', Force = '', Info = ''},
+	[19] = {id = 19, NameZh = '梦罗克大陆卫队', Emblem = '', Leader = '', Superior = '', HQ = '梦罗克', Force = '卢恩·米德加尔特王国', Info = ''},
+	[20] = {id = 20, NameZh = '幻想马戏团', Emblem = '', Leader = '', Superior = '', HQ = '', Force = '', Info = ''},
+}
+return Table_Org

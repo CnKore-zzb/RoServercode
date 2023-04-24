@@ -1,0 +1,18 @@
+-- 每级料理制作书，增加成功率5%，共10级
+-- 食材平均熟练度，每级+3%
+-- 烹饪熟练度，每级+3%
+-- 如果料理的烹饪难度超出厨师等级，每高一级成功率减一半
+-- 返回值 （1-1000）基础成功率：1000
+function CommonFun.calcCookSuccessRate(cookerlv, cooklv, cookhard, avgmateriallv, book_addrate)
+  local base_successrate = GameConfig.Food and GameConfig.Food.base_successrate
+  base_successrate = base_successrate and base_successrate[cookhard] or 0;
+
+  local reuslt = base_successrate + book_addrate + avgmateriallv * 3 + cooklv * 3;
+  if(cookhard > cookerlv)then
+    for i=1,cookhard-cookerlv do
+      reuslt = reuslt/2;
+    end
+  end
+  reuslt = math.floor(reuslt * 10);
+  return math.min(1000, reuslt);
+end

@@ -1,0 +1,57 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "cb96fad5ae1d5834ea5c6c52ba55a5b8",
+    "packages": [
+        {
+            "name": "myqee/server",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/myqee/server.git",
+                "reference": "571edc188477e7836c271cd6799878de6ab6ea34"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://files.phpcomposer.com/files/myqee/server/571edc188477e7836c271cd6799878de6ab6ea34.zip",
+                "reference": "571edc188477e7836c271cd6799878de6ab6ea34",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MyQEE\\Server\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "jonwang",
+                    "email": "jonwang@queyang.com"
+                }
+            ],
+            "description": "MyQEE Server library",
+            "homepage": "http://www.myqee.com",
+            "time": "2018-04-13T12:23:09+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "myqee/server": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

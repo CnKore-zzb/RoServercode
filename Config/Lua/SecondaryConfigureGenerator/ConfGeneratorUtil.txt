@@ -1,0 +1,207 @@
+function math.KeepDecimalPlaces(fValue, n)
+	if type(fValue) == 'number' and type(n) == 'number' then
+		local tenPower = math.pow(10, n)
+		local value = fValue * tenPower
+		value = math.floor(value)
+		return value / tenPower
+	end
+	return fValue
+end
+
+function WriteFile(filename, info)
+	local wfile = io.open(filename, "w")
+	if(wfile == nil)then
+		error(string.format("not find file:%s", filename));
+	end
+	wfile:write(info)
+	wfile:close()
+end
+
+function AppendFile(filename, info)
+	local afile = io.open(filename, "a")
+	afile:write(info)
+	afile:close()
+end
+
+function table.ContainsKey(tab, key)
+	if key == nil then return false end
+
+	local typeOfKey = type(key)
+	if (typeOfKey ~= 'number') and (typeOfKey ~= 'string') then return false end
+
+	if tab then
+		for k, _ in pairs(tab) do
+			if k == key then
+				return true
+			end
+		end
+	end
+
+	return false
+end
+
+function table.ContainsValue(tab, value)
+	if value == nil then return false end
+
+	if tab then
+		for _, v in pairs(tab) do
+			if v == value then
+				return true
+			end
+		end
+	end
+
+	return false
+end
+
+function table.IsEmpty(tab)
+	if tab == nil then return true end
+	for _, v in pairs(tab) do
+		if v then return false end
+	end
+	return true
+end
+
+function table.IsNest(tab)
+	if tab == nil then return false end
+	for _, v in pairs(tab) do
+		if v and type(v) == 'table' then
+			return true
+		end
+	end
+	return false
+end
+
+function table.IsArray(tab)
+	if tab == nil then return false end
+	local indicator = 1
+	for k, v in pairs(tab) do
+		if type(k) ~= 'number' or k ~= indicator then
+			return false
+		end
+		indicator = indicator + 1
+	end
+	return true
+end
+
+function table.KeyIsLast(tab, kValue)
+	if kValue and tab then
+		local tabKey = {}
+		for k, _ in pairs(tab) do
+			table.insert(tabKey, k)
+		end
+		if not table.IsEmpty(tabKey) then
+			local lastKey = tabKey[#tabKey]
+			if type(kValue) == type(lastKey) and kValue == lastKey then
+				return true
+			end
+		end
+	end
+	return false
+end
+
+local tabSymbolCount = 0
+
+function Tab()
+	local retValue = ""
+	if tabSymbolCount > 0 then
+		for i = 1, tabSymbolCount do
+			retValue = retValue .. "\t"
+		end
+	end
+	return retValue
+end
+
+function Serialize(obj)
+	local lua = ""
+	local t = type(obj)
+	if t == "number" then
+		lua = obj
+	elseif t == "boolean" then
+		lua = tostring(obj)
+	elseif t == "string" then
+		lua = "\"" .. obj .. "\""
+	elseif t == "table" then
+		lua = "{\n"
+		tabSymbolCount = tabSymbolCount + 1
+		local strTabs = Tab()
+		for k, v in pairs(obj) do
+			local strK = ""
+			local kType = type(k)
+			if kType == "string" then
+				strK = k
+			elseif kType == "number" then
+				strK = '[' .. k .. ']'
+			end
+			lua = lua .. strTabs .. strK .. '=' .. Serialize(v) .. ((table.KeyIsLast(obj, k) and '' or ",") .. '\n')
+		end
+		tabSymbolCount = tabSymbolCount - 1
+		strTabs = Tab()
+		lua = lua .. strTabs .. "}"
+	elseif t == "nil" then
+		return nil
+	else
+		error("Can not serialize a " .. t .. " type.")
+	end
+	return lua
+end
+
+function SerializeWithoutNewline(obj)
+	local lua = ""
+	local t = type(obj)
+	if t == "number" then
+		lua = obj
+	elseif t == "boolean" then
+		lua = tostring(obj)
+	elseif t == "string" then
+		lua = "\"" .. obj .. "\""
+	elseif t == "table" then
+		lua = "{"
+		for k, v in pairs(obj) do
+			local strK = ""
+			local kType = type(k)
+			if kType == "string" then
+				strK = k
+			elseif kType == "number" then
+				strK = '[' .. k .. ']'
+			end
+			lua = lua .. strK .. '=' .. SerializeWithoutNewline(v) .. (table.KeyIsLast(obj, k) and '' or ",")
+		end
+		lua = lua .. '}'
+	elseif t == "nil" then
+		return nil
+	else
+		error("Can not serialize a " .. t .. " type.")
+	end
+	return lua
+end
+
+-- local xmlHeader = '<?xml version=\"1.0\" encoding=\"utf-8\">\n'
+-- function SerializeXML(obj)
+-- 	local str = nil
+-- 	if type(obj) == 'table' then
+-- 		str = ''
+-- 		str = str .. xmlHeader
+-- 		if table.IsArray(obj) then
+-- 			str = str .. 
+-- 			for i = 1, #obj do
+-- 				local value = obj[i]
+-- 				str = str .. '<value>' .. value .. '</value>'
+-- 			end
+-- 		else
+-- 		end
+-- 		for k, v in pairs(obj)
+-- 			str = str .. '<' .. k
+-- 		end
+-- 	end
+-- 	return str
+-- end
+
+function FileExists(path)
+	local file = io.open(path, 'rb')
+	if file then
+		file:close()
+		return true
+	end
+	return false
+end

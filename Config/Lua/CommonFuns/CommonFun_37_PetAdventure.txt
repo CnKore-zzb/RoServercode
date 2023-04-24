@@ -1,0 +1,157 @@
+------------------------------------------------------------------------------------ 计算宠物冒险效率值
+local EquipSite_Fushou = 1 --副手
+local EquipSite_Kuijia = 2 --盔甲
+local EquipSite_Pijian = 3 --披肩
+local EquipSite_Xiezi = 4 --鞋子
+local EquipSite_Shipin1 = 5 --饰品1
+local EquipSite_Shipin2 = 6 --饰品2
+local EquipSite_Wuqi = 7 --武器
+local EquipSite_Toushi = 8 --头饰
+local EquipSite_Lianbu = 9 --脸部
+local EquipSite_Zuibu = 10 --嘴部
+local EquipSite_Beibu = 11 --背部
+local EquipSite_Weibu = 12 --尾部
+local AllEquipSites = {
+  EquipSite_Fushou,EquipSite_Kuijia,EquipSite_Pijian,EquipSite_Xiezi,
+  EquipSite_Shipin1,EquipSite_Shipin2,EquipSite_Wuqi,EquipSite_Toushi,EquipSite_Lianbu,EquipSite_Zuibu,EquipSite_Beibu,EquipSite_Weibu
+}
+local refineScore = {[1]=20,[2]=30,[3]=40,[4]=50,[5]=100,[6]=120,[7]=140,[8]=200,[9]=220,[10]=240,[11]=300,[12]=320,[13]=340,[14]=360,[15]=400}
+local isMax = false
+--装备的精炼等级
+function CommonFun.calcPetAdventure_RefineEfficiency(srcUser)
+    local refinelv,scores
+    scores = 0
+    for i=1,#AllEquipSites do
+        refinelv = srcUser:GetEquipedRefineLv(AllEquipSites[i])
+        if(refinelv>0) then
+            scores = scores + refineScore[refinelv]
+        end
+    end
+    isMax = scores>=4000
+    scores = math.min(scores,4000)
+    return scores/10000,isMax
+end
+
+local enchantScore = {
+    Vit={allscore =200,maxattr = 10},
+    Str={allscore =200,maxattr = 10},
+    Int={allscore =200,maxattr = 10},
+    Luk={allscore =200,maxattr = 8},
+    Dex={allscore =200,maxattr = 10},
+    Agi={allscore =200,maxattr = 10},
+    MaxHp={allscore =80,maxattr = 400},
+    MaxSp={allscore =80,maxattr = 80},
+    Atk={allscore =120,maxattr = 40},
+    MAtk={allscore =120,maxattr = 40},
+    Def={allscore =80,maxattr = 20},
+    MDef={allscore =80,maxattr = 20},
+    MaxHpPer={allscore =200,maxattr = 0.1},
+    MaxSpPer={allscore =140,maxattr = 0.05},
+    Hit={allscore =120,maxattr = 20},
+    Flee={allscore =120,maxattr = 20},
+    EquipASPD={allscore =160,maxattr = 0.04},
+    Cri={allscore =160,maxattr = 10},
+    CriRes={allscore =120,maxattr = 10},
+    CriDamPer={allscore =160,maxattr = 0.1},
+    CriDefPer={allscore =120,maxattr = 0.1},
+    HealEncPer={allscore =160,maxattr = 0.05},
+    BeHealEncPer={allscore =160,maxattr = 0.05},
+    DamIncrease={allscore =200,maxattr = 0.04},
+    DamReduc={allscore =200,maxattr = 0.04},
+    SilenceDef={allscore =40,maxattr = 0.25},
+    FreezeDef={allscore =40,maxattr = 0.25},
+    StoneDef={allscore =40,maxattr = 0.25},
+    StunDef={allscore =40,maxattr = 0.25},
+    BlindDef={allscore =40,maxattr = 0.25},
+    PoisonDef={allscore =40,maxattr = 0.25},
+    SlowDef={allscore =40,maxattr = 0.25},
+    ChaosDef={allscore =40,maxattr = 0.25},
+    CurseDef={allscore =40,maxattr = 0.25},
+  }
+
+local enchantgroupScore = {[1]=100,[2]=150,[3]=200,[4]=250}
+--装备附魔
+function CommonFun.calcPetAdventure_EnchantEfficiency(srcUser)
+    local scores=0
+    for i=1,#AllEquipSites do
+        -- 附魔
+        local attrs = srcUser:GetEnchantAttrsBySite(AllEquipSites[i])
+        if(attrs)then
+          for j=1,#attrs do
+              local attrType = attrs[j].typekey
+              local attrValue = attrs[j].propVO.isPercent and attrs[j].value/100 or attrs[j].value
+              local configValue = enchantScore[attrType]
+              if(configValue)then
+                  local cellValue = attrValue/configValue.maxattr>=0.8 and attrValue/configValue.maxattr * configValue.allscore or 0
+                  scores = scores + cellValue
+              end
+          end
+        end
+        -- 附魔组合
+        local combineEff = srcUser:GetCombineEffectsBySite(AllEquipSites[i])
+        if(combineEff)then
+            for j=1,#combineEff do
+                local buffid = combineEff[j].buffid;
+                if(buffid)then
+                    local buffLv = buffid%10
+                    if(enchantgroupScore[buffLv])then
+                        scores = scores + enchantgroupScore[buffLv]
+                    end
+                end
+            end
+        end
+    end
+    isMax = scores>=3000
+    scores = math.min(scores,3000)
+    return scores/10000,isMax
+end
+
+local  title = {[1001]=0,[1002]=100,[1003]=200,[1004]=300,[1005]=400,[1006]=500,[1007]=600,[1008]=700,[1009]=800,[1010]=900,}
+--冒险家等级
+function CommonFun.calcPetAdventure_AdventureTitleEfficiency(srcUser)
+    local adventureTitle = srcUser:GetAdventureTitle()
+    if(adventureTitle and adventureTitle>0) then
+        local value = title[adventureTitle]
+        value = value and value/10000 or 0
+
+        isMax = value>=0.1
+        value = math.min(value,0.1)
+        return value,isMax
+    end
+    return 0,false
+end
+
+--星盘已激活分
+function CommonFun.calcPetAdventure_XingpanEfficiency(srcUser)
+    local points = srcUser:GetActiveAstrolabePoints()
+    if(points>0) then
+       isMax = points>=3000
+       return math.min(points/10000,0.3),isMax
+    end
+    return 0,false
+end
+
+ -------------头饰存储战斗力
+local headwear = {[1]=4,[2]=6,[3]=10,[4]=30}
+  -------------卡片存储战斗力
+local card = {[1]=5,[2]=10,[3]=20,[4]=100}
+--冒险手册存储头饰
+function CommonFun.calcPetAdventure_AdventureSavedHeadWearEfficiency(srcUser)
+    local scores = 0
+    for quality,score in pairs(headwear) do
+        scores = scores + srcUser:GetAdventureSavedHeadWear(quality) * score
+    end
+    isMax = scores>=4000
+    return math.min(scores/10000,0.4),isMax
+end
+
+--冒险手册存储头饰
+function CommonFun.calcPetAdventure_AdventureSavedCardEfficiency(srcUser)
+    local scores = 0
+    for quality,score in pairs(card) do
+        scores = scores + srcUser:GetAdventureSavedCard(quality) * score
+    end
+    isMax = scores>=4000
+    return math.min(scores/10000,0.4),isMax
+end
+------- 计算宠物冒险效率值 end

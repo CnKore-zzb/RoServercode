@@ -1,0 +1,37 @@
+﻿--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+GameConfig.Quest = {
+  --悬赏任务--
+  maxwanted = {{0, 10}, {1, 4}},
+  helpTeamMemberReward = {itemId = 147,count = 2},
+  resetprotecttime = 120,
+  refresh = { "5:00"},
+  proportion={1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,2,2,2,2},
+  ratio = 10000,
+
+  --抗魔任务--
+  dailycount = 2,
+  maxdailycount = 6,
+
+  --地图任务--
+  maxcount = 2,
+
+
+  --看板委托--
+  quick_finish_board_quest = {{5560,1,55},{5561,1,85},{5562,1,100},{5563,1,110},{5520,1,120},{5564,1,120}},
+
+  --队长快速完成看板任务间隔提示（组队情况下）--
+  team_finish_board_quest_cd = 3,
+  
+  --任务类型--
+ manual_main = {"main", "ccrasteham"},
+ manual_branch = {"branch", "elite"},
+ manual_story = {"story", "story_ccrasteham"},
+}
+
+
+--道具类型对应的右上角图标显示，如任务使用道具图标的右上角标示
+GameConfig.QuestItemIcon={
+  [48]="tips_icon_02",[49]="tips_icon_02"
+}

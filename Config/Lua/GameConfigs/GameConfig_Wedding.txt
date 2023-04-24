@@ -1,0 +1,58 @@
+--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+--订婚NPC与状态
+GameConfig.Wedding = {
+   MaxFramePhotoCount = 30,  -- 相框最大照片数量
+   FramePhotoRefreshTime = 10, -- 照片刷新间隔
+   Courtship_InviteMsgId = 9637,  -- 求婚MsgId
+   Courtship_InviteOverTime = 15, -- 求婚邀请框超时时间
+   Courtship_CameraId =  11,	-- 求婚相机ID
+   Engage_Npc = 0,	--订婚的npcid
+   Engage_Dialog = {		--订婚npc显示的对话id
+     married = 1,		--已婚
+     engaged = 2,		--订婚了
+     single = 3,			--单身
+   },
+
+   --订婚日期命名
+   EngageDate = {
+    [1] = {name = "晶耀钻之日", wday = "日", picName = "marry_role01", topColor = "7691e2", bottomColor = "aecaf4"},
+    [2] = {name = "欧月泊之日", wday = "一", picName = "marry_role02", topColor = "f0c49d", bottomColor = "fde1aa"},
+    [3] = {name = "瑰红薇之日", wday = "二", picName = "marry_role03", topColor = "a386ec", bottomColor = "dbb0e7"},
+    [4] = {name = "海蓝宝之日", wday = "三", picName = "marry_role04", topColor = "cbe98c", bottomColor = "ddf3bf"},
+    [5] = {name = "蜜琥珀之日", wday = "四", picName = "marry_role05", topColor = "7ce7b1", bottomColor = "b4e6c2"},
+    [6] = {name = "猫眼金之日", wday = "五", picName = "marry_role06", topColor = "ff96b6", bottomColor = "ffc5d3"},
+    [7] = {name = "墨玛瑙之日", wday = "六", picName = "marry_role07", topColor = "57d8e7", bottomColor = "bdf0fb"},
+   },  
+
+   --婚期和礼券 
+   EngageRefresh = 5*60*60,  --婚期刷新时间，距离当天凌晨秒数
+   ticket_itemid = 6080,         --B格猫的婚庆礼券
+   EngageInviteOverTime = 15,    --订婚邀请确认超时时间
+   ManualIntroduce = {
+    {title = "皇家马车巡游", content = "新人组队访问皇家马车夫后，将坐上华丽的卢恩米德加尔特王国皇家马车，在普隆德拉绕城巡游一周，接受全城人民的祝福，这可是非常难得的机会哟~"},
+    {title = "亲友入场观礼", content = "新人和亲友们在幸福小姐处签到之后进入普隆德拉大教堂，等待神圣仪式的开始！"},
+    {title = "神圣仪式开启", content = "最重要的神圣仪式，在众人的见证下，新人在此结为一生的伴侣！"},
+	{title = "幸福时刻降临", content = "新人一同牵手登上幸福过山车，开始甜蜜浪漫的蜜月之旅吧~"},
+	{title = "浪漫蜜月之境", content = "【欢迎回来】樱花之间——只属于两个人的温馨小秘密。记得先去向樱花小姐还愿哦~"},
+   }, 
+
+   --婚礼
+   ManualShop = {npcfuncid=930, param=1},  --结婚手册装扮商店
+   InviteMaxCount = 150, --邀请函发送人数上限
+   WeddingPos={pos1={-0.315,1.28,7.712},pos2={0.382,1.311,7.659},dir1=10,dir2=-10}, -- 面向大主教时的站位
+   Cememony_Npc = 7074,  --大主教的npcid
+   Cememony_Dialog = 57838,  --婚礼对话id
+   Cememony_InviteOverTime = 15,  --婚礼开始邀请确认超时时间
+   Cememony_InviteMsgId = 9638,  --婚礼开始邀请确认MsgId
+   Cememony_Invite_GotoMsgId = 9640,  --婚礼开始前往的MsgId
+
+   --离婚
+   Divorce_NpcDistance = 10, --协议离婚和npc距离
+   Divorce_OverTime  = 90,   --协议离婚过山车邀请超时时间，秒
+   
+   BackSkill_Id = 2001001,   --欢迎回来技能ID
+   MissYou_Inviteid = 9647,  --好想你msg
+}
+

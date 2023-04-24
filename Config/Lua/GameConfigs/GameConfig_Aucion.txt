@@ -1,0 +1,27 @@
+ --【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+--拍卖
+GameConfig.Auction = {
+ OpenAuction={    --0:内网，1：预言之地，2：正式服
+  [0] = 1,
+  [1] = 0,
+  [2] = 0
+  },                    --0 关闭拍卖，1开启拍卖
+  AuctionNpc = 6647,     --拍卖npcid
+  PublicTime = 10 * 60,  --拍卖开启前x秒显示在主界面
+  Rate = 0.18,  --拍卖税率
+  FlowingWaterMaxCount = 50,  --拍卖文本最大数
+  RecordPerPageMaxCount = 50, --拍卖日志每页最大数
+  LogTime=3*24*60*60,                --清除日志记录时间
+  ReceiveTime=30*24*60*60,           --未领取日志记录清除时间
+  MaxPrice=666666,	 --拍卖最高价
+  MaskPrice={
+  [1]=300,	--开始拍卖后5分钟后屏蔽第一档价格
+  [2]=600,	--开始拍卖后10分钟后屏蔽第二档价格
+  },
+  EnchantAttrCount = 3, --装备报名门槛：附魔数
+  EnchantAttrValuableCount = 2, --装备报名门槛：附魔点赞数
+  TradePriceDiscount = 60,  ---拍卖上架时的商品价格，取当前加一所当前换算的逼格猫币的百分比折扣
+  EnchantBuffExtraCount = 1, --装备报名门槛：附魔buff数(1有 0没)
+}

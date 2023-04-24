@@ -1,0 +1,118 @@
+-- 1 : 时装; 2 : 坐骑; 3 : 卡片
+Table_AVNeedItemType =
+{
+	fashionClothes = {800, 810, 820, 830, 840},
+	ride = {90},
+	card = {81, 82, 83, 84, 85, 86, 87}
+}
+
+local tabAdventureValue = {}
+
+local adventureValueSum = 0
+local count = 0
+for _, v in pairs(Table_Npc) do
+	local npcID = v.id
+	local isOccurOnTheMap = table.ContainsKey(Table_MonsterOrigin, npcID)
+	if isOccurOnTheMap then
+		local adventureValue = v.AdventureValue
+		if adventureValue and adventureValue > 0 then
+			adventureValueSum = adventureValueSum + adventureValue
+			count = count + 1
+		end
+	end
+end
+tabAdventureValue.npc = {adventureValues = adventureValueSum, count = count}
+
+local adventureValuesMonster = 0
+local countMonster = 0
+local adventureValuesMINI = 0
+local countMINI = 0
+local adventureValuesMVP = 0
+local countMVP = 0
+for _, v in pairs(Table_Monster) do
+	local monsterType = v.Type
+	local adventureValue = v['AdventureValue']
+	if adventureValue and adventureValue > 0 then
+		if monsterType == "Monster" then
+			adventureValuesMonster = adventureValuesMonster + adventureValue
+			countMonster = countMonster + 1
+		elseif monsterType == "MINI" then
+			adventureValuesMINI = adventureValuesMINI + adventureValue
+			countMINI = countMINI + 1
+		elseif monsterType == "MVP" then
+			adventureValuesMVP = adventureValuesMVP + adventureValue
+			countMVP = countMVP + 1
+		end
+	end
+end
+tabAdventureValue.monster = {monster = {adventureValues = adventureValuesMonster, count = countMonster}, mini = {adventureValues = adventureValuesMINI, count = countMINI}, mvp = {adventureValues = adventureValuesMVP, count = countMVP}}
+
+adventureValueSum = 0
+for _, v in pairs(Table_Map) do
+	local adventureValue = v['AdventureValue']
+	if adventureValue and adventureValue > 0 then
+		adventureValueSum = adventureValueSum + adventureValue
+	end
+end
+tabAdventureValue['map'] = adventureValueSum
+
+local adventureValueSumFashionClothes = 0
+local countFashionClothes = 0
+local tabTypeFashionClothes = Table_AVNeedItemType.fashionClothes
+local adventureValueSumRide = 0
+local countRide = 0
+local tabTypeRide = Table_AVNeedItemType.ride
+local adventureValueSumCard = 0
+local countCard = 0
+local tabTypeCard = Table_AVNeedItemType.card
+for _, v in pairs(Table_Item) do
+	local adventureValue = v['AdventureValue']
+	if adventureValue and adventureValue > 0 then
+		local iType = v['Type']
+		if iType then
+			if table.ContainsValue(tabTypeFashionClothes, iType) then
+				adventureValueSumFashionClothes = adventureValueSumFashionClothes + adventureValue
+				countFashionClothes = countFashionClothes + 1
+			elseif table.ContainsValue(tabTypeRide, iType) then
+				adventureValueSumRide = adventureValueSumRide + adventureValue
+				countRide = countRide + 1
+			elseif table.ContainsValue(tabTypeCard, iType) then
+				adventureValueSumCard = adventureValueSumCard + adventureValue
+				countCard = countCard + 1
+			end
+		end
+	end
+end
+tabAdventureValue.item = {fashionClothes = {adventureValues = adventureValueSumFashionClothes, count = countFashionClothes}, ride = {adventureValues = adventureValueSumRide, count = countRide}, card = {adventureValues = adventureValueSumCard, count = countCard}}
+
+adventureValueSum = 0
+count = 0
+for _, v in pairs(Table_Viewspot) do
+	local adventureValue = v['AdventureValue']
+	if adventureValue and adventureValue > 0 then
+		adventureValueSum = adventureValueSum + adventureValue
+		count = count + 1
+	end
+end
+tabAdventureValue.viewSpot = {adventureValues = adventureValueSum, count = count}
+
+adventureValueSum = 0
+count = 0
+local iItemType1 = 47
+local iItemType2 = 63
+for _, v in pairs(Table_Item) do
+	if v.Type == iItemType1 or v.Type == iItemType2 then
+		local adventureValue = v['AdventureValue']
+		if adventureValue and adventureValue > 0 then
+			adventureValueSum = adventureValueSum + adventureValue
+			count = count + 1
+		end
+	end
+end
+tabAdventureValue.monthlyVIP = {adventureValues = adventureValueSum, count = count}
+
+local str = Serialize(tabAdventureValue)
+str = 'Table_AdventureValue=' .. str
+local fPath = CurrentPath..'../../../client-refactory/Develop/Assets/Resources/Script/MConfig/Table_AdventureValue.txt'
+WriteFile(fPath, str)
+print('Complete')

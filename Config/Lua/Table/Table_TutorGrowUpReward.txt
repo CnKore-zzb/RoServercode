@@ -1,0 +1,11 @@
+--md5:396dd418396fbbca716d96f434cb8d15
+Table_TutorGrowUpReward = { 
+	[100] = {id = 100, Type = 1, MaxLevel = 20, StudentReward = 1185, TeacherReward = 1208, Familiar = 0},
+	[101] = {id = 101, Type = 1, MaxLevel = 30, StudentReward = 1186, TeacherReward = 1209, Familiar = 0},
+	[102] = {id = 102, Type = 1, MaxLevel = 40, StudentReward = 1187, TeacherReward = 1210, Familiar = 0},
+	[103] = {id = 103, Type = 1, MaxLevel = 50, StudentReward = 1193, TeacherReward = 1211, Familiar = 600},
+	[104] = {id = 104, Type = 1, MaxLevel = 60, StudentReward = 1194, TeacherReward = 1212, Familiar = 1900},
+	[105] = {id = 105, Type = 1, MaxLevel = 70, StudentReward = 1195, TeacherReward = 1213, Familiar = 2500},
+	[106] = {id = 106, Type = 2, MaxLevel = 90, Familiar = 5500},
+}
+return Table_TutorGrowUpReward

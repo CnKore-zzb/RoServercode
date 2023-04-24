@@ -1,0 +1,176 @@
+#!/usr/bin/env php
+<?php
+error_reporting(7);
+date_default_timezone_set('PRC');
+ini_set('memory_limit', '4G');
+
+$shortOpts = '';
+$shortOpts .= 'p:';     // -p 平台名
+$shortOpts .= 'r:';     // -r regionname
+$shortOpts .= 'n:';     // -n 名称
+$shortOpts .= 'v:';     // -v 版本
+$shortOpts .= 'w:';     // -w 工作进程数，不设置则为当前cpu数
+$shortOpts .= 'c:';     // -c server.yal  配置文件
+$shortOpts .= 'hdt';    // -h : 帮助.  -d: 守护进程化， -t 是否测试服
+
+$longOpts = [
+    'debug',        // --debug
+    'help',         // --help
+    'local',        // --local 本地开发模式，不重新编译文件
+    'ip:',          // --host=127.0.0.1  强制指定监听IP
+    'port:',        // --port=6800  强制指定监听端口
+    'timezone:',    // --timezone 时区
+    'log:',         // --log=test.log 文件
+    // 以下参数为内部调用task进程用, 无需设置
+];
+
+$options = getopt($shortOpts, $longOpts);
+
+# 开启了debug
+define('IS_DEBUG', isset($options['debug']));
+
+if (isset($options['help']) || isset($options['h']))
+{
+    goto help;
+}
+
+require __DIR__. '/../vendor/autoload.php';
+
+$workNum = isset($options['w']) && $options['w'] > 0 ? $options['w'] : swoole_cpu_num();
+$config = [
+    'server' => [
+        'name'       => 'RO-Trade01',
+        'worker_num' => $workNum,
+    ],
+    'hosts' => [
+        'Main' => [
+            'type'  => 'tcp',
+            'host'  => isset($options['ip']) ? $options['ip'] : '0.0.0.0',
+            'port'  => isset($options['port']) ? intval($options['port']) : -1,
+            'class' => 'RO\\Trade\\WorkerMain',
+            'conf'  => [
+                'open_eof_check'        => false,
+                'open_eof_split'        => false,
+                'package_length_type'   => 'S',
+                'package_length_offset' => 1,
+                'package_body_offset'   => 3,
+                'package_max_length'    => 65535,
+                'open_length_check'     => true,
+            ],
+        ],
+        'Http' => [
+            'type'  => 'http',
+            'host'  => isset($options['ip']) ? $options['ip'] : '0.0.0.0',
+            'port'  => 6801,
+            'class' => 'RO\\Http\\WorkerMain',
+            'conf'  => [
+                'open_eof_check'        => false,
+                'open_eof_split'        => false,
+            ]
+        ]
+    ],
+    'customWorker' => [
+        'TradeManager'     => ['class' => 'RO\\Trade\\Process\\TradeManager'],
+        'PriceManager'     => ['class' => 'RO\\Trade\\Process\\PriceManager'],
+        'Publicity'        => ['class' => 'RO\\Trade\\Process\\Publicity'],
+        'DelayJob'         => ['class' => 'RO\\Trade\\Process\\DelayJob'],
+        'ClearExpiredData' => ['class' => 'RO\\Trade\\Process\\ClearExpiredData'],
+        'SetExpiredGoods'  => ['class' => 'RO\\Trade\\Process\\SetExpiredGoods'],
+        'UpdateStock'      => ['class' => 'RO\\Trade\\Process\\UpdateStock'],
+        'Fluent'           => ['class' => 'RO\\Trade\\Process\\Fluent'],
+        'StatisticProcess' => ['class' => 'RO\\Trade\\Process\\StatisticProcess'],
+    ],
+    'task' => [
+        'number' => min(128, $workNum * 3),
+        'class'  => 'RO\\Trade\\WorkerTask',
+    ],
+    'log' => [
+        'level' => array_merge(['warn','info'], isset($options['debug']) ? ['debug']: []),
+        'loggerProcess' => 'RO\\Trade\\Process\\Logger',
+        'active' => [
+            # 日志1小时自动存档
+            'timeLimit' => '1h',
+            'timeKey'   => 'Ymd-H',
+        ],
+    ],
+    'fluent' => [
+        '127.0.0.1:13100',
+    ],
+    'remote_shell' => [
+        'open'        => true,
+        'host'        => '0.0.0.0',
+        'port'        => 6802,
+        'public_keys' => [
+            './remote-jonwang.key',
+        ],
+    ],
+    'swoole' => [
+        'reactor_num'        => 16,
+        'log_level'          => isset($options['debug']) ? 0 : 4,
+        'dispatch_mode'      => 3,
+        'buffer_output_size' => 1024 * 1024 * 50,       // 单次最大发送长度
+        'socket_buffer_size' => 1024 * 1024 * 256,      // 客户端连接最大允许占用内存数量
+        'pipe_buffer_size'   => 1024 * 1024 * 128,      // 管道通信的内存缓存区长度, 1.9.16或更高版本已移除此配置项
+        'daemonize'          => isset($options['d']) && $options['d'] === false ? 1 : 0,
+    ],
+    'php' => [
+        'timezone' => isset($options['timezone']) ? $options['timezone']: 'PRC',
+    ],
+];
+
+# 合并配置
+if (isset($options['c']) && is_file($options['c']))
+{
+    $conf = @yaml_parse_file($options['c']) ?: [];
+    if ($conf)
+    {
+        $merge = function(){};
+        $merge = function(&$arr1, $arr2) use (& $merge)
+        {
+            foreach ($arr2 as $k => $v)
+            {
+                if (is_array($v) && isset($arr1[$k]) && is_array($arr1[$k]))
+                {
+                    $merge($arr1[$k], $v);
+                }
+                else
+                {
+                    $arr1[$k] = $v;
+                }
+            }
+        };
+        $merge($config, $conf);
+    }
+    unset($conf, $merge);
+}
+
+unset($shortOpts, $longOpts, $workNum);
+$server = new RO\Trade\Server($config);
+$server->start();
+
+return true;
+
+# 输出帮助内容
+help:
+$file = basename(__FILE__);
+echo <<<EOF
+Usage: {$file} [options]
+    -p platName     平台名
+    -r regionName   区名
+    -n name         服务名，一般都是 TradeServer
+    -v version      版本
+    -t              是否测试服
+    -w workerNum    工作进程数，不设置则为当前cpu数
+    -d              守护进程模式
+    -c PATH         本地配置文件，开发用
+    --debug         打开debug模式
+    --timezone      时区，默认 PRC
+    --local         本地开发模式，不重新编译JSON文件
+    --ip 0.0.0.0    强制指定监听IP, 不设置则 0.0.0.0
+    --port 6800     强制指定监听端口，不设置则读 ro_global 数据库中配置端口
+    --log PATH      指定log文件路径
+    -h, --help      帮助
+
+
+EOF;
+exit;

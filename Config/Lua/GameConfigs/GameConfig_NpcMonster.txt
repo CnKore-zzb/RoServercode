@@ -1,0 +1,41 @@
+--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+--指定的陷阱id
+GameConfig.TrapNpcID={
+    
+    1370,1371,1372,2504,2505,6922,5671,5046,5674,5050
+}
+
+--怪物尸体消失
+GameConfig.MonsterBodyDisappear = 
+{
+ Monster = 3000,
+ MINI = 60000,
+ MVP = 60000,
+ NPC = 10000,
+}
+
+--魔物类型
+GameConfig.AdventureCategoryMonsterType = 
+{
+ Monster = 3000,
+ MINI = 3010,
+ MVP = 3020,
+ NPC = 3030,
+ MercenaryCat = 3040,
+ PetNpc = 3050,
+}
+
+--怪物种族,属性,体型中文描述
+GameConfig.MonsterAttr = {
+        Race={Angel="天使",Brute="动物",DemiHuman="人形",Demon="恶魔",Dragon="龙",Fish="鱼贝",Formless="无形",Insect="昆虫",Plant="植物",Undead="不死",},
+        Nature={Water="水",Fire="火",Wind="风",Earth="地",Neutral="无",Shadow="暗",Holy="圣",},
+    Body={S="小",M="中",L="大"},
+}
+
+--怪物性格颜色代码
+GameConfig.MonsterCharacterColor= {
+  [1]="[c][FF0000]%s[-][/c]",
+  [2]="[c][32CD32]%s[-][/c]",
+}

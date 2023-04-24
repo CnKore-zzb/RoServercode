@@ -1,0 +1,26 @@
+--md5:9a5c9b07584b39f32c3b701b6bcafdee
+Table_Weather = { 
+	[1] = {id = 1, NameZh = '雷雨', NameEn = 'HeavyRain', EffectDir = 'Weather/1HeavyRain', Sky = 'dark'},
+	[2] = {id = 2, NameZh = '雨', NameEn = 'Rain', EffectDir = 'Weather/2Rain', Sky = 'default'},
+	[3] = {id = 3, NameZh = '雪', NameEn = 'Snow', EffectDir = 'Weather/3Snow', Sky = 'default'},
+	[4] = {id = 4, NameZh = '风', NameEn = 'Wind', EffectDir = 'Weather/4Wind', Sky = 'default'},
+	[5] = {id = 5, NameZh = '晴', NameEn = 'Default', EffectDir = '', Sky = 'default'},
+	[6] = {id = 6, NameZh = '樱花', NameEn = 'Sakura', EffectDir = 'Weather/6Sakura', Sky = 'default'},
+	[7] = {id = 7, NameZh = '海底气泡', NameEn = 'Qipao', EffectDir = 'Weather/7Qipao', Sky = 'default'},
+	[8] = {id = 8, NameZh = '沙尘', NameEn = 'SandWind', EffectDir = 'Weather/8SandWind', Sky = 'default'},
+	[9] = {id = 9, NameZh = '彩带纷飞', NameEn = 'ColouredRibbon', EffectDir = 'Weather/9ColouredRibbon', Sky = 'default'},
+	[10] = {id = 10, NameZh = '骨头', NameEn = 'Double', EffectDir = 'Weather/10Double', Sky = 'default'},
+	[11] = {id = 11, NameZh = '万圣节', NameEn = 'Halloween', EffectDir = 'Weather/11Halloween', Sky = 'default'},
+	[12] = {id = 12, NameZh = '喵星', NameEn = 'CatCome', EffectDir = 'Weather/12BigCatCome', Sky = 'default'},
+	[13] = {id = 13, NameZh = '雾', NameEn = 'Fog', EffectDir = '', Sky = 'default'},
+	[14] = {id = 14, NameZh = '圣诞雪', NameEn = 'Snow2', EffectDir = 'Weather/14Snow_2', Sky = 'default'},
+	[15] = {id = 15, NameZh = '春节', NameEn = 'Chinese_NewYear', EffectDir = 'Weather/15Chinese_NewYear', Sky = 'default'},
+	[16] = {id = 16, NameZh = '情人节', NameEn = 'LoveLove', EffectDir = 'Weather/16LoveLove', Sky = 'default'},
+	[17] = {id = 17, NameZh = '占卜天气1', NameEn = 'Season1', EffectDir = 'Weather/17Season1', Sky = 'default'},
+	[18] = {id = 18, NameZh = '占卜天气2', NameEn = 'Season2', EffectDir = 'Weather/18Season2', Sky = 'default'},
+	[19] = {id = 19, NameZh = '占卜天气3', NameEn = 'Season3', EffectDir = 'Weather/19Season3', Sky = 'default'},
+	[20] = {id = 20, NameZh = '占卜天气4', NameEn = 'Season4', EffectDir = 'Weather/20Season4', Sky = 'default'},
+	[21] = {id = 21, NameZh = '占卜天气5', NameEn = 'Season5', EffectDir = 'Weather/21Season5', Sky = 'default'},
+	[22] = {id = 22, NameZh = '儿童节', NameEn = 'Day61', EffectDir = 'Weather/22Day61', Sky = 'default'},
+}
+return Table_Weather

@@ -1,0 +1,27 @@
+--md5:be1dc92df99c64a6a616bbc4bcf9bb87
+Table_Seat_clocktower_dun1 = { 
+	[1] = {id = 1, SeatName = '女神像1', StandPot = {-56.713,-0.026,-22.405}, SeatPot = {-57.552,0.807,-21.499}, Dir = 90},
+	[2] = {id = 2, SeatName = '女神像2', StandPot = {-56.713,-0.026,-22.405}, SeatPot = {-57.552,0.807,-21.964}, Dir = 90},
+	[3] = {id = 3, SeatName = '女神像3', StandPot = {-56.713,-0.026,-22.405}, SeatPot = {-57.552,0.807,-22.404}, Dir = 90},
+	[4] = {id = 4, SeatName = '女神像4', StandPot = {-56.713,-0.026,-22.405}, SeatPot = {-57.552,0.807,-22.863}, Dir = 90},
+	[5] = {id = 5, SeatName = '女神像5', StandPot = {-56.713,-0.026,-22.405}, SeatPot = {-57.552,0.807,-23.326}, Dir = 90},
+	[6] = {id = 6, SeatName = '石像1', StandPot = {-31.228,3.32,44.15}, SeatPot = {-32.28,4.598,45.06}, Dir = 90},
+	[7] = {id = 7, SeatName = '石像2', StandPot = {37.955,13.12,-48.732}, SeatPot = {-32.28,4.598,44.59}, Dir = 90},
+	[8] = {id = 8, SeatName = '石像3', StandPot = {37.955,13.12,-48.732}, SeatPot = {-32.28,4.598,44.16}, Dir = 90},
+	[9] = {id = 9, SeatName = '石像4', StandPot = {37.955,13.12,-48.732}, SeatPot = {-32.28,4.598,43.709}, Dir = 90},
+	[10] = {id = 10, SeatName = '石像5', StandPot = {37.955,13.12,-48.732}, SeatPot = {-32.28,4.598,43.259}, Dir = 90},
+	[11] = {id = 11, SeatName = '齿轮1', StandPot = {47.529,6.759,40.151}, SeatPot = {46.687,7.985,40.46}, Dir = 90},
+	[12] = {id = 12, SeatName = '齿轮2', StandPot = {47.529,6.759,40.151}, SeatPot = {46.687,7.985,39.762}, Dir = 90},
+	[13] = {id = 13, SeatName = '齿轮3', StandPot = {47.529,6.759,55.83}, SeatPot = {46.687,7.985,56.356}, Dir = 90},
+	[14] = {id = 14, SeatName = '齿轮4', StandPot = {47.529,6.759,55.83}, SeatPot = {46.687,7.985,55.653}, Dir = 90},
+	[15] = {id = 15, SeatName = '箱子1', StandPot = {23.51,4.06,19.557}, SeatPot = {22.634,4.963,18.929}, Dir = 124.6101},
+	[16] = {id = 16, SeatName = '箱子2', StandPot = {23.51,4.06,19.557}, SeatPot = {23.765,4.963,20.638}, Dir = 98.9016},
+	[17] = {id = 17, SeatName = '箱子3', StandPot = {25.799,4.06,24.428}, SeatPot = {24.792,4.963,24.526}, Dir = 156.0209},
+	[18] = {id = 18, SeatName = '箱子4', StandPot = {25.799,4.06,24.428}, SeatPot = {26.209,4.963,25.538}, Dir = 156.0209},
+	[19] = {id = 19, SeatName = '栏杆1', StandPot = {21.49,4.06,10.45}, SeatPot = {20.389,5.262,11.42}, Dir = 90},
+	[20] = {id = 20, SeatName = '栏杆2', StandPot = {21.49,4.06,10.45}, SeatPot = {20.389,5.262,10.938}, Dir = 90},
+	[21] = {id = 21, SeatName = '栏杆3', StandPot = {21.49,4.06,10.45}, SeatPot = {20.389,5.262,10.465}, Dir = 90},
+	[22] = {id = 22, SeatName = '栏杆4', StandPot = {21.49,4.06,10.45}, SeatPot = {20.389,5.262,9.975}, Dir = 90},
+	[23] = {id = 23, SeatName = '栏杆5', StandPot = {21.49,4.06,10.45}, SeatPot = {20.389,5.262,9.498}, Dir = 90},
+}
+return Table_Seat_clocktower_dun1

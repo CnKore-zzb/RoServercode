@@ -1,0 +1,17 @@
+#!/bin/sh
+
+pfName=$1
+zoneName=$2
+extip=$3
+
+echo $pfName $zoneName $extip
+
+grep Server ServerConfig.xml | grep type | sed -e "s/^.*type=\"//" -e "s/\" name=\"/ /" -e "s/\".*$//" | awk '{print "./" $1 " -d -o -n" $2 " -p'$pfName' -s'$zoneName' -i'$extip'"}' | sed -e "/SessionServer/asleep 1" | bash
+
+cont=$(ps -u $LOGNAME |grep Server |grep -v grep|grep -v vim|wc -l)
+	while [ $cont -gt 0 ]
+	do
+	echo "ServerNum:$cont"
+	sleep 1
+cont=$(ps -u $LOGNAME |grep Server |grep -v grep|grep -v vim|wc -l)
+	done

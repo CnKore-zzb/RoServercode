@@ -1,0 +1,74 @@
+{
+    "base_pending_count": 8,
+    "booth_buff": 96321,
+    "booth_maintenance": 0,
+    "booth_range": 3,
+    "downrate_list": {
+        "1": 100,
+        "2": 200,
+        "3": 300,
+        "4": 400,
+        "5": 500
+    },
+    "downrate_max": -50,
+    "downrate_publicity_max": -50,
+    "exchange_hour": 86400,
+    "map_ids": {
+        "1": 1,
+        "2": 2
+    },
+    "max_pending_count": 13,
+    "max_size_nine": 50,
+    "max_size_one_scene": 50,
+    "name_length_max": 11,
+    "quota_cost_max": 4000000000,
+    "quota_exchange_rate": 1,
+    "quota_exchange_rate_pub": 1,
+    "quota_zeny_discount": 4,
+    "score": [
+        {
+            "icon": "stall_icon_white",
+            "name": "白色",
+            "num": 0
+        },
+        {
+            "icon": "stall_icon_green",
+            "name": "绿色",
+            "num": 50
+        },
+        {
+            "icon": "stall_icon_blue",
+            "name": "蓝色",
+            "num": 500
+        },
+        {
+            "icon": "stall_icon_purple",
+            "name": "紫色",
+            "num": 2000
+        },
+        {
+            "icon": "stall_icon_orange",
+            "name": "橘色",
+            "num": 10000
+        },
+        {
+            "icon": "stall_icon_pink",
+            "name": "粉色",
+            "num": 50000
+        }
+    ],
+    "score_exchange_rate": 10000,
+    "screenFilterID": 32,
+    "shoppingMode_reset": 604800,
+    "skill_id": 278,
+    "update_cd": 5,
+    "uprate_list": {
+        "1": 100,
+        "2": 200,
+        "3": 300,
+        "4": 400,
+        "5": 500
+    },
+    "uprate_max": 0,
+    "uprate_publicity_max": 50
+}

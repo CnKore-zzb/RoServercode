@@ -1,0 +1,11 @@
+--md5:a3898d1f6d31ede06cdf74a2c8c22581
+Table_ItemObject = { 
+	[1] = {id = 1, NameZh = '金币', NameEn = 'Coin', ModelDir = 'Item/Coin', ModelName = 'Coin', Texture = 'Gold', EffectPoint = 0},
+	[2] = {id = 2, NameZh = '银币', NameEn = 'Silver', ModelDir = 'Item/Coin', ModelName = 'Coin', Texture = 'Silver', EffectPoint = 0},
+	[3] = {id = 3, NameZh = '道具袋子', NameEn = 'ItemBag', ModelDir = 'Item/Itembag', ModelName = 'ItemBag', Texture = 'ItemBag', EffectPoint = 0},
+	[4] = {id = 4, NameZh = '掉落宝箱1', NameEn = 'ItemBox1', ModelDir = 'Item/Itembox', ModelName = 'ItemBox', Texture = 'ItemBox', EffectPoint = 1},
+	[5] = {id = 5, NameZh = '卡片', NameEn = 'Card', ModelDir = 'Item/Card', ModelName = 'Card', Texture = 'Card', EffectPoint = 0},
+	[6] = {id = 6, NameZh = '技能', NameEn = 'Skill', ModelDir = 'Item/Skill', ModelName = 'Skill', Texture = 'Skill', EffectPoint = 0},
+	[7] = {id = 7, NameZh = '金苹果', NameEn = 'GoldApple', ModelDir = 'Item/GoldApple', ModelName = 'Apple', Texture = 'GoldApple', EffectPoint = 0},
+}
+return Table_ItemObject

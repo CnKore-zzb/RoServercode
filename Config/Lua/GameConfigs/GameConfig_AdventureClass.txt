@@ -1,0 +1,54 @@
+--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+
+GameConfig.Status2RoleData = {
+  [1] = "PoisonDef", [3]="BlindDef", [4]="StunDef", 
+  [5] = "FreezeDef", [6]="StoneDef", [7]="SleepDef", [8]="ChaosDef",
+  [9] = "SlowDef", [10]="SilenceDef",[11]="CurseDef",
+}
+
+GameConfig.PropTag = {
+  BaseTag = {
+	[1] = "六维",	[2] = "base",	[3] = "job",	[4] = "力量",	[5] = "智力",	[6] = "敏捷",	[7] = "灵巧",	[8] = "体质",	[9] = "幸运",	[10] = "HP",
+	[11] = "SP",	[12] = "mini",	[13] = "mvp",	[14] = "经验",	[15] = "特殊",	[16] = "精炼"
+	},
+  CombatTag = {
+	[1] = "攻击",	[2] = "防御",	[3] = "辅助",	[4] = "技能",	[5] = "远程",	[6] = "近战",	[7] = "pvp",	[8] = "范围",	[9] = "物理",	[10] = "魔法",
+	[11] = "减伤",	[12] = "增伤",	[13] = "穿透",	[14] = "攻速",	[15] = "暴击",	[16] = "抗暴",	[17] = "命中",	[18] = "吟唱",	[19] = "恢复",	[20] = "冷却",
+	[21] = "抵抗",	[22] = "破坏",	[23] = "移动速度",	[24] = "反弹",	[25] = "吸收",	[26] = "真实",	[27] = "免疫",	[28] = "隐匿",	[29] = "转换",	[30] = "恐惧",
+	[31] = "沉默",	[32] = "冰冻",	[33] = "石化",	[34] = "眩晕",	[35] = "灼烧",	[36] = "中毒",	[37] = "定身",	[38] = "诅咒",	[39] = "治疗",	[40] = "闪避",
+	[41] = "睡眠",
+	},
+  AdjTag = {
+	[1] = "种族",	[2] = "元素",	[3] = "其他",	[4] = "身高",	[5] = "体重",	[6] = "小体型",	[7] = "中体型",	[8] = "大体型",	[9] = "无视体型",	[10] = "恶魔",
+	[11] = "动物",	[12] = "人形",	[13] = "不死",	[14] = "无形",	[15] = "植物",	[16] = "鱼贝",	[17] = "昆虫",	[18] = "无属性",	[19] = "风属性",	[20] = "火属性",
+	[21] = "水属性",	[22] = "地属性",	[23] = "圣属性",	[24] = "暗属性",	[25] = "念属性",	[26] = "毒属性",	[27] = "龙族",	[28] = "天使",	[29] = "不死属性",
+	}
+}
+
+-- 二进制转换十进制函数
+local getBitResult = function ( ... )
+	local res = 0
+	local args = {...}
+	local arg
+	for i=1,#args do
+		arg = args[i]
+		if(arg and arg >0 and arg<=64) then
+			res = res + 2^(arg-1)
+		end
+	end
+	return res
+end
+
+-- 筛选界面显示分类成员
+GameConfig.AdventurePropClassify = {
+	[1] = { name = "六维", defaultGroup={ BaseTag=getBitResult(1) } , 		group = { BaseTag=getBitResult(4,5,6,7,8,9) } },
+	[2] = { name = "攻击", defaultGroup={ CombatTag=getBitResult(1) } ,		group = { CombatTag=getBitResult(5,6,7,8,9,10,12,13,14,15,17,26), BaseTag=getBitResult(16), AdjTag=getBitResult(6,7,8) } },
+	[3] = { name = "防御", defaultGroup={ CombatTag=getBitResult(2) } , 	group = { CombatTag=getBitResult(5,6,7,9,10,11,16,26,27,40), BaseTag=getBitResult(16), AdjTag=getBitResult(6,7,8) } },
+	[4] = { name = "辅助", defaultGroup={ CombatTag=getBitResult(3) } , 	group = { CombatTag=getBitResult(18,19,20,22,23,24,25,29,30,31,32,33,34,35,36,37,38,39,41), BaseTag=getBitResult(10,11) } },
+	[5] = { name = "种族", defaultGroup={ AdjTag=getBitResult(1) } ,	 	group = { BaseTag=getBitResult(12,13), AdjTag=getBitResult(10,11,12,13,14,15,16,17,27,28) } },
+	[6] = { name = "元素", defaultGroup={ AdjTag=getBitResult(2) } , 		group = { AdjTag=getBitResult(18,19,20,21,22,23,24,25,26,29) } },
+	[7] = { name = "技能", defaultGroup={ CombatTag=getBitResult(4) } , 	group = {  } },
+	[8] = { name = "其他", defaultGroup={ AdjTag=getBitResult(3) } , 		group = { BaseTag=getBitResult(2,3,14,15) } }
+}

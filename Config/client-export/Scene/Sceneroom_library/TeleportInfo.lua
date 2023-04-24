@@ -1,0 +1,33 @@
+Root={
+	PVE={
+		inner={
+			[2]={
+				[2]={
+					totalCost=1
+				}
+			},
+			[1]={
+				[2]={
+					totalCost=1
+				}
+			}
+		}
+	},
+	Raids={
+		{
+			ID=500002,
+			inner={
+				[1]={
+					[2]={
+						totalCost=1
+					}
+				},
+				[2]={
+					[2]={
+						totalCost=1
+					}
+				}
+			}
+		}
+	}
+}

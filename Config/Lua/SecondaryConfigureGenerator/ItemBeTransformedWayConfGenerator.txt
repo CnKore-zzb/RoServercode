@@ -1,0 +1,61 @@
+local tabResult = {}
+-- {
+-- 	[1] = { -- item id
+-- 		composeWay = 1, -- compose id
+-- 		upgradeWays = {
+-- 			[1] = { -- array index
+-- 				composeID = 1,
+-- 				equipID = 1
+-- 			}
+-- 		}
+-- 	}
+-- }
+
+function SetComposeWay(item_id, compose_id)
+	local itemBeTransformedWay = tabResult[item_id]
+	itemBeTransformedWay = itemBeTransformedWay or {}
+	tabResult[item_id] = itemBeTransformedWay
+	itemBeTransformedWay.composeWay = compose_id
+end
+
+function AddUpgradeWay(item_id, compose_id, equip_id)
+	local itemBeTransformedWay = tabResult[item_id]
+	itemBeTransformedWay = itemBeTransformedWay or {}
+	tabResult[item_id] = itemBeTransformedWay
+	local upgradeWays = itemBeTransformedWay.upgradeWays
+	upgradeWays = upgradeWays or {}
+	itemBeTransformedWay.upgradeWays = upgradeWays
+	local upgradeWay = {
+		composeID = compose_id,
+		equipID = equip_id
+	}
+	table.insert(upgradeWays, upgradeWay)
+end
+
+for k, v in pairs(Table_Compose) do
+	local composeID = k
+	local category = v.Category
+	local productID = v.Product.id
+	if productID ~= nil then
+		if category == 1 or category == 10 then
+			SetComposeWay(productID, composeID)
+		elseif category == 2 then
+			for k, v in pairs(Table_Equip) do
+				if v ~= nil then
+					local equipID = k
+					local upgradeID = v.UpgradeID
+					if upgradeID == composeID then
+						AddUpgradeWay(productID, composeID, equipID)
+						Table_Equip[k] = nil
+					end
+				end
+			end
+		end
+	end
+end
+
+local str = Serialize(tabResult)
+str = 'Table_ItemBeTransformedWay =' .. str
+local fPath = CurrentPath..'../../../client-refactory/Develop/Assets/Resources/Script/MConfig/Table_ItemBeTransformedWay.txt'
+WriteFile(fPath, str)
+print("Complete.")

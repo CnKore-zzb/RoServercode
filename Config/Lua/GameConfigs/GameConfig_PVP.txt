@@ -1,0 +1,52 @@
+﻿--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+--斗技场
+GameConfig.PVPConfig=
+{
+  [1]={
+        Name="溜溜猴",
+        TeamLimit=0,
+        PeopleLimit=20,
+        Time=0,
+		RaidMap = {{9001,20},{9002,20},{9003,20}},
+		Refresh=5,
+  },
+  [2]={
+        Name="沙漠之狼",
+        TeamLimit=2,
+        MaxScore=30,
+        Time=900,
+		Raid = 9021,
+		countDownTime=10,
+  },
+  [3]={
+        Name="华丽金属",
+        TeamLimit=3,
+        PeopleLimit=0,
+        Time=1800,
+		Raid = 9041,
+		countDownTime=10,
+  },
+  [4]={
+       Name="波利乱斗",
+       TeamLimit=0,
+       PeopleLimit=10,
+       Time=360,
+       Raid = 9004,
+       DefalutScore=4,  ---初始积分，苹果数
+ },
+--地图图标  
+  [9001]={
+        Name="普隆德拉",
+		Icon=Guild,
+  },
+  [9002]={
+        Name="依斯鲁得",
+		Icon=Guild,
+  },
+  [9003]={
+        Name="吉芬",
+		Icon=Guild,
+  },
+}

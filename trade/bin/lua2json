@@ -1,0 +1,110 @@
+#!/usr/bin/env php
+<?php
+error_reporting(7);
+
+if (!class_exists('Lua', false))
+{
+    echo "必须安装Lua扩展\n";
+    exit;
+}
+
+$files = [
+    'Compose',
+    'Equip',
+    'EquipEnchant',
+    'EquipEnchantPrice',
+    'EquipRefine',
+    'EquipUpgrade',
+    'Exchange',
+    'RoleData',
+    'Item',
+    'EquipCompose'
+];
+
+# RO主程序目录
+$roPath  = $_SERVER['argv'][1] ?: __DIR__.'/../../';
+$luaPath = $_SERVER['argv'][2] ?: $roPath.'Lua/';
+$out     = $_SERVER['argv'][3] ?: __DIR__. '/../config/';
+$lua     = new Lua();
+
+if (!is_dir($roPath))
+{
+    echo "指定的Lua目录不存在 $roPath\n";
+    exit;
+}
+
+function format(&$config)
+{
+    ksort($config);
+    foreach ($config as & $item)
+    {
+        if (is_array($item))
+        {
+            format($item);
+        }
+    }
+}
+
+if (!is_dir($luaPath.'Table/'))
+{
+    echo "目录 {$luaPath}Table/ 不存在";
+    exit;
+}
+
+foreach ($files as $file)
+{
+    $config = $lua->eval(file_get_contents($luaPath.'Table/Table_'.$file.'.txt'));
+    format($config);
+    $rs = file_put_contents($out.$file.'.json', json_encode($config, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+    if (!$rs)
+    {
+        echo "保存 $file 失败，请检查目录权限";
+        exit;
+    }
+    echo $file.".json, ";
+}
+
+# 兑换相关配置
+$config = $lua->eval(file_get_contents($luaPath .'GameConfig.txt') ."\nreturn GameConfig.Exchange");
+format($config);
+$rs = file_put_contents($out.'ExchangeConfig.json', json_encode($config, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+if (!$rs)
+{
+    echo "保存 ExchangeConfig.json 失败，请检查目录权限";
+    exit;
+}
+echo "ExchangeConfig.json, ";
+
+$config = $lua->eval(file_get_contents($luaPath .'GameConfig.txt') ."\nreturn GameConfig.Booth");
+format($config);
+$rs = file_put_contents($out.'BoothConfig.json', json_encode($config, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+if (!$rs)
+{
+    echo "保存 BoothConfig.json 失败，请检查目录权限";
+    exit;
+}
+echo "BoothConfig.json, ";
+
+# 是否交易所服务器开启
+$config = $lua->eval(file_get_contents($roPath .'CommonConfig.lua') ."\nreturn CommonConfig.open_trade_server");
+$rs     = file_put_contents($out.'isTradeOpen.txt', $config == 1 ? 1 : 0);
+if (!$rs)
+{
+    echo "保存 isTradeOpen.json 失败，请检查目录权限";
+    exit;
+}
+echo "isTradeOpen.txt, ";
+
+# 数据库、Redis 等相关配置
+$config = $lua->eval(file_get_contents($roPath .'BranchConfig.lua') ."\nreturn BranchConfig");
+format($config);
+$rs = file_put_contents($out.'BranchConfig.json', json_encode($config, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+if (!$rs)
+{
+    echo "保存 BranchConfig.json 失败，请检查目录权限";
+    exit;
+}
+echo "BranchConfig.json";
+
+
+echo "\nok";

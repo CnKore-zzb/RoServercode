@@ -1,0 +1,7 @@
+﻿GameConfig.Profession=
+{
+	price_gold = 88,         -- 不同基础职业消耗金币
+	price_zeny = 500000,      -- 相同基础职业消耗zeny
+	load_cd = 30,            -- 切换CD 30秒
+	switch_zeny = 10000,      -- 切换职业消耗zeny
+}

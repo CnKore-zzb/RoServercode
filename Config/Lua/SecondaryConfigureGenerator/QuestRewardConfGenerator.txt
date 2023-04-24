@@ -1,0 +1,63 @@
+local tabQuestReward = {}
+local questTableNames = {
+	'Table_Quest',
+	'Table_Quest_3',
+	'Table_Quest_4',
+	'Table_Quest_5',
+	'Table_Quest_6'
+}
+
+local tabRewardGroup = {}
+function AddIntoTabRewardGroup(rewardGroupID, paramsID)
+	if rewardGroupID ~= nil and rewardGroupID > 0 then
+		if paramsID ~= nil and paramsID > 0 then
+			if table.ContainsKey(tabRewardGroup, rewardGroupID) then
+				paramsIDs = tabRewardGroup[rewardGroupID]
+				if not table.ContainsValue(paramsIDs, paramsID) then
+					table.insert(paramsIDs, paramsID)
+				end
+			else
+				tabRewardGroup[rewardGroupID] = {paramsID}
+			end
+		end
+	end
+end
+for _, v in pairs(questTableNames) do
+	local questTableName = v
+	local tabQuest = _G[questTableName]
+	for _, v in pairs(tabQuest) do
+		local quest = v
+		local content = quest.Content
+		if content == 'reward' then
+			local rewardGroupID = quest.RewardGroupID
+			local paramsID = quest.Params.id
+			AddIntoTabRewardGroup(rewardGroupID, paramsID)
+		end
+	end
+end
+
+for _, v in pairs(questTableNames) do
+	local questTableName = v
+	local tabQuest = _G[questTableName]
+	for _, v in pairs(tabQuest) do
+		local quest = v
+		local content = quest.Content
+		local questID = quest.QuestID
+		local groupID = quest.GroupID
+		local assemblyID = questID * 10000 + groupID
+		if not table.ContainsKey(tabQuestReward, assemblyID) then
+			local rewardGroupID = quest.RewardGroupID
+			local rewardGroup = tabRewardGroup[rewardGroupID]
+			if rewardGroup ~= nil then
+				tabQuestReward[assemblyID] = {rewardGroupID = rewardGroup}
+			end
+		end
+	end
+end
+
+local str = Serialize(tabQuestReward)
+str = "Table_QuestReward = " .. str
+local fPath = nil
+local fPath = CurrentPath..'../../../client-refactory/Develop/Assets/Resources/Script/MConfig/Table_QuestReward.txt'
+WriteFile(fPath, str)
+print("Complete.")

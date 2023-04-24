@@ -1,0 +1,72 @@
+--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+-- 特殊胜利配置：
+GameConfig.GVGConfig = {
+	danger_time= 60,			--倒計時不緊張
+	danger_success_time=840,	--緊張倒計時
+	start_time = {
+	  {day=4,hour=21,min=0},
+	  {day=7,hour=21,min=0,super=1}
+	},
+    partin_buff = 120,
+	last_time =3600,
+	msg_map = {1,13,18,43,42},
+	--partin_mail = 12001,   --老版本的参与奖
+	win_guild_mail = 12003,  ---胜利工会同公会400
+	spec_mail = 12001,  --达到5分钟，并且工会占城
+	
+	die_punish = {
+	    {interval = {1,15},cd=5},   ---死亡间隔秒，+CD秒
+	},
+	die_punish_reset = 30,           ----重置时间秒
+	die_max_cd = 15,                  ----惩罚上限
+	hp_rate = 4,                          ----回复类药剂使用控制
+	expel_skill = 10151001,          ----驱逐技能
+	att_expel_time=30,  def_expel_time=180,   --攻守方驱逐时间
+	
+	reward = {
+		partin_time = {[1] = {times=5, itemid = 156, count = 100 , desc = "GVG参战时间达到%s/5分钟"}, [2] = {times=10, itemid = 156, count = 100 , desc = "GVG参战时间达到%s/10分钟"},[3] = {times=15, itemid = 156, count = 100 , desc = "GVG参战时间达到%s/15分钟"},desc = "参加工会战（%s）"},
+		kill_monster = {[1] = {times=5,itemid= 156, count = 100, desc = "击杀中立城池中魔物%s/5只"},[2] = {times=10, itemid = 156, count = 100 , desc = "击杀中立城池中魔物%s/10只"},[3] = {times=20, itemid = 156, count = 100 , desc = "击杀中立城池中魔物%s/20只"},desc = "无主之城（%s）"},
+		relive_other = {[1] = {times=10,itemid= 156, count = 200, desc = "累计复活友方%s/10人"},[2] = {times=20, itemid = 156, count = 300 , desc = "累计复活友方%s/20人"},[3] = {times=30, itemid = 156, count = 400 , desc = "累计复活友方%s/30人"},desc = "复活（%s）"},
+		expel_enemy = {[1] = {times=5,itemid= 156, count = 100, desc = "驱逐%s/5名敌方玩家"},[2] = {times=10, itemid = 156, count = 100 , desc = "驱逐%s/10名敌方玩家"},[3] = {times=20, itemid = 156, count = 100 , desc = "驱逐%s/20名敌方玩家"},desc = "驱逐（%s）"},
+		dam_metal = {[1] = {times=15,itemid= 156, count = 200, desc = "对华丽水晶造成%s/15%%伤害"},[2] = {times=40, itemid = 156, count = 200 , desc = "对华丽水晶造成%s/40%%伤害"},desc = "攻击华丽水晶（%s）"},
+		kill_metal = {[1] = {times=1,itemid= 156, count=500,desc = "成功击破华丽水晶"},desc = "击破华丽水晶"},
+		kill_one_user = {itemid = 156, count=20},
+		get_honor = {[1] = {times=500, itemid=3720, count=1,desc = "本场荣誉值达到%s/500"}, [2]={times=1000, itemid=3720, count=1,desc = "本场荣誉值达到%s/1000"},desc = "本场荣誉值（%s）"},
+		
+		
+	    valid_partin_time = 300,
+		max_honor=1200, 
+		},
+	
+    kill_team_get_num = 10,	   --击杀敌方玩家时，队友获得的经验数值	
+	
+	safe_area_buff=137,
+	
+	 -- 1.【激烈争夺中】：总人数大于30，且攻守方人数差小于总人数的15%      
+	 -- 2.【攻方优势】：总人数大于30，攻方人数较多，双方人数差大于总人数15%，但不超             
+	 -- 过30%              
+	 -- 3.【守方优势】：总人数大于30，守方人数较多，双方方人数差大于总人数15%，但不             
+	 -- 超过30%             
+	 -- 4.【战况平缓】：总人数小于30，或双方人数差超过总人数的30%            
+	 -- 5.【完美防守】：已达成完美防守                     
+	 -- 6.【中立】：无人占领野怪据点             
+	 -- 7.【已占领】：非完美防守状态             
+	gland_status_desc = {
+		[1] = "[c][FF0000]激烈争夺中[-][/c]",
+		[2] = "[c][6A5ACD]攻方优势[-][/c]",
+		[3] = "[c][00FF00]守方优势[-][/c]",
+		[4] = "[c][87CEFA]战况平缓[-][/c]",
+		[5] = "[c][000000]完美防守[-][/c]",
+		[6] = "[c][000000]中立[-][/c]",
+		[7] = "[c][000000]已占领[-][/c]",
+	},
+	
+	min_show_num = 10,       --人数达到此值时区分显示
+    show_cri_per = 0.2,     --区分激烈争夺的百分比
+    show_normal_per = 0.6,   --区分平缓的百分比
+	
+	extra_reward_mail = 12004,		--活动期间额外奖励邮件
+	extra_reward_msg = 25807,		--活动期间额外奖励提示
+}

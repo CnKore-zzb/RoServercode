@@ -1,0 +1,20 @@
+--md5:99af671ba1b2a172602ee9df17d7348f
+Table_PveCardGroup = { 
+	[101] = {id = 101, Name = '控制组', Difficulty = {1}, CardIDs = {144,145,146}},
+	[102] = {id = 102, Name = '召唤组', Difficulty = {1}, CardIDs = {147,148,149}},
+	[103] = {id = 103, Name = '哥布林组', Difficulty = {1}, CardIDs = {150,151,152}},
+	[104] = {id = 104, Name = '远射手组1', Difficulty = {1}, CardIDs = {153,154,155}},
+	[105] = {id = 105, Name = '鬼怪组1', Difficulty = {1}, CardIDs = {159,160,161}},
+	[106] = {id = 106, Name = '远射手组2', Difficulty = {2}, CardIDs = {156,157,158}},
+	[107] = {id = 107, Name = '鬼怪组2', Difficulty = {2}, CardIDs = {162,163,164}},
+	[108] = {id = 108, Name = '强力奶妈组', Difficulty = {2}, CardIDs = {165,166,167}},
+	[109] = {id = 109, Name = '恶魔组', Difficulty = {2}, CardIDs = {168,169,170}},
+	[110] = {id = 110, Name = '动物组2', Difficulty = {2}, CardIDs = {171,172,173}},
+	[111] = {id = 111, Name = '兽人勇士组2', Difficulty = {2}, CardIDs = {177,178,179}},
+	[112] = {id = 112, Name = '动物组3', Difficulty = {3}, CardIDs = {174,175,176}},
+	[113] = {id = 113, Name = '兽人勇士组3', Difficulty = {3}, CardIDs = {180,181,182}},
+	[114] = {id = 114, Name = '全能物理组', Difficulty = {3}, CardIDs = {183,184,185}},
+	[115] = {id = 115, Name = '双子精英组', Difficulty = {3}, CardIDs = {186,187,188}},
+	[116] = {id = 116, Name = '野蛮精英组', Difficulty = {3}, CardIDs = {189,190,191}},
+}
+return Table_PveCardGroup

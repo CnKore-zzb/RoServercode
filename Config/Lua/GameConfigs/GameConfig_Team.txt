@@ -1,0 +1,31 @@
+--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+--队伍相关信息
+GameConfig.Team = {
+  maxmember = 6,
+  maxinvite = 3,
+  inviteovertime = 10,
+  applyovertime = 600,
+  teamname="_的队伍",
+  overtime = 86400,
+  filtratelevel={1,20,40,60,80,90,100,110,120},
+  defaulttype = 10010,
+  defaultminlv = 1,
+  defaultmaxlv = 110,
+  defaultauto = 2,      -- 0:关闭 1:全部 2:公会好友
+  quickentertime = 60,
+  pickupmode = 1,        -- 0:自由拾取 1：随机分配
+}
+
+--社交（好友人数）
+GameConfig.Social = {
+  maxapply = 50,
+  maxfriend = 200,
+  maxfind = 20,
+  maxteam = 20,
+  maxblack = 20,
+  maxchatwords = 39,
+  maxchat = 20,
+  BlackListRemoveTime = 7,
+}

@@ -1,0 +1,7 @@
+--md5:d30272f00c62bd8d2ebb7c01e78797b2
+Table_PveRaid = { 
+	[1] = {id = 1, RaidID = 64608, Difficulty = 1, Reward = {3725}, Tips = '初级'},
+	[2] = {id = 2, RaidID = 64608, Difficulty = 2, Reward = {3735}, Tips = '中级'},
+	[3] = {id = 3, RaidID = 64608, Difficulty = 3, Reward = {3745}, Tips = '高级'},
+}
+return Table_PveRaid

@@ -1,0 +1,187 @@
+local time1 = os.clock();
+collectgarbage("collect");
+local gabage1 = collectgarbage("count");
+
+print("runtimePlatform------------",runtimePlatform)
+
+local posRecord = string.len(package.path)
+
+local removal_map = {};
+local empty_table = {};
+
+local gSubMap = 
+{
+	['\\'] = '\\\\',
+	['\n'] = '\\n',
+}
+local table_insert = table.insert;
+function Stage_Serialize(obj, depth)
+	depth = depth or 1;
+
+	local t = type(obj)
+	if(t == "number")then
+		return obj;
+	end
+	if(t == "string")then
+		for k,v in pairs(gSubMap)do
+			obj = string.gsub(obj, k, v);
+		end
+		return "\'" .. obj .. "\'";
+	end
+	if(t == "table")then
+		local str_array = {};
+
+		table_insert(str_array, "{");
+
+		local keys = {};
+		for k, v in pairs(obj) do
+			table.insert(keys, k);
+		end
+		table.sort(keys, function (a, b)
+			return a < b;
+		end)
+		for i=1,#keys do
+			local k,v = keys[i], obj[ keys[i] ];
+
+			local strK
+
+			local kType = type(k)
+			if kType == "string" then
+				strK = k
+			elseif kType == "number" then
+				strK = '[' .. k .. ']'
+			end
+
+			if(depth == 1)then
+				strK = "\n\t" .. strK
+			end
+
+			table_insert(str_array, " ");
+			table_insert(str_array, strK);
+			table_insert(str_array, ' = ');
+			table_insert(str_array, Stage_Serialize(v, depth + 1));
+			table_insert(str_array, ",");
+		end
+			
+		if(#keys == 0)then
+			return "_EmptyTable";
+		end
+
+		if(depth == 1)then
+			table_insert(str_array, "\n");
+		end
+
+		table_insert(str_array, "}");
+
+		return table.concat(str_array);
+	end
+	if(t == "boolean")then
+		return tostring(obj);
+	end
+	if(depth == 1)then
+		return "_EmptyTable";
+	end
+	return "nil"
+end
+
+
+local Target_FilePath = CurrentPath .. "../../../client-refactory/Develop/Assets/Resources/Script/MConfig/";
+
+local commond_filePath = Target_FilePath;
+if(runtimePlatform == "WindowsEditor")then
+	commond_filePath = string.gsub(CurrentPath, "/", "\\");
+	commond_filePath = commond_filePath .. "..\\..\\..\\client-refactory\\Develop\\Assets\\Resources\\Script\\FrameWork\\Config";
+end
+
+local file = io.open(Target_FilePath);
+if file then 
+	file:close() 
+else
+	if(runtimePlatform == "WindowsEditor")then
+		os.execute("md " .. commond_filePath) --unix,linux like
+	else
+		os.execute("mkdir -p " .. commond_filePath) --unix,linux like
+	end
+end
+
+
+local stage_indexmap = {}
+for k, v in pairs(Table_Item)do
+	
+	for k1,v1 in pairs(GameConfig.ItemDress) do 
+		for i=1,#v1.types do
+		-- print(k1)
+			if k1 == 6 then
+				if v.Type == v1.types[i] then
+					if v.StageDisplay and v.StageDisplay==1 then
+						if(stage_indexmap[6] == nil)then
+							stage_indexmap[6] = {};
+						end
+						table.insert(stage_indexmap[6], v.id)
+					end
+				end
+			elseif k1 == 2 then
+				if v.Type == v1.types[i] then
+					if v.StageDisplay and v.StageDisplay==1 then
+						if(stage_indexmap[2] == nil)then
+							stage_indexmap[2] = {};
+						end
+						table.insert(stage_indexmap[2], v.id)
+					else
+						if v.AdventureValue and v.AdventureValue ~= 0 then
+							if not v.StageDisplay then
+								if(stage_indexmap[2] == nil)then
+									stage_indexmap[2] = {};
+								end
+								table.insert(stage_indexmap[2], v.id)
+							end
+						end
+					end
+				end
+			else
+				if v.Type == v1.types[i] and v.AdventureValue and v.AdventureValue ~= 0 then
+					if v.StageDisplay and v.StageDisplay==1 then
+						if(stage_indexmap[k1] == nil)then
+							stage_indexmap[k1] = {};
+						end
+						table.insert(stage_indexmap[k1], v.id)
+					else						
+						if not v.StageDisplay then
+							if(stage_indexmap[k1] == nil)then
+								stage_indexmap[k1] = {};
+							end
+							table.insert(stage_indexmap[k1], v.id)
+						end
+					end
+				end
+			end
+		end
+	end
+	
+end
+for k,v in pairs(stage_indexmap)do
+	table.sort(v, function (id1, id2)
+		if Table_Item[id1].AdventureSort and Table_Item[id2].AdventureSort then			
+			if Table_Item[id1].AdventureSort == Table_Item[id2].AdventureSort then
+				return id1 < id2
+			else
+				return Table_Item[id1].AdventureSort < Table_Item[id2].AdventureSort
+			end
+		else
+			return id1 < id2
+		end
+	end)
+end
+
+local index_filename = "StageBagItemIndex";
+local index_fPath = Target_FilePath .. index_filename .. '.txt'
+local str = index_filename .. ' =\n' .. Stage_Serialize(stage_indexmap, 1)
+print(index_fPath, str)
+WriteFile(index_fPath, str)
+
+
+
+
+local time2 = os.clock();
+local gabage2 = collectgarbage("count");
+print("Success!", "Stage耗时：" .. time2 - time1 .. "s", "内存：" .. gabage2 - gabage1 .. "kb");

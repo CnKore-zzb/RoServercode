@@ -1,0 +1,11 @@
+--md5:1344d47efe85b2b4f13d23cc71147405
+Table_ShaderColor = { 
+	[1] = {id = 1, LightColor1 = '3FB953FF', Exposure1 = 1, LightColor2 = '3FB953FF', Exposure2 = 2, LightColor3 = '3FB953FF', Exposure3 = 1, Weight = 0, Info = '默认渲染效果'},
+	[2] = {id = 2, LightColor1 = 'B9B9B9FF', Exposure1 = -2, LightColor2 = 'F3F3F3FF', Exposure2 = -2, LightColor3 = '494848FF', Exposure3 = -1.8, Weight = 80, Info = '黑色，用作石化变黑'},
+	[3] = {id = 3, LightColor1 = 'FF0000FF', Exposure1 = 3, LightColor2 = '290000FF', Exposure2 = -3, LightColor3 = '504242FF', Exposure3 = -2.15, Weight = 1, Info = '黑底红边，封印怪物'},
+	[4] = {id = 4, LightColor1 = 'F0C600FF', Exposure1 = 2.83, LightColor2 = 'F0C600FF', Exposure2 = 2.54, LightColor3 = 'F0C600FF', Exposure3 = 0.43, Weight = 100, Info = '金色，可能用作无敌'},
+	[5] = {id = 5, LightColor1 = 'FF0000FF', Exposure1 = 1.1, LightColor2 = 'AA4343FF', Exposure2 = 2.5, LightColor3 = '761B1BFF', Exposure3 = 1, Weight = 30, Info = '亮红，可能用作速度激发'},
+	[6] = {id = 6, LightColor1 = 'FFFFFFFF', Exposure1 = -1.8, LightColor2 = '9F9F9FFF', Exposure2 = -2, LightColor3 = '027F6AFF', Exposure3 = -3, Weight = 50, Info = '暗红黑边，可能用作诅咒'},
+	[7] = {id = 7, LightColor1 = 'E600FFFF', Exposure1 = 2.27, LightColor2 = '28FF00FF', Exposure2 = -0.11, LightColor3 = '28FF00FF', Exposure3 = -0.77, Weight = 40, Info = '紫，用作中毒'},
+}
+return Table_ShaderColor

@@ -1,0 +1,36 @@
+-- local posRecord = string.len(package.path)
+
+-- if runtimePlatform == 1 then
+-- 	package.path = string.sub(package.path, 1, posRecord)
+
+-- 	package.path = package.path .. ';../../Cehua/Lua/SecondaryConfigureGenerator/?.txt'
+
+-- 	require 'ReferenceFilesName'
+
+-- elseif runtimePlatform == nil then
+-- 	package.path = string.sub(package.path, 1, posRecord)
+-- 	package.path = package.path .. ';./?.txt'
+-- 	require 'ReferenceFilesName'
+-- end
+
+local Value = {}
+
+for id,v in pairs(Table_EquipCompose) do
+	for i=1,#v.Material do
+		local material_id = v.Material[i].id
+		local cellValue = Value[material_id] and Value[material_id].productID
+		if cellValue then
+			cellValue[#cellValue+1]=id
+			Value[material_id] = {productID = cellValue}
+		else
+			Value[material_id] = {productID = {id}}
+		end
+	end
+end
+
+local str = Serialize(Value)
+str = 'Table_EquipComposeProduct=' .. str
+
+local fPath = CurrentPath..'../../../client-refactory/Develop/Assets/Resources/Script/MConfig/Table_EquipComposeProduct.txt'
+WriteFile(fPath, str)
+print('Table_EquipComposeProduct Complete')

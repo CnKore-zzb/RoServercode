@@ -1,0 +1,761 @@
+local ErrorTitle = 'ItemOriginConfGenerator Error'
+local Error = {
+	[1] = 'Table Name Illegal',
+	[2] = 'Field Name Illegal',
+	[3] = 'Filter Illegal',
+	[4] = 'Field Value Illegal',
+	[5] = 'Row Data Not Found'
+}
+function LogError(errIndex, tip)
+	if table.ContainsKey(Error, errIndex) then
+		local strLog = ErrorTitle .. ':' .. Error[errIndex] .. '_'
+		if tip then
+			if type(tip) == 'table' then
+				for _,v in pairs(tip) do
+					if v then
+						strLog = strLog .. v .. '_'
+					end
+				end
+			else
+				strLog = strLog .. tip
+			end
+		end
+		print(strLog)
+	end
+end
+
+function GetRowsDataFromTable(strTabName, tabID)
+	local tabOut = {}
+
+	if strTabName == nil then
+		LogError(1, 'value is nil')
+		return
+	end
+	local tab = _G[strTabName]
+	if tab == nil then
+		LogError(1, {strTabName})
+		return
+	end
+	if tabID == nil or table.IsEmpty(tabID) then
+		print('GetRowsDataFromTable Error:ID Illegal')
+	end
+	for _, v in pairs(tabID) do
+		if v == nil or type(v) ~= 'number' or (not table.ContainsKey(tab, v)) then
+			print('GetRowsDataFromTable Error:ID Illegal')
+		end
+		local rowData = tab[v]
+		if rowData then
+			table.insert(tabOut, rowData)
+		end
+	end
+	return tabOut
+end
+
+function GetFieldsValueFromRowsData(tabRowData, tabFieldName)
+	local tabOut = {}
+	if tabRowData then
+		if tabFieldName then
+			for _, v in pairs(tabRowData) do
+				if v then
+					local tabFieldsValue = {}
+					for _, v1 in pairs(tabFieldName) do
+						local fieldValue = v[v1]
+						if fieldValue then
+							table.insert(tabFieldsValue, fieldValue)
+						end
+					end
+					table.insert(tabOut, tabFieldsValue)
+				end
+			end
+		end
+	end
+	return tabOut
+end
+
+local tabOrigin = Table_AddWay
+local tabOut = {}
+-- {
+-- 	[14022]={
+-- 		[1]={
+-- 			1, --gain way id
+-- 			1000 --gain way id
+-- 		},
+-- 		-- Monster.xlsx/Dead_Reward&Mvp_Reward
+-- 		[2]={
+-- 			[1]={
+-- 				70037, --monster id
+-- 				0.042 --probability
+-- 			},
+-- 			[2]={
+-- 				10037, --monster id
+-- 				0.042 --probability
+-- 			}
+-- 		},
+-- 		-- GuildPVE_Monster.xlsx
+-- 		[3]={
+-- 			[1]={
+-- 				70037, --monster id
+-- 				0.042 --probability
+-- 			},
+-- 			[2]={
+-- 				10037, --monster id
+-- 				0.042 --probability
+-- 			}
+-- 		}
+-- 		-- Monster.xlsx/FoodReward
+-- 		[4]={
+-- 			[1]={
+-- 				70037, --monster id
+-- 				0.042 --probability
+-- 			},
+-- 			[2]={
+-- 				10037, --monster id
+-- 				0.042 --probability
+-- 			}
+-- 		}
+-- 	}
+-- }
+
+function Search(strTabName, strFieldName, tabFilterInfo, tabFilterValue)
+	local tabOutForSearch = {}
+	local tabName = strTabName
+	if tabName then
+		local tab = _G[tabName]
+		if tab then
+			local fieldName = strFieldName
+			if fieldName then
+				for k, v in pairs(tab) do
+					local fieldValue = v[fieldName]
+					if fieldValue then
+						local isFilted = false
+						for i = 1, #tabFilterInfo do
+							isFilted = IsFilted(strTabName, k, tabFilterInfo[i], tabFilterValue)
+							if not isFilted then
+								break
+							end
+						end
+						if isFilted then
+							if strTabName == 'Table_Reward' and strFieldName == 'item' and (v['type'] == 3 or v['type'] == 4) then
+								for _, v1 in pairs(fieldValue) do
+									local team = v1['id']
+									if team then
+										for k2, v2 in pairs(tab) do
+											local team1 = v2['team']
+											if team1 and team1 == team then
+												local fieldValue = v2[fieldName]
+												if fieldValue then
+													--if IsFilted(strTabName, k2, tabFilterInfo, tabFilterValue) then
+														table.insert(tabOutForSearch, fieldValue)
+													--end
+												end
+											end
+										end
+									end
+								end
+							else
+								table.insert(tabOutForSearch, fieldValue)
+							end
+						end
+					end
+				end
+			else
+				local tip = {fieldName and fieldName or 'name is nil'}
+				LogError(2, tip)
+			end
+		else
+			LogError(1, {tabName})
+		end
+	else
+		LogError(1, {'name is nil'})
+	end
+	return tabOutForSearch
+end
+
+function IsFilted(strTabName, id, tabFilterInfo, tabFilterValue)
+	if strTabName then
+		local tab = _G[strTabName]
+		if tab then
+			local filtedObject = tab[id]
+			if filtedObject then
+				if tabFilterInfo then
+					local filterField = tabFilterInfo[1]
+					local filterType = tabFilterInfo[2]
+					local filterSymbol = tabFilterInfo[3]
+					local filterValue = tabFilterInfo[4]
+					if filterType == 'all' then
+						return true
+					elseif filterType == 'compare' then
+						if filterField and table.ContainsKey(filtedObject, filterField) then
+							local fieldValue = filtedObject[filterField]
+							if filterValue and type(filterValue) == 'number' and fieldValue and type(fieldValue) == 'number' then
+								if filterSymbol == '>' then
+									return fieldValue > filterValue
+								elseif filterSymbol == '=' then
+									return fieldValue == filterValue
+								elseif filterSymbol == '<' then
+									return fieldValue < filterValue
+								else
+									LogError(3)
+								end
+							else
+								LogError(3)
+							end
+						end
+					elseif filterType == 'dynamicselect' then
+						if tabFilterValue then
+							local fieldValue = filtedObject[filterField]
+							if fieldValue then
+								for k, v in pairs(tabFilterValue) do
+									local vType = type(v)
+									if vType == 'number' and v == fieldValue then
+										return true
+									elseif vType == 'table' and table.ContainsValue(v, fieldValue) then
+										return true
+									end
+								end
+								return false
+							end
+						else
+							printRed('tabFilterValue is nil')
+						end
+					elseif filterType == 'staticselect' then
+						local fieldValue = filtedObject[filterField]
+						if fieldValue and filterValue and type(filterValue) == 'table' then
+							return table.ContainsValue(filterValue, fieldValue)
+						end
+					else
+						LogError(3)
+					end
+				else
+					LogError(3)
+				end
+			else
+				LogError(5, {strTabName, id})
+			end
+		else
+			LogError(1, {strTabName})
+		end
+	else
+		LogError(1, {'name is nil'})
+	end
+end
+
+function InsertIntoTabOut(iOriginID, iItemID)
+	if iItemID and iOriginID then
+		if table.ContainsKey(tabOut, iItemID) then
+			local v = tabOut[iItemID]
+			if v then
+				local tabOriginID = v[1]
+				if tabOriginID then
+					if table.ContainsValue(tabOriginID, iOriginID) then
+						return
+					else
+						table.insert(tabOriginID, iOriginID)
+					end
+				else
+					tabOriginID = {iOriginID}
+				end
+				v[1] = tabOriginID
+			else
+				tabOut[iItemID] = {{iOriginID}}
+			end
+		else
+			local tabOriginID = {iOriginID}
+			local v = {tabOriginID}
+			tabOut[iItemID] = v
+		end
+	end
+end
+
+function AddOriginIntoItem(iOriginID, tabSearchResult)
+	--print('FUN >>> AddOriginIntoItem')
+	if not table.ContainsKey(tabOrigin, iOriginID) then return end
+	if tabSearchResult == nil then return end
+	for _, v in pairs(tabSearchResult) do
+		if v then
+			local vType = type(v)
+			if vType == 'number' then
+				local itemID = v
+				InsertIntoTabOut(iOriginID, itemID)
+			elseif vType == 'table' then
+				if table.IsArray(v) then
+					for _, v1 in pairs(v) do
+						local itemID = v1['id']
+						if itemID and (type(itemID) == 'number') then
+							InsertIntoTabOut(iOriginID, itemID)
+						end
+					end
+				else
+					local itemID = v['itemID']
+					if itemID and (type(itemID) == 'number') then
+						InsertIntoTabOut(iOriginID, itemID)
+					else
+						itemID = v['id']
+						if itemID and (type(itemID) == 'number') then
+							InsertIntoTabOut(iOriginID, itemID)
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+-- origin statistics
+local keysTabOrigin = {}
+for k, v in pairs(tabOrigin) do
+	table.insert(keysTabOrigin, k)
+end
+table.sort(keysTabOrigin)
+for _,key in pairs(keysTabOrigin) do
+	local origin = tabOrigin[key]
+	
+	local originID = origin['id']
+	print('origin ' .. originID .. ' start...')
+
+	-- search end index
+	local searchEndIndex = 1
+	searchEndIndex = (not table.IsEmpty(origin.Search1)) and ((not table.IsEmpty(origin.Search2)) and ((not table.IsEmpty(origin.Search3)) and 3 or 2) or 1) or 0
+
+	-- first search
+	print('first search...')
+	local search1 = origin.Search1
+	local tableTemp = Search(search1[1], search1[2], search1[3])
+	-- TableUtil.Print(tableTemp)
+	if searchEndIndex == 1 then
+		AddOriginIntoItem(originID, tableTemp)
+	else
+		-- second search
+		print('second search...')
+		local search2 = origin.Search2
+		tableTemp = Search(search2[1], search2[2], search2[3], tableTemp)
+		-- TableUtil.Print(tableTemp)
+		if searchEndIndex == 2 then
+			AddOriginIntoItem(originID, tableTemp)
+		else
+			-- third search
+			print('third search...')
+			local search3 = origin.Search3
+			tableTemp = Search(search3[1], search3[2], search3[3], tableTemp)
+			AddOriginIntoItem(originID, tableTemp)
+		end
+	end
+end
+local tabRewardMVP = {}
+for _, v in pairs(Table_Monster) do
+	if v then
+		local rewardMVP = v['Mvp_Reward']
+		if rewardMVP and rewardMVP > 0 and (not table.ContainsValue(tabRewardMVP, rewardMVP))then
+			table.insert(tabRewardMVP, rewardMVP)
+		end
+	end
+end
+local tabMVPRewardItems = {}
+for _, v in pairs(tabRewardMVP) do
+	local team = v
+	local indicator = 1
+	for _, v in pairs(Table_Reward) do
+		local reward = v
+		local comparisonTeam = reward.team
+		if comparisonTeam == team then
+			local tabItem = reward.item
+			if tabItem and (not table.IsEmpty(tabItem)) then
+				table.insert(tabMVPRewardItems, tabItem)
+			end
+		-- 	table.remove(Table_Reward, indicator)
+		-- else
+		-- 	indicator = indicator + 1
+		end
+	end
+end
+AddOriginIntoItem(1, tabMVPRewardItems)
+
+-- monster kill item gain probability statistics
+local tabItemOriginMonster = {}
+local tabReward = Table_Reward
+
+local tabProbabilityBase = {}
+function GetProbabilityBaseByTeam(team)
+	if table.IsEmpty(tabProbabilityBase) then
+		for _, v in pairs(tabReward) do
+			if v then
+				local team = v['team']
+				local iType = v['type']
+				local rate = v['rate']
+				if table.ContainsKey(tabProbabilityBase, team) then
+					local base = tabProbabilityBase[team]
+					base = base + rate
+					tabProbabilityBase[team] = base
+				else
+					tabProbabilityBase[team] = rate
+				end
+			end
+		end
+	end
+	return tabProbabilityBase[team]
+end
+
+function AddMonsterOriginIntoItem(iMonsterID, iItemID, fPercentage)
+	local itemIDIsExist = table.ContainsKey(tabOut, iItemID)
+	if itemIDIsExist then
+		local v = tabOut[iItemID]
+		if v and table.IsNest(v) then
+			local tabMonsterOrigin = v[2]
+			if tabMonsterOrigin then
+				local bExist = false
+				for _, v1 in pairs(tabMonsterOrigin) do
+					local monsterID = v1[1]
+					if monsterID == iMonsterID then
+						bExist = true
+						local fOldPercentage = v1[2]
+						if fPercentage and fPercentage > fOldPercentage then
+							v1[2] = fPercentage
+						end
+					end
+				end
+				if not bExist then
+					table.insert(tabMonsterOrigin, {iMonsterID, fPercentage})
+				end
+			else
+				tabMonsterOrigin = {{iMonsterID, fPercentage}}
+			end
+			v[2] = tabMonsterOrigin
+		else
+			v = {
+				[2] = {{iMonsterID, fPercentage}}
+			}
+		end
+		tabOut[iItemID] = v
+	else
+		local v = {{}, {{iMonsterID, fPercentage}}}
+		tabOut[iItemID] = v
+	end
+end
+
+function AddMonsterOriginIntoItem_Guild(iMonsterID, iItemID, fPercentage)
+	local itemIDIsExist = table.ContainsKey(tabOut, iItemID)
+	if itemIDIsExist then
+		local v = tabOut[iItemID]
+		if v and table.IsNest(v) then
+			local tabGuildMonsterOrigin = v[3]
+			if tabGuildMonsterOrigin then
+				local bExist = false
+				for _, v1 in pairs(tabGuildMonsterOrigin) do
+					local monsterID = v1[1]
+					if monsterID == iMonsterID then
+						bExist = true
+						local fOldPercentage = v1[2]
+						if fPercentage and fPercentage > fOldPercentage then
+							v1[2] = fPercentage
+						end
+					end
+				end
+				if not bExist then
+					table.insert(tabGuildMonsterOrigin, {iMonsterID, fPercentage})
+				end
+			else
+				tabGuildMonsterOrigin = {{iMonsterID, fPercentage}}
+			end
+			v[3] = tabGuildMonsterOrigin
+		else
+			v = {
+				[3] = {{iMonsterID, fPercentage}}
+			}
+		end
+		tabOut[iItemID] = v
+	else
+		local v = {[1] = {}, [3] = {{iMonsterID, fPercentage}}}
+		tabOut[iItemID] = v
+	end
+end
+
+function AddMonsterOriginIntoItem_FoodReward(iMonsterID, iItemID, fPercentage)
+	local itemIDIsExist = table.ContainsKey(tabOut, iItemID)
+	if itemIDIsExist then
+		local v = tabOut[iItemID]
+		if v and table.IsNest(v) then
+			local tabGuildMonsterOrigin = v[4]
+			if tabGuildMonsterOrigin then
+				local bExist = false
+				for _, v1 in pairs(tabGuildMonsterOrigin) do
+					local monsterID = v1[1]
+					if monsterID == iMonsterID then
+						bExist = true
+						local fOldPercentage = v1[2]
+						if fPercentage and fPercentage > fOldPercentage then
+							v1[2] = fPercentage
+						end
+					end
+				end
+				if not bExist then
+					table.insert(tabGuildMonsterOrigin, {iMonsterID, fPercentage})
+				end
+			else
+				tabGuildMonsterOrigin = {{iMonsterID, fPercentage}}
+			end
+			v[4] = tabGuildMonsterOrigin
+		else
+			v = {
+				[4] = {{iMonsterID, fPercentage}}
+			}
+		end
+		tabOut[iItemID] = v
+	else
+		local v = {[1] = {}, [4] = {{iMonsterID, fPercentage}}}
+		tabOut[iItemID] = v
+	end
+end
+
+-- main
+local tabMonster = Table_Monster
+for k, v in pairs(tabMonster) do
+	local monsterID = k
+	local isOccurOnTheMap = table.ContainsKey(Table_MonsterOrigin, monsterID)
+	if isOccurOnTheMap then
+		if v then
+			local reward = {}
+			local rewardDead = v['Dead_Reward']
+			if rewardDead and (not table.IsEmpty(rewardDead)) then
+				reward = rewardDead
+			end
+			local rewardMVP = v['Mvp_Reward']
+			if rewardMVP and rewardMVP > 0 then
+				table.insert(reward, rewardMVP)
+			end
+			for _, v1 in pairs(reward) do
+				local rewardID = v1
+				for _, v2 in pairs(tabReward) do
+					if v2 then
+						local fieldTeamValue = v2['team']
+						if fieldTeamValue and fieldTeamValue == rewardID then
+							local base = GetProbabilityBaseByTeam(fieldTeamValue)
+							local weight = v2['rate']
+							local percentage = 0.0
+							if base and type(base) == 'number' and base > 0 then
+								percentage = weight / base
+								percentage = math.KeepDecimalPlaces(percentage, 4)
+							end
+							local fieldItemValue = v2['item']
+							if fieldItemValue ~= nil then
+								for _, v3 in pairs(fieldItemValue) do
+									if v3 then
+										local fieldTypeValue = v2['type']
+										if fieldTypeValue and (fieldTypeValue == 3 or fieldTypeValue == 4) then
+											local team = v3['id']
+											if team then
+												for _, v4 in pairs(tabReward) do
+													local team1 = v4['team']
+													if team1 and team1 == team then
+														local fieldItemValue2 = v4['item']
+														for _, v5 in pairs(fieldItemValue2) do
+															if v5 then
+																local itemID = v5['id']
+																if itemID then
+																	AddMonsterOriginIntoItem(monsterID, itemID, percentage)
+																end
+															end
+														end
+													end
+												end
+											end
+										else
+											local itemID = v3['id']
+											if itemID then
+												AddMonsterOriginIntoItem(monsterID, itemID, percentage)
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+tabMonster = Table_GuildPVE_Monster
+for k, v in pairs(tabMonster) do
+	local monsterID = k
+	if v then
+		local reward = {}
+		local bossReward = v['BossReward']
+		if bossReward and (not table.IsEmpty(bossReward)) then
+			reward = bossReward
+		end
+		for _, v1 in pairs(reward) do
+			local rewardID = v1
+			for _, v2 in pairs(tabReward) do
+				if v2 then
+					local fieldTeamValue = v2['team']
+					if fieldTeamValue and fieldTeamValue == rewardID then
+						local base = GetProbabilityBaseByTeam(fieldTeamValue)
+						local weight = v2['rate']
+						local percentage = 0.0
+						if base and type(base) == 'number' and base > 0 then
+							percentage = weight / base
+							percentage = math.KeepDecimalPlaces(percentage, 4)
+						end
+						local fieldItemValue = v2['item']
+						if fieldItemValue ~= nil then
+							for _, v3 in pairs(fieldItemValue) do
+								if v3 then
+									local fieldTypeValue = v2['type']
+									if fieldTypeValue and (fieldTypeValue == 3 or fieldTypeValue == 4) then
+										local team = v3['id']
+										if team then
+											for _, v4 in pairs(tabReward) do
+												local team1 = v4['team']
+												if team1 and team1 == team then
+													local fieldItemValue2 = v4['item']
+													for _, v5 in pairs(fieldItemValue2) do
+														if v5 then
+															local itemID = v5['id']
+															if itemID then
+																AddMonsterOriginIntoItem_Guild(monsterID, itemID, percentage)
+															end
+														end
+													end
+												end
+											end
+										end
+									else
+										local itemID = v3['id']
+										if itemID then
+											AddMonsterOriginIntoItem_Guild(monsterID, itemID, percentage)
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+tabMonster = Table_Monster
+for k, v in pairs(tabMonster) do
+	local monsterID = k
+	if v then
+		local reward = {}
+		local foodReward = v['FoodReward']
+		if foodReward and (not table.IsEmpty(foodReward)) then
+			reward = foodReward
+		end
+		for _, v1 in pairs(reward) do
+			local rewardID = v1
+			for _, v2 in pairs(tabReward) do
+				if v2 then
+					local fieldTeamValue = v2['team']
+					if fieldTeamValue and fieldTeamValue == rewardID then
+						local base = GetProbabilityBaseByTeam(fieldTeamValue)
+						local weight = v2['rate']
+						local percentage = 0.0
+						if base and type(base) == 'number' and base > 0 then
+							percentage = weight / base
+							percentage = math.KeepDecimalPlaces(percentage, 4)
+						end
+						local fieldItemValue = v2['item']
+						if fieldItemValue ~= nil then
+							for _, v3 in pairs(fieldItemValue) do
+								if v3 then
+									local fieldTypeValue = v2['type']
+									if fieldTypeValue and (fieldTypeValue == 3 or fieldTypeValue == 4) then
+										local team = v3['id']
+										if team then
+											for _, v4 in pairs(tabReward) do
+												local team1 = v4['team']
+												if team1 and team1 == team then
+													local fieldItemValue2 = v4['item']
+													for _, v5 in pairs(fieldItemValue2) do
+														if v5 then
+															local itemID = v5['id']
+															if itemID then
+																AddMonsterOriginIntoItem_FoodReward(monsterID, itemID, percentage)
+															end
+														end
+													end
+												end
+											end
+										end
+									else
+										local itemID = v3['id']
+										if itemID then
+											AddMonsterOriginIntoItem_FoodReward(monsterID, itemID, percentage)
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+-- handle Compose.xlsx
+for _, v in pairs(Table_Compose) do
+	if v then
+		local composedItem = v.Product
+		local materialItems = v.BeCostItem
+		if composedItem and materialItems then
+			local composedItemID = composedItem['id']
+			local indexs = v.keyBeCost
+			if indexs then
+				for _, v1 in pairs(indexs) do
+					local index = v1
+					local materialItem = materialItems[index]
+					if materialItem then
+						materialItemID = materialItem['id']
+						local originConfMaterialItem = tabOut[materialItemID]
+						if originConfMaterialItem then
+							local origins = originConfMaterialItem[1]
+							if origins then
+								for _, v2 in pairs(origins) do
+									local origin = v2
+									local materialdisplay = Table_AddWay[origin].Materialdisplay
+									if materialdisplay == 0 then
+										InsertIntoTabOut(origin, composedItemID)
+										if origin == 1 then
+											local monsters = originConfMaterialItem[2]
+											if monsters and (not table.IsEmpty(monsters))then
+												for _, v in pairs(monsters) do
+													local monsterID = v[1]
+													local fPercentage = v[2]
+													if monsterID and fPercentage then
+														AddMonsterOriginIntoItem(monsterID, composedItemID, fPercentage)
+													end
+												end
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+local isFirstItem = true
+local str = 'Table_ItemOrigin = {'
+for k, v in pairs(tabOut) do
+	if not isFirstItem then
+		str = str .. ',\n'
+	else
+		str = str .. '\n'
+		isFirstItem = false
+	end
+	local itemID = k
+	str = str .. '\t' .. '[' .. itemID .. '] = '
+	local itemOriginDetail = v
+	str = str .. SerializeWithoutNewline(itemOriginDetail)
+end
+str = str .. '\n}'
+local fPath = CurrentPath..'../../../client-refactory/Develop/Assets/Resources/Script/MConfig/Table_ItemOrigin.txt'
+WriteFile(fPath, str)
+print("Complete.")

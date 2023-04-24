@@ -1,0 +1,32 @@
+--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+-- GameConfig 追加内容
+GameConfig.RaidDeadBoss = {
+  tower = {
+    week_deadboss_count = 1, -- 每周次数
+    deadboss_uid = 1002, -- 亡者boss unique id
+    deadboss_num = 2, -- 每次召唤数量
+    deadboss_layer = 100, -- 召唤层数
+  },
+  guild_raid = {
+    week_deadboss_count = 1,
+    deadboss_uid = 1011,
+    deadboss_num = 1,
+    deadboss_raidlv = 100, -- 召唤的副本等级
+   },
+  pve_card = {
+    week_deadboss_count = 1,
+    deadboss_uid = 5,
+    deadboss_num = 1,
+    deadboss_npc_uid = 4,
+    deadboss_min_difficulty = 2, -- 召唤的副本难度
+    deadboss_npc_time = 2, -- 通关后,召唤交互npc的时间
+  },
+  mvp_battle = {
+    week_deadboss_count = 1,
+    deadboss_num = 2,
+    deadboss_summon_time = {60,180}, -- 召唤时间段
+    dead_boss_uids = {310,311}, -- 随机的unique id 列表
+  },
+}

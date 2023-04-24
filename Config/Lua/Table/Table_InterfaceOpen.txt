@@ -1,0 +1,8 @@
+--md5:5e321b1022df9765bfee33fa3c589177
+Table_InterfaceOpen = { 
+	[1] = {id = 1, PanelID = 3, Text = '冒险技能', Condition = {Prop={VarName="TransformID",value=0}}, SysMsgID = {id=832}, EnterHide = 1},
+	[2] = {id = 2, PanelID = 4, Text = '职业技能', Condition = {Prop={VarName="TransformID",value=0}}, SysMsgID = {id=832}, EnterHide = 1},
+	[3] = {id = 3, PanelID = 111, Text = '加点技能', Condition = {Prop={VarName="TransformID",value=0}}, SysMsgID = {id=832}, EnterHide = 1},
+	[4] = {id = 4, PanelID = 121, Text = '职业页签', Condition = {Prop={VarName="TransformID",value=0}}, SysMsgID = {id=832}, EnterHide = 1},
+}
+return Table_InterfaceOpen

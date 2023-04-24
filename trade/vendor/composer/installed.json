@@ -1,0 +1,41 @@
+[
+    {
+        "name": "myqee/server",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/myqee/server.git",
+            "reference": "571edc188477e7836c271cd6799878de6ab6ea34"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://files.phpcomposer.com/files/myqee/server/571edc188477e7836c271cd6799878de6ab6ea34.zip",
+            "reference": "571edc188477e7836c271cd6799878de6ab6ea34",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.5.0"
+        },
+        "time": "2018-04-13T12:23:09+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "MyQEE\\Server\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "jonwang",
+                "email": "jonwang@queyang.com"
+            }
+        ],
+        "description": "MyQEE Server library",
+        "homepage": "http://www.myqee.com"
+    }
+]

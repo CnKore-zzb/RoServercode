@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="GBK" ?>
+<Config>
+  <Region>
+    <info reg="StatServer" name="StatServer"/>
+    <info reg="TradeServer" name="TradeServer"/>
+    <info reg="MatchServer" name="MatchServer"/>
+    <info reg="GuildServer" name="GuildServer"/>
+    <info reg="GlobalServer" name="GlobalServer"/>
+    <info reg="GZoneServer" name="GZoneServer"/>
+    <info reg="AuctionServer" name="AuctionServer"/>
+    <info reg="WeddingServer" name="WeddingServer"/>
+  <Region>
+
+  <Server>
+    <info type="SuperServer" name="SuperServer"/>
+    <info type="RecordServer" name="RecordServer"/>
+    <info type="SessionServer" name="SessionServer"/>
+    <info type="TeamServer" name="TeamServer"/>
+    <info type="SocialServer" name="SocialServer"/>
+    <info type="DataServer" name="DataServer"/>
+
+    <info type="SceneServer" name="SceneServer1"/>
+    <info type="SceneServer" name="SceneServer2"/>
+    <info type="GateServer" name="GateServer1"/>
+    <info type="GateServer" name="GateServer2"/>
+    <info type="GateServer" name="GateServer3"/>
+  </Server>
+</Config>

@@ -1,0 +1,202 @@
+--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+-- 组队竞技赛配置：
+GameConfig.teamPVP = {
+  Countdown = 60,      --倒计时
+  Victoryanimation = "victory",    --结算动画
+  PvpDivision = {                --段位分数
+    [1] = {0,500},
+    [2] = {500,1200},
+	[3] = {1200,2000},
+    [4] = {2000},
+  },
+  Maxtime = 10,                   --每周次数
+}
+
+--排位竞技模式
+GameConfig.PvpTeamRaid = {
+    APoooCacheSize = 10, -- A池缓冲数量
+    MaxTeamMatchTime = 60, -- 不完整队伍, 最长匹配队伍的时间（t）
+    MaxFireMatchTime = 120, -- 最长匹配对手的时间（t）
+    APoolMaxMatchTime = 60, -- 超过此时间 A池进B池（t）
+    BPoolMaxMatchTime= 40, -- 超过该时间, 强制匹配B池（t）
+    MaxPrepareTime= 60, -- 最长准备时间
+    WeekMaxCount= 10, -- 每周最多参战次数
+    RequireLv = 90, -- 需要等级
+    MaxRankNum= 200, -- 展示的排名数量
+    LeavePunishCD= 20, -- 退队惩罚CD（t）
+    LeavePunishScore= 100, -- 退队惩罚积分
+    SeasonBattleTimes= 6, -- 每个赛季比赛次数
+    FinalBeginRewardTime= 60*60*24*3, -- 最后一次比赛开始后, 再经过多长时间下发奖励
+    MatchScoreGruop={{0,200},{201,400},{401,600},{601,800},{801,1000},{1001,1200},{1201,1400},{1401,1600},{1601,1800},{1801,2000},{2001,2200},{2201,2400},{2401,2600},{2601,2800},{2801,3000},{3001,3200},{3201,3400},{3401,3600},{3601,3800},{3801,4000},{4001,99999}}, --匹配池积分分组
+    -- 段位与分数关系, 高段位数字小, 1:传说
+    Rank2Score = {
+        [1] = {min=2000, max=100000,winreward={{itemid=156,count=400}},losereward={{itemid=156,count=80}}},
+        [2] = {min=1200,max=2000,winreward={{itemid=156,count=300}},losereward={{itemid=156,count=70}}},
+        [3] = {min=500,max=1200,winreward={{itemid=156,count=200}},losereward={{itemid=156,count=60}}},
+        [4] = {min=1,max=500,winreward={{itemid=156,count=150}},losereward={{itemid=156,count=50}}},
+    },
+	UserRewardMail = 12119,
+	-- 强制拉回范围
+	PrepareLimitArea ={
+	[1] = {pos = {0.33,1.9,-41.94},radius = 11},
+	[2] = {pos = {0,8.87,43.42},radius =11},
+	},
+	--法球位置
+	ElementBornPosition = {
+	  [1] = {-32.18,9.4,14,37},
+	  [2] = {32.29,9.36,14.42},
+	  [3] = {-32.26,9.42,-9.67}, 
+	  [4] = {32.22,9.46,-9.62},
+	},  
+    -- 排名对应的奖励
+    RewardInfo = {
+      {NeedRank = 20, Mail = 12116},
+      {NeedRank = 50, Mail = 12117},
+	  {NeedRank = 100, Mail = 12118},
+    },
+	-- 总表现分,排名获得额外积分
+    AllScore2ExtraAdd = {5,4,3,2,1},
+    -- 击杀
+    KillScore2ExtraAdd = {3,2,1},
+    -- 治疗
+    HealScore2ExtraAdd = {3,2,1},
+	TeamColorInfo = {
+    [1] = { name = "红方", },
+    [2] = { name = "蓝方", },
+    },
+    WarnScore = 3500,
+	SelectEffectDialogId = 300822,
+	ActivityID = 516,
+    RaidIDs={7028}, -- 所有随机的副本
+    Time = 900,  -- 持续时长
+    ElementCollectSkillID = 10153001, --采集法球技能
+    BuffCollectSkillID = 10154001,  --采集buff npc 技能
+    BallValueInterval = 2,  -- 持球加分间隔
+    BallDelayValueTime = 2, -- 持球后, 延迟加分的时间
+    WinScore = 4000,  -- 胜利所需积分
+    PrepareTime = 30,  -- 副本准备时间
+    MagicCD = 15,  -- 法术组合CD
+    KillScore = 5,  -- 击杀得分
+    SummonBallTime = 30,  -- 开战后召唤法球时间
+    PickBuffScore = 200,  -- 拾取buff加分
+    BebinBuffTime = 60,  -- 开战后, 第一次刷新buff的时间
+    RefreshBuffInterval = 30,  -- 刷新buff间隔
+    BuffNpcUniqueID = 9,  -- 刷新buff npc对应的uniqueid
+	BuffNpcClearTime = 30, --中央法球存活时间
+    -- buffnpc 对应的buff效果
+    BuffEffect={
+      [9309] = {{selfbuff=210020, time=10},{teambuff=210020,time=10},name="真实视界"}, --npcid -> buff效果, self是只给自己添加, team 给队伍添加
+      [9310] = {{selfbuff=210030, time=10},name="伤害增强"},
+	  [9311] = {{selfbuff=210040, time=10},name="加速"},
+    },
+    -- 持球buff
+    HoldBallBuff = {210010,210011,210110,210111,210112,210113},
+    -- 法球unique id
+    BallUniqueID = {1,2,3,4},
+    -- 持球分数
+    BallScore = {	
+      [1] = 10,
+      [2] = 20,
+	  [3] = 25,
+	  [4] = 30,
+    },
+    -- 魔法组合
+    ElementCombine = {
+      [12] = {BuffIDs={210080},name="风暴障壁（风+地）",icon="ui_teampvp_skill6"},
+      [13] = {BuffIDs={210070},name="静电磁场（风+水）",icon="ui_teampvp_skill5"},
+      [14] = {BuffIDs={210100},name="灵魂枷锁（风+火）",icon="ui_teampvp_skill3"},
+	  [23] = {BuffIDs={210090},name="强冻结界（地+水）",icon="ui_teampvp_skill4"},
+	  [24] = {BuffIDs={210060},name="枯萎术（地+火）",icon="ui_teampvp_skill2"},
+	  [34] = {BuffIDs={210050},name="法力损毁（水+火）",icon="ui_teampvp_skill1"},
+    },
+    -- 元素球
+    ElementNpcsID = {
+      [1] = {npcid = 9307, buffid=210123,name="风元素",icon="ui_teampvp_skillg_JM",mapicon="map_teampvp_g"},  --风
+      [2] = {npcid = 9306, buffid=210122,name="地元素",icon="ui_teampvp_skilly_JM",mapicon="map_teampvp_y"},  --地
+	  [3] = {npcid = 9304, buffid=210120,name="水元素",icon="ui_teampvp_skillb_JM",mapicon="map_teampvp_b"},  --水
+	  [4] = {npcid = 9305, buffid=210121,name="火元素",icon="ui_teampvp_skillr_JM",mapicon="map_teampvp_r"},  --火
+    },
+}
+
+-- 休闲模式配置
+GameConfig.PvpTeamRaid_Relax = {  
+    APoooCacheSize = 10, -- A池缓冲数量
+    MaxTeamMatchTime = 60, -- 不完整队伍, 最长匹配队伍的时间（t）
+    MaxFireMatchTime = 120, -- 最长匹配对手的时间（t）
+    APoolMaxMatchTime = 60, -- 超过此时间 A池进B池（t）
+    BPoolMaxMatchTime= 40, -- 超过该时间, 强制匹配B池（t）
+    MaxPrepareTime= 60, -- 最长准备时间
+    RequireLv = 90, -- 需要等级
+	SelectEffectDialogId = 300822,
+	ActivityID = 516,
+    RaidIDs={7028}, -- 所有随机的副本
+	MatchScoreGruop={0,99999},
+	RaidMaps={{id = 7028, Name = "魔力地牢"}},
+    Time = 600,  -- 持续时长
+    ElementCollectSkillID = 111, --采集法球技能
+    BuffCollectSkillID = 222,  --采集buff npc 技能
+    BallValueInterval = 2,  -- 持球加分间隔
+    BallDelayValueTime = 2, -- 持球后, 延迟加分的时间
+    WinScore = 4000,  -- 胜利所需积分
+    PrepareTime = 30,  -- 副本准备时间
+    MagicCD = 15,  -- 法术组合CD
+    KillScore = 5,  -- 击杀得分
+    SummonBallTime = 30,  -- 开战后召唤法球时间
+    PickBuffScore = 200,  -- 拾取buff加分
+    BebinBuffTime = 60,  -- 开战后, 第一次刷新buff的时间
+    RefreshBuffInterval = 30,  -- 刷新buff间隔
+    BuffNpcUniqueID = 9,  -- 刷新buff npc对应的uniqueid
+	BuffNpcClearTime = 30, --中央法球存活时间
+    -- buffnpc 对应的buff效果
+    BuffEffect={
+      [9309] = {{selfbuff=210020, time=10},{teambuff=210020,time=10},name="真实视界"}, --npcid -> buff效果, self是只给自己添加, team 给队伍添加
+      [9310] = {{selfbuff=210030, time=10},name="伤害增强"},
+	  [9311] = {{selfbuff=210040, time=10},name="加速"},
+    },
+	TeamColorInfo = {
+    [1] = { name = "红方", },
+    [2] = { name = "蓝方", },
+    },
+    WarnScore = 3500,
+    -- 持球buff
+    HoldBallBuff = {210010,210011,210110,210111,210112,210113},
+    -- 法球unique id
+    BallUniqueID = {1,2,3,4},
+    -- 持球分数
+    BallScore = {
+      [1] = 10,
+      [2] = 20,
+	  [3] = 25,
+	  [4] = 30,
+    },
+    -- 强制拉回范围
+	PrepareLimitArea ={
+	[1] = {pos = {0.33,1.9,-41.94},radius = 11},
+	[2] = {pos = {0,8.87,43.42},radius =11},
+	},
+	-- 法球位置
+	ElementBornPosition = {
+	  [1] = {-32.18,9.4,14,37},
+	  [2] = {32.29,9.36,14.42},
+	  [3] = {-32.26,9.42,-9.67},
+	  [4] = {32.22,9.46,-9.62},
+	}, 
+    -- 魔法组合
+    ElementCombine = {
+      [12] = {BuffIDs={210080},name="风暴障壁（风+地）",icon="ui_teampvp_skill6"},
+      [13] = {BuffIDs={210070},name="静电磁场（风+水）",icon="ui_teampvp_skill5"},
+      [14] = {BuffIDs={210100},name="灵魂枷锁（风+火）",icon="ui_teampvp_skill3"},
+	  [23] = {BuffIDs={210090},name="强冻结界（地+水）",icon="ui_teampvp_skill4"},
+	  [24] = {BuffIDs={210060},name="枯萎术（地+火）",icon="ui_teampvp_skill2"},
+	  [34] = {BuffIDs={210050},name="法力损毁（水+火）",icon="ui_teampvp_skill1"},
+    },
+    -- 元素球
+    ElementNpcsID = {
+      [1] = {npcid = 9307, buffid=210123,name="风元素",icon="ui_teampvp_skillg_JM",mapicon="map_teampvp_g"},  --风
+      [2] = {npcid = 9306, buffid=210122,name="地元素",icon="ui_teampvp_skilly_JM",mapicon="map_teampvp_y"},  --地
+	  [3] = {npcid = 9304, buffid=210120,name="水元素",icon="ui_teampvp_skillb_JM",mapicon="map_teampvp_b"},  --水
+	  [4] = {npcid = 9305, buffid=210121,name="火元素",icon="ui_teampvp_skillr_JM",mapicon="map_teampvp_r"},  --火
+    },
+ }

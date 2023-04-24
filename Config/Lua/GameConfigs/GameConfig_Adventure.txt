@@ -1,0 +1,128 @@
+--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+--冒险手册解锁提示
+GameConfig.AdventureUnLockTip = 
+{
+ Fashion = "制作%s",
+ Monstet = "击杀%s",
+ Card = "拾取%s",
+ NPC = "与%s对话",
+ Mount = "成功拍摄"
+}
+
+--冒险手册解锁提示
+GameConfig.AdventureUnlockCodition = 
+{
+[1]= "击杀",
+[2]= "拾取",
+[3]= "制作",
+[4]= "获得",
+[5]= "对话",
+[6]= "拍摄",
+[7]= "使用",
+[8]= "抽取",
+[9]= "孵化",
+}
+
+--配置冒险手册中追加奖励中的特殊类型
+GameConfig.AdventureAppendSpecialItemType = {1200
+}
+
+--冒险手册中，魔物详情里属性的排序
+GameConfig.MonsterShowType = { "Hp","Level","Race","Shape","Str","Dex","Int","Vit","Agi","Luk","Hit","Atk","MAtk","Def","MDef","Flee","MoveSpd","MoveSpdRate","AtkSpd",
+}
+
+--冒险手册 派遣战斗力
+GameConfig.PetAdventureEff = {
+  ------------精炼战斗力
+  refine = {[1]=20,[2]=30,[3]=40,[4]=50,[5]=100,[6]=120,[7]=140,[8]=200,[9]=220,[10]=240,[11]=300,[12]=320,[13]=340,[14]=360,[15]=400},
+  ------------附魔战斗力
+  enchant_calc_per = 80,
+  enchant = {
+    Vit={allscore =200,maxattr = 10},
+    Str={allscore =200,maxattr = 10},
+    Int={allscore =200,maxattr = 10},
+    Luk={allscore =200,maxattr = 8},
+    Dex={allscore =200,maxattr = 10},
+    Agi={allscore =200,maxattr = 10},
+    MaxHp={allscore =80,maxattr = 400},
+    MaxSp={allscore =80,maxattr = 80},
+    Atk={allscore =120,maxattr = 40},
+    MAtk={allscore =120,maxattr = 40},
+    Def={allscore =80,maxattr = 20},
+    MDef={allscore =80,maxattr = 20},
+    MaxHpPer={allscore =200,maxattr = 0.1},
+    MaxSpPer={allscore =140,maxattr = 0.05},
+    Hit={allscore =120,maxattr = 20},
+    Flee={allscore =120,maxattr = 20},
+    EquipASPD={allscore =160,maxattr = 0.04},
+    Cri={allscore =160,maxattr = 10},
+    CriRes={allscore =120,maxattr = 10},
+    CriDamPer={allscore =160,maxattr = 0.1},
+    CriDefPer={allscore =120,maxattr = 0.1},
+    HealEncPer={allscore =160,maxattr = 0.05},
+    BeHealEncPer={allscore =160,maxattr = 0.05},
+    DamIncrease={allscore =200,maxattr = 0.04},
+    DamReduc={allscore =200,maxattr = 0.04},
+    SilenceDef={allscore =40,maxattr = 0.25},
+    FreezeDef={allscore =40,maxattr = 0.25},
+    StoneDef={allscore =40,maxattr = 0.25},
+    StunDef={allscore =40,maxattr = 0.25},
+    BlindDef={allscore =40,maxattr = 0.25},
+    PoisonDef={allscore =40,maxattr = 0.25},
+    SlowDef={allscore =40,maxattr = 0.25},
+    ChaosDef={allscore =40,maxattr = 0.25},
+    CurseDef={allscore =40,maxattr = 0.25},
+  },
+  -------------附魔组合战斗力
+  enchantgroup = {[1]=100,[2]=150,[3]=200,[4]=250},
+  -------------冒险家等级战斗力
+  title = {
+    [1002]=100,
+    [1003]=100,
+    [1004]=100,
+    [1005]=100,
+    [1006]=100,
+    [1007]=100,
+    [1008]=100,
+    [1009]=100,
+    [1010]=100,
+  },
+  -------------头饰存储战斗力
+  headwear = {[1]=4,[2]=6,[3]=10,[4]=30},
+  -------------卡片存储战斗力
+  card = {[1]=5,[2]=10,[3]=20,[4]=100},
+  
+  refine_max = 4000,
+  enchant_max = 3000,
+  star_max = 3000,
+  title_max = 1000,
+  headwear_max = 4000,
+  card_max = 4000,
+}
+----冒险段位所需等级
+GameConfig.AdventureAppellationLevel = {
+	[1001] = 1,
+	[1002] = 5,
+	[1003] = 10,
+	[1004] = 15,
+	[1005] = 20,
+	[1006] = 25,
+	[1007] = 30,
+	[1008] = 35,
+	[1009] = 40,
+	[1010] = 45,
+}
+
+---冒险手册中EP卡图片配置
+GameConfig.EpCardTexture = 
+{
+	[5700] = "EP01",
+	[5701] = "EP02",
+	[5702] = "EP03",
+	[5703] = "EP04",
+	[5704] = "EP05",
+}
+---成就解锁次数奖励
+GameConfig.AchievementType_TimeReward = {"pray_def_lv","pray_atk_lv","pray_elem_lv","cost_pray_card"}

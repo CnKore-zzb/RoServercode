@@ -1,0 +1,11 @@
+--md5:a7aba2f179f4de5023ead29b0e8277a0
+Table_HeadEffect = { 
+	[45249] = {id = 45249, NameZh = '吟游诗人', TriggerAction = {type='ActionAnime',id={3,57,60}}, Effect = {type='itemmusic',id=45249,uri='SoulGarden',range=10,expiretime=120}},
+	[145249] = {id = 145249, NameZh = '吟游诗人', TriggerAction = {type='ActionAnime',id={3,57,60}}, Effect = {type='itemmusic',id=145249,uri='SoulGarden',range=10,expiretime=120}},
+	[47035] = {id = 47035, NameZh = '蔚蓝的伊斯鲁德海', TriggerAction = {type='ActionAnime',id={3,57,60}}, Effect = {type='itemmusic',id=47035,uri='MemoryOfEternalLove',range=10,expiretime=120,npcid=3349}},
+	[45283] = {id = 45283, NameZh = '金色的进行曲', TriggerAction = {type='ActionAnime',id={3,57,60}}, Effect = {type='itemmusic',id=45283,uri='Title',range=10,expiretime=120}},
+	[48013] = {id = 48013, NameZh = '银·铃', TriggerAction = {type='ActionAnime',id={3,57,60}}, Effect = {type='itemmusic',id=45283,uri='SliverBell',range=10,expiretime=120}},
+	[47038] = {id = 47038, NameZh = '宝贝·别哭', TriggerAction = {type='ActionAnime',id={3,57,60}}, Effect = {type='itemmusic',id=45283,uri='Music_DCB',range=10,expiretime=120}},
+	[145297] = {id = 145297, NameZh = '白色圣诞', TriggerAction = {type='ActionAnime',id={3,57,60}}, Effect = {type='itemmusic',id=45283,uri='xmas',range=10,expiretime=120}},
+}
+return Table_HeadEffect

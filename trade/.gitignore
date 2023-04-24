@@ -1,0 +1,13 @@
+Icon?
+.DS_Store
+.svn
+*.debug.php
+*.debug.config.php
+*.debug.runtime.php
+*~
+/.idea
+/.idea/*
+proto/protobuf-php/vendor/*
+proto/protobuf-php/composer.json
+proto/protobuf-php/composer.lock
+proto/protobuf-php/protoc-gen-php.php

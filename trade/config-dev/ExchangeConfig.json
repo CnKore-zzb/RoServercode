@@ -1,0 +1,117 @@
+{
+    "AdjustPendingInterval": 10800,
+    "BuyShow": "[c][1F74BF]%s[-][\/c]正在[c][CF1C0F]抢购期[-][\/c]，您购买时需预支全部费用，在[c][CF1C0F]抢购期[-][\/c]结束后物品有概率分配给您。\n\n当前抢购成功率为[c][1F74BF]%s[-][\/c]。",
+    "CantSendTime": 2505600,
+    "Cycle_KT": 86400,
+    "Cycle_T": {
+        "1": 14400,
+        "2": 28800
+    },
+    "DownRate": 50,
+    "EquipUpRate": 1000,
+    "ExchangeFashion": [
+        "全部",
+        "普通魔物",
+        "Mini",
+        "MVP",
+        "乐园团",
+        "活动",
+        "任务",
+        "其他"
+    ],
+    "ExchangeHour": 86400,
+    "ExchangeLevel": {
+        "1": {
+            "maxlv": 100,
+            "minlv": 1,
+            "name": "所有等级"
+        },
+        "2": {
+            "maxlv": 40,
+            "minlv": 1
+        },
+        "3": {
+            "maxlv": 70,
+            "minlv": 41
+        },
+        "4": {
+            "maxlv": 100,
+            "minlv": 71
+        }
+    },
+    "ExchangeLogScreen": [
+        "全部",
+        "出售记录",
+        "购买记录",
+        "抢购记录",
+        "赠送记录"
+    ],
+    "ExchangeRate": 0.09,
+    "ExchangeTrade": [
+        "全部",
+        "交易所",
+        "摆摊"
+    ],
+    "GoodRate": 1,
+    "HeadRatio": {
+        "800": 1.8,
+        "810": 3,
+        "830": 1.8,
+        "840": 3,
+        "850": 1.8
+    },
+    "HotTime": 28800,
+    "Inflation": 0.3,
+    "LogTime": 259200,
+    "LvRate": {
+        "1": 3,
+        "2": 6,
+        "3": 9,
+        "4": 16
+    },
+    "MaxBoothfee": 10000,
+    "MaxLog": 100,
+    "MaxPendingCount": 8,
+    "MaxPriceUp": 0.1,
+    "MaxSearchLog": 20,
+    "MinPriceRatio": 0.5,
+    "MobPrice": 120000,
+    "MonthRefineRate": 1000,
+    "NoDealDropRatio": 0.05,
+    "OpenGift": [
+        1,
+        1,
+        0
+    ],
+    "PageNumber": 100,
+    "ReceiveTime": 2592000,
+    "SellCost": 0.01,
+    "SellShow1": "[c][1F74BF]%s[-][\/c]在交易所过于稀缺，上架会进入[c][CF1C0F]抢购期[-][\/c]。",
+    "SellShow2": "[c][1F74BF]%s[-][\/c]正在[c][CF1C0F]抢购期[-][\/c]，需耐心等待哦！想下架？很遗憾，道具在[c][CF1C0F]抢购期[-][\/c]无法下架呢！",
+    "SellShow3": "[c][1F74BF]%s[-][\/c]的[c][CF1C0F]抢购期[-][\/c]时间为[c][1F74BF]%s[-][\/c]分钟。",
+    "SellShow4": "[c][1F74BF]%s[-][\/c]在交易所过于稀缺，已处于[c][CF1C0F]抢购期[-][\/c]。",
+    "SendButtonTime": 259200,
+    "SendMessage": "传递而来这份心意，\n饱含的是爱和守护，\n见证着我们一起冒险的点滴。",
+    "SendMoney": {
+        "1": {
+            "Resourse": "ExchangeExpressBg1",
+            "fontcolor": "1F74BF",
+            "price": 0
+        },
+        "2": {
+            "Resourse": "ExchangeExpressBg2",
+            "buffid": 111,
+            "fontcolor": "E8639C",
+            "price": 100000
+        }
+    },
+    "SendMoneyLimit": 100000,
+    "SendTime": 300,
+    "TypeRate": {
+        "1": 0,
+        "2": 0.2,
+        "3": 0.6
+    },
+    "UpRate": 10,
+    "WeekRefineRate": 1000
+}

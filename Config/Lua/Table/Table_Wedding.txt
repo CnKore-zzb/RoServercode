@@ -1,0 +1,16 @@
+--md5:6a49e39b3c66a56a34facee484f3efd2
+Table_Wedding = { 
+	[1] = {id = 1, starttime = 12, endtime = 13, price = 2000000},
+	[2] = {id = 2, starttime = 13, endtime = 14, price = 2000000},
+	[3] = {id = 3, starttime = 14, endtime = 15, price = 2000000},
+	[4] = {id = 4, starttime = 15, endtime = 16, price = 2000000},
+	[5] = {id = 5, starttime = 16, endtime = 17, price = 2000000},
+	[6] = {id = 6, starttime = 17, endtime = 18, price = 2000000},
+	[7] = {id = 7, starttime = 18, endtime = 19, price = 2000000},
+	[8] = {id = 8, starttime = 19, endtime = 20, price = 2000000},
+	[9] = {id = 9, starttime = 20, endtime = 21, price = 2000000},
+	[10] = {id = 10, starttime = 21, endtime = 22, price = 2000000},
+	[11] = {id = 11, starttime = 22, endtime = 23, price = 2000000},
+	[12] = {id = 12, starttime = 23, endtime = 24, price = 2000000},
+}
+return Table_Wedding

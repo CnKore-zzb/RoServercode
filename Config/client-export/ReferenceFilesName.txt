@@ -1,0 +1,39 @@
+local posRecord = string.len(package.path)
+
+if runtimePlatform == 1 then
+	package.path = string.sub(package.path, 1, posRecord)
+	package.path = package.path .. ';./Assets/Resources/Script/Util/?.txt'
+	require('TableUtil')
+
+	package.path = string.sub(package.path, 1, posRecord)
+	package.path = package.path .. ';../../Cehua/Lua/SecondaryConfigureGenerator/?.txt'
+	require('ConfGeneratorUtil')
+
+	package.path = string.sub(package.path, 1, posRecord)
+	package.path = package.path .. ';../../Cehua/Lua/Table/?.txt'
+	require('Table_Map')
+	require('Table_Boss')
+
+	package.path = string.sub(package.path, 1, posRecord)
+	package.path = package.path .. ';./Assets/Resources/Script/MConfig/?.txt'
+	require('Table_ScenesName')
+elseif runtimePlatform == nil then
+	package.path = string.sub(package.path, 1, posRecord)
+	package.path = package.path .. ';../client-refactory/Develop/Assets/Resources/Script/Util/?.txt'
+	require('TableUtil')
+
+	package.path = string.sub(package.path, 1, posRecord)
+	package.path = package.path .. ';../Cehua/Lua/SecondaryConfigureGenerator/?.txt'
+	require('ConfGeneratorUtil')
+
+	package.path = string.sub(package.path, 1, posRecord)
+	package.path = package.path .. ';../Cehua/Lua/Table/?.txt'
+	require('Table_Map')
+	require('Table_Boss')
+
+	package.path = string.sub(package.path, 1, posRecord)
+	package.path = package.path .. ';../client-refactory/Develop/Assets/Resources/Script/MConfig/?.txt'
+	require('Table_ScenesName')
+end
+
+package.path = string.sub(package.path, 1, posRecord)

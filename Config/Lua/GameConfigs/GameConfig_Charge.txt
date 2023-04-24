@@ -1,0 +1,73 @@
+--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+--充值后的反馈动画配置
+--countOfZenyIcon每个档位的特效货币初始数量（最前面那个是档位id）；
+--diffusionDistanceMin/Max第一段扩散动画，扩散距离的最小/最大值，相对1280 * 720；diffusionTime扩散时间；flyToTargetTime第二段动画，飞向余额位置的时间；scaleWhenReachTarget第二段动画，缩放的目标值
+GameConfig.ZenyIconAnimation = {
+  countOfZenyIcon = {
+    [1] = 6,
+    [2] = 7,
+    [3] = 8,
+    [4] = 9,
+    [5] = 10,
+    [6] = 15,
+  },
+  diffusionDistanceMin = 30,
+  diffusionDistanceMax = 60,
+  diffusionTime = 1,
+  flyToTargetTime = 0.7,
+  scaleWhenReachTarget = 0.5,
+}
+
+--充值卡片
+GameConfig.DepositCard = {
+  [1] = { type1 = 2, name="限定特典",duration=31,funcs={1,2,3,4,5,6,7,8,10,11,12,13,14,15,16,17,29,30},expandpackage=30},
+}
+
+--支付渠道
+GameConfig.Channel = {
+  ['1'] = {platform = 'ios', name = 'appstore'},
+  ['001134'] = {platform = 'android', name = 'taptap'},
+  ['800053'] = {platform = 'android', name = 'taptap(official)'},
+  ['800056'] = {platform = 'android', name = '广告渠道1'},
+  ['800066'] = {platform = 'android', name = '网鱼网咖'},
+  ['800054'] = {platform = 'android', name = '全民助手'},
+  ['800055'] = {platform = 'android', name = '蓝叠'},
+  ['800067'] = {platform = 'android', name = 'mumu'},
+  ['800059'] = {platform = 'android', name = 'UC'},
+  ['800057'] = {platform = 'android', name = '云游戏'},
+  ['800060'] = {platform = 'android', name = '今日头条1'},
+  ['800061'] = {platform = 'android', name = '今日头条2'},
+  ['800062'] = {platform = 'android', name = '天天'},
+  ['800063'] = {platform = 'android', name = '靠谱'},
+  ['800064'] = {platform = 'android', name = '布卡漫画'},
+  ['800065'] = {platform = 'android', name = '广告渠道3'},
+  ['800070'] = {platform = 'android', name = '广告渠道4'},
+  ['800058'] = {platform = 'android', name = '4399'},
+  ['800071'] = {platform = 'android', name = '360'},
+  ['800072'] = {platform = 'android', name = '腾讯手游助手'},
+  ['800073'] = {platform = 'android', name = '爱奇艺'},
+  ['800074'] = {platform = 'android', name = '智橙'},
+  ['800075'] = {platform = 'android', name = '快手广告'},
+  ['800076'] = {platform = 'android', name = '快手1'},
+  ['800077'] = {platform = 'android', name = '快手2'},
+  ['800078'] = {platform = 'android', name = '快手3'},
+  ['800079'] = {platform = 'android', name = '8月免费hx'},
+  ['800086'] = {platform = 'android', name = '360CPT'},
+  ['800087'] = {platform = 'android', name = '美图'},
+  ['800088'] = {platform = 'android', name = 'MUMUX网鱼'},
+  ['800089'] = {platform = 'android', name = '信条'},
+  ['800090'] = {platform = 'android', name = '糖果手机'},
+  ['800091'] = {platform = 'android', name = '今日头条3'},
+  ['800092'] = {platform = 'android', name = '网易新闻'},
+  ['800093'] = {platform = 'android', name = 'vungle'},
+  ['800094'] = {platform = 'android', name = '网易UU'},
+  ['800095'] = {platform = 'android', name = '葫芦侠'},
+  ['800096'] = {platform = 'android', name = 'unity安卓广告包'},
+} 
+
+--充值按钮延迟时间配置，毫秒单位
+GameConfig.PurchaseMonthlyVIP = {
+  interval = 10000,
+}

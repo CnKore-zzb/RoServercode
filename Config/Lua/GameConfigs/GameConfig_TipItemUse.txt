@@ -1,0 +1,232 @@
+--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+--时装Tips功能
+GameConfig.Fashionitmction = {
+        [800] = {Dressed = {57,58},UnDressed = {4,53,58},Gray = {4,53},},
+        [810] = {Dressed = {57,59},UnDressed = {4,59,53,58},Gray = {4,53},},
+}
+
+--道具按钮功能配置
+-- showtype表明装备之后是否显示该功能 (1:显示在主背包, 2:显示在身上的背包 4:显示在个人仓库, 8:显示在通用仓库, 16:显示在临时背包, 32:显示在手推车背包) 
+-- 需要在多处显示累加就可以了 例如：需要显示在高高和身上 包包是1 身上是2 那就是填 1+2 3
+-- childFunction 按钮点击出来之后的自按钮 childFunction_Tip 子界面按钮Tip
+GameConfig.ItemFunction = {    
+    [1]={name="使用",type="Apply",showtype = 1},
+    [2]={name="使用箭矢",type="Active",showtype = 1},
+    [4]={name="交易所",type="Pitch",showtype = 1},
+    [5]={name="装备",type="DepositFashion",showtype = 1},
+    [6]={name="装备",type="Dress",showtype = 1},
+    [7]={name="卸下",type="GetoutFashion",showtype = 2},
+    [8]={name="卸下",type="Discharge",showtype = 2},
+    [9]={name="制作",type="MakePic",showtype = 1},
+    [10]={name="合成",type="Combine",showtype = 1},
+    [11]={name="插卡",type="Inlay",showtype = 3},
+    [12]={name="链接",type="Link",showtype = 3},
+    [13]={name="获取途径",type="Access",showtype = 3},
+    [14]={name="培养",type="Train",showtype = 3},		
+    [15]={name="登录手册",type="Adventure",showtype = 1},
+    [30]={name="存入",type="DepositRepository",showtype = 4},
+    [31]={name="取出",type="WthdrawnRepository",showtype = 4},
+    [32]={name="存入",type="PersonalDepositRepository",showtype = 8},
+    [33]={name="取出",type="PersonalWthdrawnRepository",showtype = 8},
+    [34]={name="取出",type="PickUpFromTempBag",showtype = 16},
+    [35]={name="接取任务",type="GetTask",showtype=1},
+    [36]={name="打开手推车",type="OpenBarrowBag",showtype=2},
+    -- 存入手推车背包
+    [37]={name="存入",type="PutInBarrow",showtype = 1},
+    -- 从手推车背包取出
+    [38]={name="取出",type="PutBackBarrow",showtype = 32},
+
+    [40]={name="放置料理",type="PutFood",showtype = 1, childFunction = {41,42,43,47}, childFunction_Tip = "请选择可食用人群"},
+    [41]={name="公开所有人",type="PutFood_Public",showtype = 1},
+    [42]={name="小队私有",type="PutFood_Team",showtype = 1},
+    [43]={name="自己享用",type="PutFood_Self",showtype = 1},
+	[44]={name="打开",type="Open_Letter",showtype = 1},
+	[45]={name="孵化",type="Hatch",showtype = 1},
+	[46]={name="前往使用",type="GotoUse",showtype = 1},
+	[47]={name="宠物享用",type="PutFood_Pet",showtype = 1},
+	
+	[50]={name="合成",type="CombineTip",showtype = 1, childFunction = {52,51}, childFunction_Tip = "请选择合成方式"},
+	[51]={name="合成%s个",type="CombineMultiple",showtype = 1},
+	[52]={name="合成1个",type="Combine",showtype = 1},
+	[53] = {name="打开",type = "Open_MarriageManual",showtype = 1},
+	[54] = {name="赠送",type = "Send_WeddingDress",showtype = 1}, 
+    [55] = {name="查看",type = "Open_MarriageCertificate",showtype = 1},
+	[56] = {name="点单",type = "OpenRegistTicket",showtype = 1},
+    [57] = {name="解锁",type = "UnlockPetWork",showtype = 1},
+}
+
+--技能等级限制装备条件
+GameConfig.EquipedLimitBySkill = {
+  -- 手推车样式2
+  [25301] = {263 ,5},
+  [25302] = {263 ,5},
+  --- 骑龙
+  [25114] = {1260 ,1},
+  [25116] = {1260 ,1},
+  [25117] = {1260 ,1},
+  [25118] = {1260 ,1},
+  [25122] = {1260 ,1},
+}
+
+GameConfig.EquipEffect = {
+        Atk="物理攻击",
+        Def="物理防御",
+        MAtk="魔法攻击",
+        MDef="魔法防御",
+        MaxHp="最大生命值",
+        MaxHpPer="最大生命值%",
+        Str="力量",
+        Int="智力",
+        Vit="体质",
+        Agi="敏捷",
+        Dex="灵巧",
+        Luk="幸运",
+        AtkPer="物攻百分比",
+        DefPer="物防百分比",
+        MAtkPer="魔攻百分比",
+        MDefPer="魔防百分比",
+        Hit="命中",
+        Flee="闪避",
+        Cri="暴击",
+        CriRes="暴击防护",
+        AtkSpd="攻击速度",
+        MoveSpd="移动速度",
+        CastSpd="吟唱速度",
+        Refine="精炼物攻",
+        MRefine="精炼魔攻",
+        DamIncrease="物伤加成",
+        MDamIncrease="魔伤加成",
+        DamReduc="物伤减免",
+        MDamReduc="魔伤减免",
+        RefineDamReduc="精炼物免",
+        RefineMDamReduc="精炼魔免",
+}
+
+--人物面板属性一览
+GameConfig.BaseAttrConfig={
+    "Hp",
+    "Sp",
+    "Atk",
+    "Def",
+    "MAtk",
+    "MDef",
+    "Hit",
+    "Flee",
+    "Cri",
+    "CriRes", 
+    "AtkSpd",
+    "MoveSpd",
+    "RestoreSpd",
+    "SpRestoreSpd",  
+    "CastSpd",
+    "BeHealEncPer",
+    "Refine",
+    "MRefine",
+    "DamIncrease",
+    "MDamIncrease",
+    "DamReduc",
+    "MDamReduc",
+    "RefineDamReduc",
+    "RefineMDamReduc",
+}
+
+GameConfig.InfoPageConfigs = 
+  { 
+    "Hp",
+    "Sp",
+	"SaveHp",
+	"SaveHpDes",
+	"SaveSp",
+	"SaveSpDes",
+    "Atk",
+    "Def",
+    "MAtk",
+    "MDef",
+	"Satiety",
+	"SlimHeight",
+	"SlimWeight",
+  }
+
+GameConfig.ClassInitialAttr = {
+   "Str",
+   "Agi",
+   "Vit",
+   "Int",    
+   "Dex",
+   "Luk",    
+}
+
+GameConfig.PropIcon = {
+  Atk = 103,
+  Def = 101,
+  MAtk = 102,
+  MDef = 100,
+  MaxHp = 104,
+}
+
+-- 物品快捷栏提示配置
+-- HpPct hp低于比例
+-- SpPct sp低于比例
+-- Hp 的提示道具
+-- Sp 的提示道具
+GameConfig.QuickItemTip = {
+  Level = 15,
+  HpPct = 25,
+  SpPct = 15,
+  HpItemIds = {12001},
+  SpItemIds = {12024},
+}
+
+-- 道具提示框获取途径展示面板id 和隐藏面板id
+GameConfig.ItemTipGetPathShow = {
+  HideViews = {41,51,92,93,390,410,151,135,370,141,201,101},
+}
+
+--给道具进行指定的功能按钮配置
+GameConfig.SpecialItemFunction = {
+  [5001] = {10},[5002] = {10},[5003] = {10},[5004] = {10},[5029] = {10},
+  [5030] = {10},[5100] = {10},[5101] = {10},[5102] = {10},[5103] = {10},
+  [5001] = {50},[5002] = {50},[5003] = {50},[5004] = {50},[5029] = {50},
+  [5030] = {50},[5100] = {50},[5101] = {50},[5102] = {50},[5103] = {50},
+  [51081] = {6,8},[51082] = {6,8},
+}
+  
+--处于以下几种状态时，无法使用道具（眩晕，冰冻，石化，睡眠，恐惧） 
+GameConfig.ItemsNoUseWhenRoleStates = {
+  [4] = {40,41,90},
+  [5] = {40,41,90},
+  [6] = {40,41,90},
+  [7] = {40,41,90},
+  [8] = {40,41,90},
+}
+
+GameConfig.ItemQualityDesc={
+    [1] = "D级珍藏品",
+    [2] = "C级珍藏品",
+	[3] = "B级珍藏品",
+	[4] = "A级珍藏品",
+	[5] = "S级珍藏品",
+}
+
+--情书
+--情书
+GameConfig.LoveLetter = {
+  StarId = 710046,  --普通情书
+  ChristmasId = 700115,  --圣诞情书
+  letter_christmas_reward = 3728,  --圣诞情书赠送后获得的道具
+  SpringId = 700118,  --新年情书
+  letter_spring_reward = 3861,  --新年情书赠送后获得的道具
+  letter_wedding_clother = 6075,  --婚纱赠语
+}
+
+--情书道具
+GameConfig.Item_LoveLetter = {
+  [700117] = 57,
+}
+
+--tips中3D道具展示辨识
+GameConfig.ManualShowItemType = {
+  81,82,83,84,85,86,87,170,180,190,200,210,220,230,240,250,260,270,280,290,501,800,801,810,820,830,840,850
+}

@@ -1,0 +1,20 @@
+--md5:4841274157565d239953d6238d38ffca
+Table_GuildPVE_Map = { 
+	[210001] = {id = 210001, Name = '入口一号', Type = 1, LinkMapType = {2}, Environment = ''},
+	[210002] = {id = 210002, Name = '入口二号', Type = 1, LinkMapType = {2}, Environment = ''},
+	[220001] = {id = 220001, Name = '过道一号', Type = 2, LinkMapType = {1,2}, Environment = ''},
+	[220002] = {id = 220002, Name = '过道二号', Type = 2, LinkMapType = {1,2,3}, Environment = ''},
+	[220003] = {id = 220003, Name = '过道三号', Type = 2, LinkMapType = {1,2,3,4}, Environment = ''},
+	[220004] = {id = 220004, Name = '过道四号', Type = 2, LinkMapType = {1,2,3}, HaveBoss = 1, Environment = ''},
+	[220005] = {id = 220005, Name = '过道五号', Type = 2, LinkMapType = {1,2}, HaveBoss = 1, Environment = ''},
+	[220006] = {id = 220006, Name = '过道四号2', Type = 2, LinkMapType = {1,2,3}, Environment = ''},
+	[220007] = {id = 220007, Name = '过道五号2', Type = 2, LinkMapType = {1,2}, Environment = ''},
+	[220008] = {id = 220008, Name = '过道三号2', Type = 2, LinkMapType = {1,2,3,4}, HaveBoss = 1, Environment = ''},
+	[220009] = {id = 220009, Name = '过道五号', Type = 2, LinkMapType = {1,2,3,4}, Environment = ''},
+	[220010] = {id = 220010, Name = '过道六号', Type = 2, LinkMapType = {1,2}, HaveBoss = 1, Environment = ''},
+	[220011] = {id = 220011, Name = '过道七号', Type = 2, LinkMapType = {1,2,3,4}, Environment = ''},
+	[230001] = {id = 230001, Name = '断路场景1号', Type = 3, LinkMapType = {1}, Environment = ''},
+	[230002] = {id = 230002, Name = '断路场景2号', Type = 3, LinkMapType = {1}, HaveBoss = 1, Environment = ''},
+	[240001] = {id = 240001, Name = '终点1号', Type = 4, LinkMapType = {1}, HaveBoss = 1, Environment = ''},
+}
+return Table_GuildPVE_Map

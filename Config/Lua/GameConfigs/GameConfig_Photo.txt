@@ -1,0 +1,19 @@
+--【改动任何内容都请单独改动每个分支下的配置文件条目，禁止偷懒直接将整个文件从一个分支复制到另外一个分支！】
+--【配置表下按类别拆分，新内容如有必要则按格式重建一个配置表单独对应！】
+
+--相机拍摄景点距离设置
+GameConfig.PhotographPanel = { 
+  Near_Focus_Distance = 25,
+  Far_Focus_Distance = 40,
+  Near_Focus_Distance_Monster = 10
+}
+
+GameConfig.PhotographResultPanel_ShareDescription = ""
+
+--相机模型ID配置
+GameConfig.photomodelID =400044
+
+--相机焦距参数设定
+GameConfig.PhotoFocalLength={
+   {min=0,max=18,value=135},{min=18,max=28.5,value=85},{min=28.5,max=46,value=50},{min=46,max=63,value=35}
+}
