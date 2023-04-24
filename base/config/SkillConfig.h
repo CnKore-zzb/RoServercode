@@ -1,0 +1,163 @@
+/**
+ * @file SkillConfig.h
+ * @brief 
+ * @author sunhuiwei, sunhuiwei@xindong.com
+ * @version v1
+ * @date 2015-10-21
+ */
+
+#pragma once
+
+#include "xSingleton.h"
+#include "xLuaTable.h"
+#include "SceneSkill.pb.h"
+
+using namespace Cmd;
+using std::map;
+using std::string;
+
+const DWORD SKILL_WEDDING_MISSYOU = 2000001;
+const DWORD SKILL_WEDDING_WELCOME = 2001001;
+
+enum ESkillLogic
+{
+  ESKILLLOGIC_MIN = 0,
+  ESKILLLOGIC_ADDBUFF = 1,
+  ESKILLLOGIC_FORWARDRECT = 2,
+  ESKILLLOGIC_LOCKEDTARGET = 3,
+  ESKILLLOGIC_SELFRANGE = 4,
+  ESKILLLOGIC_POINTRANGE = 5,
+  ESKILLLOGIC_POINTRANGEEFFECTIVE = 6,
+  ESKILLLOGIC_POINTRECT = 7,
+  ESKILLLOGIC_MISSILE = 8,
+  ESKILLLOGIC_RANDOMRANGE = 9,
+  ESKILLLOGIC_MAX = 10,
+};
+
+enum ESkillCamp
+{
+  ESKILLCAMP_MIN = 0,
+  ESKILLCAMP_FRIEND = 1,
+  ESKILLCAMP_ENEMY = 2,
+  ESKILLCAMP_TEAM = 3,
+  ESKILLCAMP_MAX = 4,
+};
+
+enum EElementType
+{
+  EELEMENTTYPE_MIN = 0,
+  EELEMENTTYPE_WIND = 1,
+  EELEMENTTYPE_EARTH = 2,
+  EELEMENTTYPE_WATER = 3,
+  EELEMENTTYPE_FIRE = 4,
+  EELEMENTTYPE_NEUTRAL = 5,
+  EELEMENTTYPE_HOLY = 6,
+  EELEMENTTYPE_SHADOW = 7,
+  EELEMENTTYPE_GHOST = 8,
+  EELEMENTTYPE_UNDEAD = 9,
+  EELEMENTTYPE_POSION = 10,
+  EELEMENTTYPE_MAX = 11,
+};
+
+enum ESkillType
+{
+  ESKILLTYPE_MIN = 0,
+  ESKILLTYPE_ACTIVE = 1,
+  ESKILLTYPE_BUFF = 2,
+  ESKILLTYPE_PASSIVE = 3,
+  ESKILLTYPE_HEAL = 4,
+  ESKILLTYPE_TELESPORT = 5,
+  ESKILLTYPE_BOWLINGBASH = 6,
+  ESKILLTYPE_PURIFY = 7,
+  ESKILLTYPE_TRANSPORT = 8,
+  ESKILLTYPE_COLLECT = 9,
+  ESKILLTYPE_SUMMON = 10,
+  ESKILLTYPE_SUICIDE = 11,
+  ESKILLTYPE_FLASH = 12,
+  ESKILLTYPE_FAKEDEAD = 13,
+  ESKILLTYPE_EXPEL = 14,
+  ESKILLTYPE_REBIRTH = 15,
+  ESKILLTYPE_TRAPSKILL = 16,
+  ESKILLTYPE_REPAIR = 17,
+  ESKILLTYPE_BEATBACK = 18,
+  ESKILLTYPE_TRAPBARRIER = 19,
+  ESKILLTYPE_TRIGGERTRAP = 20,
+  ESKILLTYPE_STEAL = 21,
+  ESKILLTYPE_FUNCTION = 22,
+  ESKILLTYPE_GRPREBIRTH = 23,
+  ESKILLTYPE_MARKHEAL = 24,
+  ESKILLTYPE_LEAD = 25,
+  ESKILLTYPE_TRAPNPCSKILL = 26,
+  ESKILLTYPE_SWORDBREAK = 27,
+  ESKILLTYPE_SHOWSKILL = 28,
+  ESKILLTYPE_TOUCHPETSKILL = 29,
+  ESKILLTYPE_SUMMONBEING = 30,
+  ESKILLTYPE_REVIVEBEING = 31,
+  ESKILLTYPE_HELLPLANT = 32,
+  ESKILLTYPE_BEINGBUFF = 33,
+  ESKILLTYPE_USEBEINGSKILL = 34,
+  ESKILLTYPE_RANDOMSKILL = 35,
+  ESKILLTYPE_STEALMONEY = 36,
+  ESKILLTYPE_SEIZE = 37,
+  ESKILLTYPE_CONTROL = 38,
+  ESKILLTYPE_REMOVETRAP = 39,
+  ESKILLTYPE_POLIATTACK = 40,
+  ESKILLTYPE_BLINK = 41,
+  ESKILLTYPE_TRAPMONSTER = 42,
+  ESKILLTYPE_COPYSKILL = 43,
+  ESKILLTYPE_FASTRESTORE = 44,
+  ESKILLTYPE_SPACELEAP = 45,
+
+  ESKILLTYPE_GOMAP = 46,
+  ESKILLTYPE_WEDDING = 47,
+  ESKILLTYPE_CLEAREFFECT = 48,
+  ESKILLTYPE_CURSEDCIRCLE = 49,
+  ESKILLTYPE_RIDECHANGE = 50, //骑乘(骑狼术)或者变身(魔导机械)
+  ESKILLTYPE_REVIVE = 51,//圣灵降临 
+  ESKILLTYPE_SUMMONELEMENT = 52,//贤者召唤元素精灵
+  ESKILLTYPE_ELEMENTTRAP = 53, //贤者系元素领域技能
+  ESKILLTYPE_SOLO = 54,
+  ESKILLTYPE_ENSEMBLE = 55,
+  ESKILLTYPE_STOPCONCERT = 56,
+  ESKILLTYPE_MAX = 57,
+};
+
+// config data
+struct SSkillCFG
+{
+  DWORD dwID = 0;
+
+  ESkillType eType = ESKILLTYPE_MIN;
+  ESkillLogic eLogic = ESKILLLOGIC_MIN;
+  ESkillCamp eCamp = ESKILLCAMP_MIN;
+
+  xLuaData oParam;
+
+  SSkillCFG() {}
+};
+typedef map<DWORD, SSkillCFG> TMapSkillCFG;
+
+// config
+class SkillConfig : public xSingleton<SkillConfig>
+{
+  friend class xSingleton<SkillConfig>;
+  private:
+    SkillConfig();
+  public:
+    virtual ~SkillConfig();
+
+    bool loadConfig();
+
+    const SSkillCFG* getSkillCFG(DWORD dwSkillID) const;
+    const TMapSkillCFG& getSkillCFGList() const { return m_mapSkillCFG; }
+    float getImmuneOdds(DWORD immuneid) const { auto it=m_mapID2OddsImmune.find(immuneid); return it != m_mapID2OddsImmune.end() ? it->second : 0; }
+    ESkillType getSkillType(const string& str);
+  private:
+    ESkillLogic getSkillLogic(const string& str);
+    ESkillCamp getSkillCamp(const string& str);
+  private:
+    TMapSkillCFG m_mapSkillCFG;
+  private:
+    map<DWORD, float> m_mapID2OddsImmune;
+};
+

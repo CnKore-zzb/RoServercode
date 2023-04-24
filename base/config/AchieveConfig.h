@@ -1,0 +1,260 @@
+/**
+ * @file ManualConfig.h
+ * @brief 
+ * @author sunhuiwei, sunhuiwei@xindong.com
+ * @version v1
+ * @date 2015-12-11
+ */
+
+#pragma once
+
+#include "xSingleton.h"
+#include "AchieveCmd.pb.h"
+#include "TableManager.h"
+
+using namespace Cmd;
+using std::vector;
+using std::map;
+using std::string;
+
+// config data
+enum EAchieveCond
+{
+  EACHIEVECOND_MIN = 0,
+  EACHIEVECOND_LEVELUP,
+  EACHIEVECOND_ADDFRIEND,
+  EACHIEVECOND_PLAYMUSIC,
+  EACHIEVECOND_FERRISWHEEL,
+  EACHIEVECOND_HAND,
+  EACHIEVECOND_EMOJI,
+  EACHIEVECOND_EXPRESSION,
+  EACHIEVECOND_USEITEM,
+  EACHIEVECOND_ITEM,
+  EACHIEVECOND_CREATEGUILD,
+  EACHIEVECOND_ENTERGUILD,
+  EACHIEVECOND_MAPMOVE,
+  EACHIEVECOND_SCENERY_COUNT,
+  EACHIEVECOND_SCENERY,
+  EACHIEVECOND_PHOTO,
+  EACHIEVECOND_PHOTO_MAN,
+  EACHIEVECOND_PHOTO_MONSTER,
+  EACHIEVECOND_MONSTER_PHOTO,
+  EACHIEVECOND_GHOST_PHOTO,
+  EACHIEVECOND_NPC_COUNT,
+  EACHIEVECOND_KILL_MONSTER,
+  EACHIEVECOND_KILL_MVP,
+  EACHIEVECOND_BATTLE,
+  EACHIEVECOND_USE_SKILL,
+  EACHIEVECOND_BATTLE_TIME,
+  EACHIEVECOND_COMPOSE,
+  EACHIEVECOND_REFINE_EQUIP,
+  EACHIEVECOND_REFINE_WEAPON,
+  EACHIEVECOND_REFINE_FAIL,
+  EACHIEVECOND_STRENGTH,
+  EACHIEVECOND_ENCHANT,
+  EACHIEVECOND_EQUIP_UPGRADE,
+  EACHIEVECOND_GET_ITEM,
+  EACHIEVECOND_WANTEDQUEST,
+  EACHIEVECOND_REPAIR_SEAL,
+  EACHIEVECOND_TOWER_PASS,
+  EACHIEVECOND_KPL_TRANS,
+  EACHIEVECOND_KPL_CONSUME,
+  EACHIEVECOND_DOJO,
+  EACHIEVECOND_VEHICLE,
+  EACHIEVECOND_MONEY_TRADE,
+  EACHIEVECOND_MONEY_TRADE_CONSUME,
+  EACHIEVECOND_MANUAL_EQUIP,
+  EACHIEVECOND_QUEST_SUBMIT,
+  EACHIEVECOND_ACHIEVE_FINISH,
+  EACHIEVECOND_USER_ATTR,
+  EACHIEVECOND_USER_CHAT,
+  EACHIEVECOND_USER_BODY,
+  EACHIEVECOND_USER_RUNE,
+  EACHIEVECOND_USER_PORTRAIT,
+  EACHIEVECOND_USER_HAIR,
+  EACHIEVECOND_USER_TITLE,
+  EACHIEVECOND_USER_DEAD,
+  EACHIEVECOND_USER_DAMAGE,
+  EACHIEVECOND_MONSTER_DRAW,
+  EACHIEVECOND_PVP,
+  EACHIEVECOND_CAT,
+  EACHIEVECOND_USER_TRANSFER,
+  EACHIEVECOND_MANUAL,
+  EACHIEVECOND_QUEST,
+  EACHIEVECOND_MONEY_SHOP_BUY,
+  EACHIEVECOND_MONEY_SHOP_SELL,
+  EACHIEVECOND_MONEY_TRADE_BUY,
+  EACHIEVECOND_MONEY_TRADE_ONCEBUY,
+  EACHIEVECOND_MONEY_TRADE_SELL,
+  EACHIEVECOND_MONEY_TRADE_ONCESELL,
+  EACHIEVECOND_TRADE_RECORD,
+  EACHIEVECOND_MONEY_GET,
+  EACHIEVECOND_MONEY_CHARGE,
+  EACHIEVECOND_ITEM_GET,
+  EACHIEVECOND_SEAT,
+  EACHIEVECOND_HELP_QUEST,
+  EACHIEVECOND_TRAVEL,
+
+  EACHIEVECOND_PET_CAPTURE_SUCCESS,
+  EACHIEVECOND_PET_CAPTURE_FAIL,
+  EACHIEVECOND_PET_BASELV,
+  EACHIEVECOND_PET_FEED,
+  EACHIEVECOND_PET_TOUCH,
+  EACHIEVECOND_PET_GIFT,
+  EACHIEVECOND_PET_HANDWALK,
+  EACHIEVECOND_PET_TIME,
+  EACHIEVECOND_PET_EQUIP,
+  EACHIEVECOND_PET_FRIENDLV,
+  EACHIEVECOND_PET_DEAD,
+
+  EACHIEVECOND_PET_ADVENTURE_FINISH,
+  EACHIEVECOND_PET_ADVENTURE_COUNT,
+
+  EACHIEVECOND_COOKFOOD,
+  EACHIEVECOND_EATFOOD,
+  EACHIEVECOND_COOKERLV,
+  EACHIEVECOND_FOODMATERIALLV,
+  EACHIEVECOND_TASTERLV,
+  EACHIEVECOND_COSTSAVEHP,
+  EACHIEVECOND_COSTSAVESP,
+  EACHIEVECOND_FOODCOOKLV,
+  EACHIEVECOND_PRODUCE_EQUIP,
+  EACHIEVECOND_COLLECTION,
+
+  EACHIEVECOND_TUTOR_GUIDE,
+  EACHIEVECOND_TUTOR_STUDENT_GRADUATION,
+  EACHIEVECOND_GOLD_APPLE_GAME,
+  EACHIEVECOND_JOIN_POLLY,
+  EACHIEVECOND_GOLD_APPLE_TOTAL,
+  EACHIEVECOND_DEF_PRAY_LV,
+  EACHIEVECOND_ATK_PRAY_LV,
+  EACHIEVECOND_ELEM_PRAY_LV,
+  EACHIEVECOND_PRAY_CARD_USE,
+
+  EACHIEVECOND_WEDDING_PURCHASE,
+  EACHIEVECOND_WEDDING_PROPOSE,
+  EACHIEVECOND_WEDDING_RESERVE,
+  EACHIEVECOND_WEDDING_PHOTO,
+  EACHIEVECOND_WEDDING_JOINCEREMONY,
+  EACHIEVECOND_WEDDING_CEREMONY,
+  EACHIEVECOND_WEDDING_CARRIER,
+  EACHIEVECOND_WEDDING_DAY,
+  EACHIEVECOND_WEDDING_DIVORCE,
+
+  EACHIEVECOND_PHOTO_USER,
+  EACHIEVECOND_EATFOODID,
+  EACHIEVECOND_PROFESSION,
+  EACHIEVECOND_PET_COMPOSE,
+  EACHIEVECOND_PETSKILL_ALL_LV,
+  EACHIEVECOND_PET_FRIENDLV_NUM,
+  EACHIEVECOND_MAX
+};
+struct SAchieveCondition
+{
+  EAchieveCond eCond = EACHIEVECOND_MIN;
+  set<EProfession> setProfession;
+  TVecDWORD vecParams;
+};
+
+/*enum EAchieveRwdFunction
+{
+  EACHIEVEREWARD_MIN = 0,
+  EACHIEVEREWARD_ADDSHOPCNT = 1,
+};
+struct SAchieveRewardFunction
+{
+  EAchieveRwdFunction eRewardFunction = EACHIEVEREWARD_MIN;
+  DWORD dwParam1 = 0;
+  DWORD dwParam2 = 0;
+};
+*/
+
+struct SAchieveCFG : public SBaseCFG
+{
+  DWORD dwID = 0;
+  DWORD dwManualExp = 0;
+
+  EAchieveType eType = EACHIEVETYPE_MIN;
+  EAchieveSubType eSubType = EACHIEVESUBTYPE_MIN;
+
+  bool bVisibility = false;
+
+  TSetDWORD setPreAchIDs;
+  TVecItemInfo vecReward;
+
+  SAchieveCondition stCondition;
+  //SAchieveRewardFunction stRewardFunction;
+
+  map<DWORD, AchieveQuest> mapPreQuest;
+
+  SAchieveCFG() {}
+
+  bool checkSource(DWORD dwSource) const;
+  bool checkEnable(EProfession eProfession, EAchieveCond eCond, const TVecQWORD& vecParam = TVecQWORD{}) const;
+  bool checkFinish(const TVecQWORD& vecParam = TVecQWORD{}, DWORD dwProcess = 0) const;
+
+  DWORD getProcess() const;
+
+  void toQuest(DWORD dwIndex, DWORD dwQuestID, AchieveQuest& rQuest);
+};
+typedef map<DWORD, SAchieveCFG> TMapAchieveCFG;
+
+typedef set<EAchieveSubType> TSetAchieveSubType;
+typedef map<EAchieveType, TSetAchieveSubType> TMapTypeSubCFG;
+
+typedef vector<SAchieveCFG> TVecAchieveCFG;
+typedef map<EAchieveCond, TVecAchieveCFG> TMapCondAchCFG;
+
+// achieve item
+enum EAchieveItemType
+{
+  EACHIEVEITEMTYPE_MIN = 0,
+  EACHIEVEITEMTYPE_CCRASTEHAM = 1,
+  EACHIEVEITEMTYPE_BELL = 2,
+  EACHIEVEITEMTYPE_MAX,
+};
+struct SAchieveItemCFG : public SBaseCFG
+{
+  DWORD dwItemID = 0;
+
+  EAchieveItemType eType = EACHIEVEITEMTYPE_MIN;
+};
+typedef map<DWORD, SAchieveItemCFG> TMapAchieveItemCFG;
+
+// config
+class AchieveConfig : public xSingleton<AchieveConfig>
+{
+  friend class xSingleton<AchieveConfig>;
+  private:
+    AchieveConfig();
+  public:
+    virtual ~AchieveConfig();
+
+    bool loadConfig();
+    bool checkConfig();
+
+    const TMapCondAchCFG& getCondAchCFGList() const { return m_mapCondAchCFG; }
+
+    const TSetAchieveSubType& getAchSubTypeList(EAchieveType eType) const;
+    const TVecAchieveCFG& getAchieveCond(EAchieveCond eCond) const;
+    const SAchieveCFG* getAchieveCFG(DWORD dwID) const;
+    const SAchieveItemCFG* getAchieveItemCFG(DWORD dwID) const;
+    EAchieveType getAchieveType(EAchieveSubType eSubType) const;
+
+    bool isAchieveQuest(DWORD dwQuestID) const { return m_setQuestIDs.find(dwQuestID) != m_setQuestIDs.end(); }
+    void addAchieveQuest(DWORD dwQuestID) { m_setQuestIDs.insert(dwQuestID); }
+  private:
+    bool loadAchievementConfig();
+    bool loadAchievementItemConfig();
+
+    EAchieveCond getAchieveCondition(const string& str);
+    //EAchieveRwdFunction getRewardFuction(const string& str);
+  private:
+    TMapAchieveCFG m_mapAchieveCFG;
+    TMapTypeSubCFG m_mapType2SubCFG;
+    TMapCondAchCFG m_mapCondAchCFG;
+    TMapAchieveItemCFG m_mapAchItemCFG;
+
+    TSetDWORD m_setQuestIDs;
+};
+
